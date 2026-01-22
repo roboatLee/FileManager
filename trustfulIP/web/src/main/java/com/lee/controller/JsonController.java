@@ -1,6 +1,7 @@
 package com.lee.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.lee.dao.file.OnePathFilesVo;
 import com.lee.service.FileService;
 import com.lee.service.MyJsonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class JsonController {
     private MyJsonService myJsonService;
 
     @GetMapping("/getdefaultfiles")
-    public JsonNode getDefaultFiles(){
+    public OnePathFilesVo getDefaultFiles(){
         return fileService.getDefaultFiles();
     }
 

@@ -1,0 +1,15 @@
+.gitignore
+.npmignore
+api.ts
+apis/json-controller-api.ts
+base.ts
+common.ts
+configuration.ts
+docs/JsonControllerApi.md
+docs/OnePathFileVo.md
+docs/OnePathFilesVo.md
+git_push.sh
+index.ts
+models/index.ts
+models/one-path-file-vo.ts
+models/one-path-files-vo.ts

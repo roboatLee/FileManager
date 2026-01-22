@@ -36,8 +36,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
+            <groupId>com.lee</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 

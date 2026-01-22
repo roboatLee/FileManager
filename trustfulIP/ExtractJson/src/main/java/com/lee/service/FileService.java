@@ -1,6 +1,8 @@
 package com.lee.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.lee.dao.file.FileType;
+import com.lee.dao.file.OnePathFilesVo;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -45,7 +47,8 @@ public interface FileService {
      *     ]
      * }
      * */
-    JsonNode getAllFileAndDirInJson(File f);
+    OnePathFilesVo getAllFileAndDirInJson(File f);
+    JsonNode getAllFileAndDirInJsonAsJson(File f);
 
     JsonNode getFiles2Json(List<File> files);
 
@@ -54,7 +57,9 @@ public interface FileService {
     /**
      * 打开默认文件夹
      * */
-    JsonNode getDefaultFiles();
+    JsonNode getDefaultFilesAsJson();
+
+    OnePathFilesVo getDefaultFiles();
 
     /**
      * 打开上一级文件
@@ -70,5 +75,5 @@ public interface FileService {
     /**
      * 判断是否为文件
      * */
-    String isFile (File file);
+    FileType isFile (File file);
 }

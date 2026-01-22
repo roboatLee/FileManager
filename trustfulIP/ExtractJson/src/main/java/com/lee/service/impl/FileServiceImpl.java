@@ -4,11 +4,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.lee.dao.file.FileType;
+import com.lee.dao.file.OnePathFileVo;
+import com.lee.dao.file.OnePathFilesVo;
 import com.lee.service.FileService;
 import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -99,9 +103,33 @@ public class FileServiceImpl implements FileService {
      * }
      * */
     @Override
-    public JsonNode getAllFileAndDirInJson(File f){
+    public JsonNode getAllFileAndDirInJsonAsJson(File f){
         List<File> files =  getAllFileAndDir(f);
         return getFiles2Json(files);
+    }
+
+
+    @Override
+    public OnePathFilesVo getAllFileAndDirInJson(File f){
+        List<File> files =  getAllFileAndDir(f);
+
+        /**
+         * 将Files变成OnePathFilesVo
+         * */
+        OnePathFilesVo onePathFilesVo = new OnePathFilesVo();
+        List<OnePathFileVo> onePathFileVos = new ArrayList<>();
+
+
+        for (File file : files){
+            OnePathFileVo onePathFileVo = new OnePathFileVo();
+            onePathFileVo.setName(file.getName());
+            onePathFileVo.setType(isFile(file));
+            onePathFileVos.add(onePathFileVo);
+        }
+        String path = f.getParent();
+        onePathFilesVo.setFiles(onePathFileVos);
+        onePathFilesVo.setPath(path);
+        return onePathFilesVo;
     }
 
     @Override
@@ -123,7 +151,7 @@ public class FileServiceImpl implements FileService {
         for (File oneFile : files){
             ObjectNode file = mapper.createObjectNode();
             file.put("name",oneFile.getName());
-            file.put("type",isFile(oneFile));
+            file.put("type",isFile(oneFile).name());
             array.add(file);
         }
         root.set("files",array);
@@ -131,7 +159,13 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public JsonNode getDefaultFiles(){
+    public JsonNode getDefaultFilesAsJson(){
+        File file = new File("D:\\User\\document\\Json\\Probaility\\L01.1.json");
+        return getAllFileAndDirInJsonAsJson(file);
+    }
+
+    @Override
+    public OnePathFilesVo getDefaultFiles(){
         File file = new File("D:\\User\\document\\Json\\Probaility\\L01.1.json");
         return getAllFileAndDirInJson(file);
     }
@@ -139,24 +173,24 @@ public class FileServiceImpl implements FileService {
     @Override
     public JsonNode getParentFiles(String path){
         File file = new File(path);
-        return getAllFileAndDirInJson(file);
+        return getAllFileAndDirInJsonAsJson(file);
     }
 
     @Override
     public JsonNode getPathFiles(String path){
         File file = new File(path);
 
-        return getAllFileAndDirInJson(file);
+        return getAllFileAndDirInJsonAsJson(file);
     }
 
     @Override
-    public String isFile (File file){
+    public FileType isFile (File file){
             if (file.isDirectory()) {
-                return "dir";
+                return FileType.DIR;
             } else if (file.isFile()) {
-                return "file";
+                return FileType.FILE;
             }
-            else return "err";
+            else return null;
     }
 
 
