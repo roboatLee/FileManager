@@ -13,6 +13,7 @@
         <module>ExtractJson</module>
         <module>wecom</module>
         <module>web</module>
+        <module>common</module>
     </modules>
 
     <parent>
@@ -93,6 +94,13 @@
                 <artifactId>jackson-databind</artifactId>
                 <version>2.13.5</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-ui</artifactId>
+                <version>1.6.15</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

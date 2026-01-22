@@ -1,21 +1,20 @@
+<template>
+  <div>
+    <RouterLink to="/file">file</RouterLink>
+    <RouterLink to="/vditor">vditor</RouterLink>
+    <RouterLink to="study">study</RouterLink>
+  </div>
+  <RouterView></RouterView>
+</template>
+
+
 <script setup>
 import { ref } from 'vue'
 
 
-
-
-
 </script>
 
-<template>
-    <div>
-    <!--     <RouterLink to="/">Home</RouterLink> -->
-        <RouterLink to="/file">about</RouterLink>
 
-
-      </div>
-      <RouterView></RouterView>
-</template>
 
 
 <style scoped></style>
