@@ -1,7 +1,34 @@
-springboot+vue
-1. 本地文件夹开发（实现进入目录，退后到上一级目录）
-2. 解析json文件
+# 技术栈：
+## 基本技术栈
+java 8
+springboot 2.11.7
+vue 
+mybatisplus 配合springboot版本
 
+## 更细节的开发
+使用 openapi来进行 前后端接口对齐
+
+
+# 功能
+## 文件功能
+
+> 说实话，当时开发这个的时候完全是为了更好的的提取json文件，但是到了后面才意识到，如果发布到网上，别人浏览的是我的的电脑啊！
+
+本地文件夹浏览开发
+1. 实现进入默认目录
+2. 退后到上一级目录
+3. 进入文件夹目录
+
+
+## 解析json文件
+解析json文件content内容，并组合在一起
+
+## markdown编辑器开发
+实现了vditor的嵌入
+
+# 项目来源
 本来想着在听国外YouTube课（b站转运）的时候解析一下字幕。不过发现每解析一次都要改。觉得太麻烦还是直接做一个小功能来展示吧
 
-项目链接：github：roboatlee：file Manager
+项目链接：
+github: https://github.com/roboatLee/FileManager
+

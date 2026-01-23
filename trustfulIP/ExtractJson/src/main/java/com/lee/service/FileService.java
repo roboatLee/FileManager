@@ -76,4 +76,6 @@ public interface FileService {
      * 判断是否为文件
      * */
     FileType isFile (File file);
+
+
 }
