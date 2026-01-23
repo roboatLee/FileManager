@@ -1,23 +1,22 @@
-import axios from 'axios'
+// import axios from 'axios'
+import { JsonControllerApi } from './generated'
+import { http } from './http'
+const api = new JsonControllerApi(undefined, undefined, http)
+
 
 export function getDefaultFiles() {
-  return axios.get('/api/file/getdefaultfiles')
+  return api.getDefaultFiles()
 }
 
 export function getChildFiles(path) {
-  return axios.get('/api/file/getchild', {
-    params: { path }
-  })
+  return api.getChild(path)
+
 }
 
 export function getParentFiles(path) {
-  return axios.get('/api/file/getparent', {
-    params: { path }
-  })
+  return api.getParetn(path)
 }
 
 export function getContentTxt(path, name) {
-  return axios.get('/api/file/getcontenttxt', {
-    params: { path ,name}
-  })
+  return api.getJsonFile2txt(path,name)
 }

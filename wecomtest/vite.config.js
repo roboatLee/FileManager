@@ -12,7 +12,7 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
-  base: '/',
+  base: "/",
   server: {
     port: 5172,
     // allowedHosts: ["10un4gz933676.vicp.fun","http://lcx.u3w.com"],
@@ -20,6 +20,7 @@ export default defineConfig({
       "/api": {
         target: "http://localhost:8080",
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },
