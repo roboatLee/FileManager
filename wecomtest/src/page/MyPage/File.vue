@@ -9,8 +9,15 @@
       <button class="parse-btn" @click="parseJson" :disabled="!selected">
         解析 JSON
       </button>
+
+      <button class="print-btn" @click="printStructure" :disabled="!current.path">
+        打印结构
+      </button>
+
       <select v-model="selectedDisk" @change="switchDisk">
-        <option v-for="disk in disks" :key="disk" :value="disk">💽{{ disk }}</option>
+        <option v-for="disk in disks" :key="disk" :value="disk">
+          💽 {{ disk }}
+        </option>
       </select>
 
       <span class="path" :title="current.path">
@@ -20,9 +27,13 @@
 
     <!-- 文件列表 -->
     <ul class="file-list">
-      <li v-for="item in current.files" :key="item.name"
-        :class="['file-item', item.type, { active: item.name === selected }]" @click="selected = item.name"
-        @dblclick="open(item)">
+      <li
+        v-for="item in current.files"
+        :key="item.name"
+        :class="['file-item', item.type, { active: item.name === selected }]"
+        @click="selected = item.name"
+        @dblclick="open(item)"
+      >
         <span class="icon">
           {{ item.type === 'DIR' ? '📁' : '📄' }}
         </span>
@@ -35,54 +46,54 @@
     </ul>
   </div>
 
+  <!-- JSON / 字幕内容 -->
   <div v-if="subtitle" class="subtitle-box">
-    <div class="subtitle-title">🎬 字幕内容</div>
-    <pre class="subtitle-content">
-      {{ subtitle }}
-  </pre>
+    <div class="subtitle-title">🎬 文件内容</div>
+    <pre class="subtitle-content">{{ subtitle }}</pre>
+  </div>
+
+  <!-- 目录结构打印 -->
+  <div v-if="treeText" class="subtitle-box">
+    <div class="subtitle-title">📂 目录结构</div>
+    <pre class="subtitle-content">{{ treeText }}</pre>
   </div>
 </template>
 
-
-
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getChildFiles, getDefaultFiles, getParentFiles, getContentTxt,getDisk } from '@/api/fileApi.js'
+import {
+  getChildFiles,
+  getDefaultFiles,
+  getParentFiles,
+  getContentTxt,
+  getDisk
+} from '@/api/fileApi.js'
 
-const current = ref({
-  path: '',
-  files: []
-})
-
+const current = ref({ path: '', files: [] })
 const selected = ref(null)
-const subtitle = ref('')     // 字幕内容
-const loading = ref(false)   // 加载状态
+
+const subtitle = ref('')
+const treeText = ref('')
+
 const disks = ref([])
 const selectedDisk = ref('')
 
 /**
- * 初始化：默认目录
+ * 初始化
  */
 onMounted(async () => {
-  const res = await getDefaultFiles()
-  current.value = res.data
-
-  disks.value =(await getDisk()).data
-
+  current.value = (await getDefaultFiles()).data
+  disks.value = (await getDisk()).data
 })
 
 /**
- * 进入下一级目录（双击目录）
+ * 进入目录
  */
 const open = async (item) => {
-  if (item.type === 'FILE') {
-    console.log('打开文件', item.name)
-    return
-  }
+  if (item.type === 'FILE') return
 
   const nextPath = current.value.path + '\\' + item.name
-  const res = await getChildFiles(nextPath)
-  current.value = res.data
+  current.value = (await getChildFiles(nextPath)).data
   selected.value = null
 }
 
@@ -90,45 +101,71 @@ const open = async (item) => {
  * 返回上一级
  */
 const goParent = async () => {
-  const res = await getParentFiles(current.value.path)
-
-  current.value = res.data
+  current.value = (await getParentFiles(current.value.path)).data
   selected.value = null
 }
 
-const parseJson = async () => {
-  // 找到当前选中的文件对象
-  const file = current.value.files.find(
-    f => f.name === selected.value && f.type === 'file'
-  )
-
-  if (!file) {
-    alert('请先选择一个文件')
-    return
-  }
-
-  try {
-    loading.value = true
-
-    const res = await getContentTxt(
-      current.value.path, // 目录路径
-      file.name            // 文件名
-    )
-
-    subtitle.value = res.data
-  } finally {
-    loading.value = false
-  }
-}
-
+/**
+ * 切换磁盘
+ */
 const switchDisk = async () => {
   if (!selectedDisk.value) return
-  const res = await getChildFiles(selectedDisk.value)
-  current.value = res.data
+  current.value = (await getChildFiles(selectedDisk.value)).data
   selected.value = null
 }
-</script>
 
+/**
+ * 解析文件
+ */
+const parseJson = async () => {
+  const file = current.value.files.find(
+    f => f.name === selected.value && f.type === 'FILE'
+  )
+  if (!file) return alert('请选择文件')
+
+  subtitle.value = (await getContentTxt(
+    current.value.path,
+    file.name
+  )).data
+}
+
+/**
+ * ========= 逐层打印文件结构 =========
+ */
+const MAX_DEPTH = 5
+
+const printStructure = async () => {
+  treeText.value = ''
+  await printLevel(current.value.path, '', 0)
+}
+
+const printLevel = async (path, prefix, depth) => {
+  if (depth > MAX_DEPTH) return
+
+  const res = await getChildFiles(path)
+
+  
+  const files = res.data.files.filter(f => !f.name.startsWith('.' ) && f.name !== 'node_modules')
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i]
+    const isLast = i === files.length - 1
+
+    treeText.value +=
+      prefix +
+      (isLast ? '└── ' : '├── ') +
+      (file.type === 'DIR' ? '📁 ' : '📄 ') +
+      file.name +
+      '\n'
+
+    if (file.type === 'DIR') {
+      const nextPrefix = prefix + (isLast ? '    ' : '│   ')
+      const nextPath = path + '\\' + file.name
+      await printLevel(nextPath, nextPrefix, depth + 1)
+    }
+  }
+}
+</script>
 
 <style scoped>
 .file-browser {
@@ -140,31 +177,35 @@ const switchDisk = async () => {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-/* 工具栏 */
 .toolbar {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
 }
 
-.back-btn {
+.back-btn,
+.print-btn,
+.parse-btn {
   border: none;
-  background: #f0f2f5;
   border-radius: 6px;
   padding: 6px 10px;
   cursor: pointer;
-  transition: all 0.2s;
 }
 
-.back-btn:hover:not(:disabled) {
-  background: #e6f4ff;
+.back-btn {
+  background: #f0f2f5;
 }
 
-.back-btn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+.print-btn {
+  background: #52c41a;
+  color: #fff;
+}
+
+.parse-btn {
+  background: #1677ff;
+  color: #fff;
 }
 
 .path {
@@ -176,7 +217,6 @@ const switchDisk = async () => {
   text-overflow: ellipsis;
 }
 
-/* 文件列表 */
 .file-list {
   list-style: none;
   padding: 6px 0;
@@ -185,15 +225,12 @@ const switchDisk = async () => {
   overflow-y: auto;
 }
 
-/* 文件项 */
 .file-item {
   display: flex;
-  align-items: center;
   gap: 10px;
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
 }
 
 .file-item:hover {
@@ -205,62 +242,15 @@ const switchDisk = async () => {
   color: #1677ff;
 }
 
-/* 图标 */
 .icon {
   width: 20px;
   text-align: center;
-  font-size: 16px;
 }
 
-/* 名称 */
-.name {
-  flex: 1;
-  font-size: 14px;
-}
-
-/* 目录/文件区分 */
-.file-item.dir .name {
-  font-weight: 600;
-}
-
-.file-item.file .name {
-  color: #444;
-}
-
-/* 空目录 */
 .empty {
   padding: 20px;
   text-align: center;
   color: #999;
-  font-size: 13px;
-}
-
-/* 滚动条美化 */
-.file-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.file-list::-webkit-scrollbar-thumb {
-  background: #d0d7de;
-  border-radius: 3px;
-}
-
-.file-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.parse-btn {
-  border: none;
-  background: #1677ff;
-  color: #fff;
-  border-radius: 6px;
-  padding: 6px 12px;
-  cursor: pointer;
-}
-
-.parse-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .subtitle-box {
@@ -276,12 +266,12 @@ const switchDisk = async () => {
 }
 
 .subtitle-content {
-  max-height: 200px;
+  max-height: 600px;
   overflow-y: auto;
   background: #f6f8fa;
   padding: 10px;
   border-radius: 6px;
   font-size: 12px;
-  white-space: pre-wrap;
+  white-space: pre;
 }
 </style>
