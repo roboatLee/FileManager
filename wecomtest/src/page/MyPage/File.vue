@@ -21,7 +21,7 @@
         :class="['file-item', item.type, { active: item.name === selected }]" @click="selected = item.name"
         @dblclick="open(item)">
         <span class="icon">
-          {{ item.type === 'dir' ? '📁' : '📄' }}
+          {{ item.type === 'DIR' ? '📁' : '📄' }}
         </span>
         <span class="name">{{ item.name }}</span>
       </li>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="div">
     <RouterLink to="/file">file</RouterLink>
     <RouterLink to="/vditor">vditor</RouterLink>
     <RouterLink to="study">study</RouterLink>
@@ -17,4 +17,11 @@ import { ref } from 'vue'
 
 
 
-<style scoped></style>
+<style scoped>
+.div{
+  display: flex;
+  gap: 16px;
+
+}
+
+</style>
