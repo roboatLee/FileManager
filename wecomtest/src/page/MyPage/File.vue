@@ -9,6 +9,9 @@
       <button class="parse-btn" @click="parseJson" :disabled="!selected">
         解析 JSON
       </button>
+      <select v-model="selectedDisk" @change="switchDisk">
+        <option v-for="disk in disks" :key="disk" :value="disk">💽{{ disk }}</option>
+      </select>
 
       <span class="path" :title="current.path">
         {{ current.path || '根目录' }}
@@ -44,7 +47,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getChildFiles, getDefaultFiles, getParentFiles, getContentTxt } from '@/api/fileApi.js'
+import { getChildFiles, getDefaultFiles, getParentFiles, getContentTxt,getDisk } from '@/api/fileApi.js'
 
 const current = ref({
   path: '',
@@ -54,6 +57,8 @@ const current = ref({
 const selected = ref(null)
 const subtitle = ref('')     // 字幕内容
 const loading = ref(false)   // 加载状态
+const disks = ref([])
+const selectedDisk = ref('')
 
 /**
  * 初始化：默认目录
@@ -61,20 +66,22 @@ const loading = ref(false)   // 加载状态
 onMounted(async () => {
   const res = await getDefaultFiles()
   current.value = res.data
+
+  disks.value =(await getDisk()).data
+
 })
 
 /**
  * 进入下一级目录（双击目录）
  */
 const open = async (item) => {
-  if (item.type === 'file') {
+  if (item.type === 'FILE') {
     console.log('打开文件', item.name)
     return
   }
 
   const nextPath = current.value.path + '\\' + item.name
   const res = await getChildFiles(nextPath)
-
   current.value = res.data
   selected.value = null
 }
@@ -114,6 +121,12 @@ const parseJson = async () => {
   }
 }
 
+const switchDisk = async () => {
+  if (!selectedDisk.value) return
+  const res = await getChildFiles(selectedDisk.value)
+  current.value = res.data
+  selected.value = null
+}
 </script>
 
 
@@ -235,6 +248,7 @@ const parseJson = async () => {
 .file-list::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .parse-btn {
   border: none;
   background: #1677ff;

@@ -15,6 +15,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author KitenLee
@@ -33,9 +34,6 @@ public class FileServiceImpl implements FileService {
      * */
     @Override
     public  String getFileContent(File f){
-        /**
-         * 初始化FileReader对象
-         * */
         Reader reader = null;
         try{
             reader = new FileReader(f);
@@ -56,9 +54,8 @@ public class FileServiceImpl implements FileService {
             }
             FileContent.append((char) n);
         }
-        /**
-         * 关闭reader
-         * */
+
+        //关闭reader
         try{
             reader.close();
         }catch (Exception e){
@@ -76,16 +73,20 @@ public class FileServiceImpl implements FileService {
         return getFileContent(f);
     }
 
+    /**
+     * 获得当前文件所在目录的全部文件和文件夹
+     * @param f：当前文件
+     * @return List<File>: 文件列表
+     * */
     @Override
     public List<File> getAllFileAndDir(File f){
         File parent =  f.getParentFile();
         return Arrays.asList(parent.listFiles());
     }
+
+
     /**
-     *
-     *
      * 将当前的文件的文件所在目录和所有文件以json格式展示
-     *
      * @return
      * {
      *     path: path
@@ -108,11 +109,33 @@ public class FileServiceImpl implements FileService {
         return getFiles2Json(files);
     }
 
+    /**
+     * 以VO层 返回 获得当前文件所在目录的全部文件和文件夹
+     * @param f：当前文件
+     * @return OnePathFilesVo: VO层
+     */
+    @Override
+    public OnePathFilesVo getAllFileAndDirAsDao(File f){
+        List<File> files =  getAllFileAndDir(f);
+        OnePathFilesVo onePathFilesVo =  makeFiles2DDao(f,files);
+        onePathFilesVo.setPath(f.getParent());
+        return  onePathFilesVo;
+    }
+    /**
+     * 以VO层 返回 获得当前文件所在目录的全部文件和文件夹
+     * @param f：当前文件
+     * @return OnePathFilesVo: VO层
+     */
+    @Override
+    public OnePathFilesVo getAllFileAndDirInDirAsDao(File f){
+        List<File> files = Arrays.asList(f.listFiles());
+        OnePathFilesVo onePathFilesVo =  makeFiles2DDao(f,files);
+        onePathFilesVo.setPath(f.getPath());
+        return  onePathFilesVo;
+    }
 
     @Override
-    public OnePathFilesVo getAllFileAndDirInJson(File f){
-        List<File> files =  getAllFileAndDir(f);
-
+    public OnePathFilesVo makeFiles2DDao(File f, List<File> files ){
         /**
          * 将Files变成OnePathFilesVo
          * */
@@ -126,19 +149,22 @@ public class FileServiceImpl implements FileService {
             onePathFileVo.setType(isFile(file));
             onePathFileVos.add(onePathFileVo);
         }
-        String path = f.getParent();
         onePathFilesVo.setFiles(onePathFileVos);
-        onePathFilesVo.setPath(path);
         return onePathFilesVo;
     }
 
     @Override
-    public JsonNode getDir(String  path){
+    public JsonNode getDirAsJson(String  path){
         File file = new File(path);
         List<File> files = Arrays.asList(file.listFiles());
         return getFiles2Json(files);
     }
 
+    @Override
+    public OnePathFilesVo getDir(String  path){
+        File file = new File(path);
+        return  getAllFileAndDirInDirAsDao(file);
+    }
     @Override
     public JsonNode getFiles2Json(List<File> files){
         ObjectMapper mapper = new ObjectMapper();
@@ -157,25 +183,37 @@ public class FileServiceImpl implements FileService {
         root.set("files",array);
         return  root;
     }
-
     @Override
     public JsonNode getDefaultFilesAsJson(){
         File file = new File("D:\\User\\document\\Json\\Probaility\\L01.1.json");
         return getAllFileAndDirInJsonAsJson(file);
     }
-
+    /**
+     *
+     * */
     @Override
     public OnePathFilesVo getDefaultFiles(){
         File file = new File("D:\\User\\document\\Json\\Probaility\\L01.1.json");
-        return getAllFileAndDirInJson(file);
+        return getAllFileAndDirAsDao(file);
+    }
+    /**
+     * 得到当前文件的所有文件
+     * */
+    @Override
+    public OnePathFilesVo getParentFiles(String path){
+        File file = new File(path);
+        return getAllFileAndDirAsDao(file);
     }
 
     @Override
-    public JsonNode getParentFiles(String path){
+    public JsonNode getParentFilesAsJson(String path){
         File file = new File(path);
         return getAllFileAndDirInJsonAsJson(file);
     }
 
+    /**
+     *
+     * */
     @Override
     public JsonNode getPathFiles(String path){
         File file = new File(path);
@@ -192,7 +230,14 @@ public class FileServiceImpl implements FileService {
             }
             else return null;
     }
+    @Override
+    public List<String> getDisks(){
+        File[] roots = File.listRoots();
+        return Arrays.stream(roots)
+                .map(File::getAbsolutePath)
+                .collect(Collectors.toList());
 
+    }
 
 
 }

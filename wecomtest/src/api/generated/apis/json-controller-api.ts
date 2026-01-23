@@ -34,6 +34,42 @@ export const JsonControllerApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
+        changeVolume: async (path: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'path' is not null or undefined
+            assertParamExists('changeVolume', 'path', path)
+            const localVarPath = `/api/file/ChangeVolume`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (path !== undefined) {
+                localVarQueryParameter['path'] = path;
+            }
+
+            localVarHeaderParameter['Accept'] = '*/*';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} path 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
         getChild: async (path: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'path' is not null or undefined
             assertParamExists('getChild', 'path', path)
@@ -71,6 +107,35 @@ export const JsonControllerApiAxiosParamCreator = function (configuration?: Conf
          */
         getDefaultFiles: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/file/getdefaultfiles`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Accept'] = '*/*';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDisks: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/file/getDisk`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -187,7 +252,19 @@ export const JsonControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getChild(path: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async changeVolume(path: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OnePathFilesVo>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.changeVolume(path, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['JsonControllerApi.changeVolume']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} path 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getChild(path: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OnePathFilesVo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getChild(path, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['JsonControllerApi.getChild']?.[localVarOperationServerIndex]?.url;
@@ -202,6 +279,17 @@ export const JsonControllerApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getDefaultFiles(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['JsonControllerApi.getDefaultFiles']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getDisks(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<string>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getDisks(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['JsonControllerApi.getDisks']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -223,7 +311,7 @@ export const JsonControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getParetn(path: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async getParetn(path: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OnePathFilesVo>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getParetn(path, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['JsonControllerApi.getParetn']?.[localVarOperationServerIndex]?.url;
@@ -244,7 +332,16 @@ export const JsonControllerApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getChild(path: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+        changeVolume(path: string, options?: RawAxiosRequestConfig): AxiosPromise<OnePathFilesVo> {
+            return localVarFp.changeVolume(path, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} path 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getChild(path: string, options?: RawAxiosRequestConfig): AxiosPromise<OnePathFilesVo> {
             return localVarFp.getChild(path, options).then((request) => request(axios, basePath));
         },
         /**
@@ -254,6 +351,14 @@ export const JsonControllerApiFactory = function (configuration?: Configuration,
          */
         getDefaultFiles(options?: RawAxiosRequestConfig): AxiosPromise<OnePathFilesVo> {
             return localVarFp.getDefaultFiles(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getDisks(options?: RawAxiosRequestConfig): AxiosPromise<Array<string>> {
+            return localVarFp.getDisks(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -271,7 +376,7 @@ export const JsonControllerApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getParetn(path: string, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+        getParetn(path: string, options?: RawAxiosRequestConfig): AxiosPromise<OnePathFilesVo> {
             return localVarFp.getParetn(path, options).then((request) => request(axios, basePath));
         },
     };
@@ -281,6 +386,16 @@ export const JsonControllerApiFactory = function (configuration?: Configuration,
  * JsonControllerApi - object-oriented interface
  */
 export class JsonControllerApi extends BaseAPI {
+    /**
+     * 
+     * @param {string} path 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public changeVolume(path: string, options?: RawAxiosRequestConfig) {
+        return JsonControllerApiFp(this.configuration).changeVolume(path, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {string} path 
@@ -298,6 +413,15 @@ export class JsonControllerApi extends BaseAPI {
      */
     public getDefaultFiles(options?: RawAxiosRequestConfig) {
         return JsonControllerApiFp(this.configuration).getDefaultFiles(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getDisks(options?: RawAxiosRequestConfig) {
+        return JsonControllerApiFp(this.configuration).getDisks(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

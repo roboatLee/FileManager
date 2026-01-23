@@ -13,22 +13,18 @@ import java.util.List;
  * * @date 2026/1/4
  */
 public interface FileService {
-
     /**
      * 打印当前文件
      * */
     void printNowFile(File file);
-
     /**
      * 获得文件内容
      * */
     String getFileContent(File f);
-
     /**
      * 根据路径和名字获得文件内容
      * */
     String getFileContent(String path,String name);
-
     /**
      * 获得当前文件的所有文件和目录
      * */
@@ -47,35 +43,34 @@ public interface FileService {
      *     ]
      * }
      * */
-    OnePathFilesVo getAllFileAndDirInJson(File f);
+    OnePathFilesVo getAllFileAndDirInDirAsDao(File f);
+    OnePathFilesVo getAllFileAndDirAsDao(File f);
     JsonNode getAllFileAndDirInJsonAsJson(File f);
-
+    OnePathFilesVo makeFiles2DDao(File f, List<File> files);
     JsonNode getFiles2Json(List<File> files);
-
-    JsonNode getDir(String  path);
-
+    OnePathFilesVo getDir(String  path);
+    JsonNode getParentFilesAsJson(String path);
+    JsonNode getDirAsJson(String  path);
     /**
      * 打开默认文件夹
      * */
     JsonNode getDefaultFilesAsJson();
-
     OnePathFilesVo getDefaultFiles();
-
     /**
      * 打开上一级文件
      * */
-    JsonNode getParentFiles(String path);
-
+    OnePathFilesVo getParentFiles(String path);
     /**
      * 打开path目录
      * */
     JsonNode getPathFiles(String path);
-
-
     /**
      * 判断是否为文件
      * */
     FileType isFile (File file);
-
+    /**
+     * 展示磁盘内容
+     * */
+    List<String> getDisks();
 
 }

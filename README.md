@@ -1,9 +1,9 @@
 # 技术栈：
 ## 基本技术栈
-java 8
-springboot 2.11.7
-vue 
-mybatisplus 配合springboot版本
+1. java 8
+2. springboot 2.11.7
+3. vue 
+4. mybatisplus 配合springboot版本
 
 ## 更细节的开发
 使用 openapi来进行 前后端接口对齐

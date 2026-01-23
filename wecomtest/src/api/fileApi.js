@@ -20,3 +20,7 @@ export function getParentFiles(path) {
 export function getContentTxt(path, name) {
   return api.getJsonFile2txt(path,name)
 }
+
+export function getDisk() {
+  return api.getDisks()
+}

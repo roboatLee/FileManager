@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author KitenLee
  * * @date 2026/1/4
@@ -30,16 +32,21 @@ public class JsonController {
     }
 
     @GetMapping("/getparent")
-    public  JsonNode getParetn(@RequestParam String path){
+    public  OnePathFilesVo getParetn(@RequestParam String path){
         return fileService.getParentFiles(path);
     }
 
     @GetMapping("/getchild")
-    public JsonNode getChild(@RequestParam String path){
+    public OnePathFilesVo getChild(@RequestParam String path){
         return fileService.getDir(path);
     }
 
     @GetMapping("/getcontenttxt")
     public String getJsonFile2txt(@RequestParam String path,@RequestParam String name){return  myJsonService.getJsonFile2txt(path,name);}
 
+    @GetMapping("/ChangeVolume")
+    public  OnePathFilesVo ChangeVolume(@RequestParam String path){return fileService.getDir(path);}
+
+    @GetMapping("/getDisk")
+    public List<String> getDisks(){return  fileService.getDisks();}
 }
