@@ -10,6 +10,7 @@ All URIs are relative to *http://localhost:8080*
 |[**getDisks**](#getdisks) | **GET** /api/file/getDisk | |
 |[**getJsonFile2txt**](#getjsonfile2txt) | **GET** /api/file/getcontenttxt | |
 |[**getParetn**](#getparetn) | **GET** /api/file/getparent | |
+|[**readFileContent**](#readfilecontent) | **GET** /api/file/readfile | |
 
 # **changeVolume**
 > OnePathFilesVo changeVolume()
@@ -282,6 +283,59 @@ const { status, data } = await apiInstance.getParetn(
 ### Return type
 
 **OnePathFilesVo**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **readFileContent**
+> string readFileContent()
+
+
+### Example
+
+```typescript
+import {
+    JsonControllerApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new JsonControllerApi(configuration);
+
+let path: string; // (default to undefined)
+let name: string; // (default to undefined)
+
+const { status, data } = await apiInstance.readFileContent(
+    path,
+    name
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **path** | [**string**] |  | defaults to undefined|
+| **name** | [**string**] |  | defaults to undefined|
+
+
+### Return type
+
+**string**
 
 ### Authorization
 

@@ -49,4 +49,7 @@ public class JsonController {
 
     @GetMapping("/getDisk")
     public List<String> getDisks(){return  fileService.getDisks();}
+
+    @GetMapping("/readfile")
+    public String readFileContent(@RequestParam String path,@RequestParam String name){return fileService.readFileContent(path,name);}
 }

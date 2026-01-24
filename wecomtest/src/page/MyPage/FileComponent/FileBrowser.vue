@@ -5,7 +5,9 @@
             <button @click="goParent" :disabled="!current.path" class="back-btn">⬅</button>
             <button @click="parseJson" :disabled="!selected" class="parse-btn">解析 JSON</button>
             <button @click="printStructure" :disabled="!current.path" class="print-btn">打印结构</button>
-
+            <button @click="openInWorkspace" :disabled="!selected">
+                📝 在 Workspace 打开
+            </button>
             <select v-model="selectedDisk" @change="switchDisk">
                 <option v-for="disk in disks" :key="disk" :value="disk">💽 {{ disk }}</option>
             </select>
@@ -30,6 +32,9 @@ import FileList from './FileList.vue'
 import ContentViewer from './ContentViewer.vue'
 import { getChildFiles, getDefaultFiles, getParentFiles, getContentTxt, getDisk } from '@/api/fileApi.js'
 import { isDir, joinPath, filterFiles } from '@/page/MyPage/FileComponent/fileUtils.js'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
 
 const current = ref({ path: '', files: [] })
 const selected = ref(null)
@@ -104,6 +109,22 @@ const printLevel = async (path, prefix, depth) => {
     }
     return lines
 }
+
+const openInWorkspace = () => {
+    const file = current.value.files.find(
+        f => f.name === selected.value && !isDir(f)
+    )
+    if (!file) return alert('请选择文件')
+
+    router.push({
+        name: 'workspace',
+        query: {
+            path: current.value.path,
+            name: file.name
+        }
+    })
+}
+
 </script>
 
 <style scoped>

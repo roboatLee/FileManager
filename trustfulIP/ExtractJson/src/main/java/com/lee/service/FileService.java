@@ -20,11 +20,11 @@ public interface FileService {
     /**
      * 获得文件内容
      * */
-    String getFileContent(File f);
+    String readFileContent(File f);
     /**
      * 根据路径和名字获得文件内容
      * */
-    String getFileContent(String path,String name);
+    String readFileContent(String path,String name);
     /**
      * 获得当前文件的所有文件和目录
      * */
@@ -72,5 +72,12 @@ public interface FileService {
      * 展示磁盘内容
      * */
     List<String> getDisks();
+
+    /**
+     * todo: 写文件
+     * */
+    void writeFileContent();
+
+
 
 }

@@ -95,7 +95,7 @@ public class MyJsonImpl implements MyJsonService {
 
     @Override
     public String getJsonFile2txt(String path,String name){
-        return getContentInAttribute2txt(extractArrayJson(fileService.getFileContent(path,name)),"content");
+        return getContentInAttribute2txt(extractArrayJson(fileService.readFileContent(path,name)),"content");
     }
 
 

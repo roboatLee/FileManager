@@ -24,3 +24,7 @@ export function getContentTxt(path, name) {
 export function getDisk() {
   return api.getDisks()
 }
+
+export function readFileContent(path,name){
+  return api.readFileContent(path,name)
+}

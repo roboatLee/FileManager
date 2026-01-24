@@ -237,6 +237,49 @@ export const JsonControllerApiAxiosParamCreator = function (configuration?: Conf
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {string} path 
+         * @param {string} name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        readFileContent: async (path: string, name: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'path' is not null or undefined
+            assertParamExists('readFileContent', 'path', path)
+            // verify required parameter 'name' is not null or undefined
+            assertParamExists('readFileContent', 'name', name)
+            const localVarPath = `/api/file/readfile`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (path !== undefined) {
+                localVarQueryParameter['path'] = path;
+            }
+
+            if (name !== undefined) {
+                localVarQueryParameter['name'] = name;
+            }
+
+            localVarHeaderParameter['Accept'] = '*/*';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -317,6 +360,19 @@ export const JsonControllerApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['JsonControllerApi.getParetn']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @param {string} path 
+         * @param {string} name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async readFileContent(path: string, name: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.readFileContent(path, name, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['JsonControllerApi.readFileContent']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -378,6 +434,16 @@ export const JsonControllerApiFactory = function (configuration?: Configuration,
          */
         getParetn(path: string, options?: RawAxiosRequestConfig): AxiosPromise<OnePathFilesVo> {
             return localVarFp.getParetn(path, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} path 
+         * @param {string} name 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        readFileContent(path: string, name: string, options?: RawAxiosRequestConfig): AxiosPromise<string> {
+            return localVarFp.readFileContent(path, name, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -443,6 +509,17 @@ export class JsonControllerApi extends BaseAPI {
      */
     public getParetn(path: string, options?: RawAxiosRequestConfig) {
         return JsonControllerApiFp(this.configuration).getParetn(path, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} path 
+     * @param {string} name 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public readFileContent(path: string, name: string, options?: RawAxiosRequestConfig) {
+        return JsonControllerApiFp(this.configuration).readFileContent(path, name, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

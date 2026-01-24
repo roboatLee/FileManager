@@ -33,7 +33,7 @@ public class FileServiceImpl implements FileService {
      * 获取FileContent
      * */
     @Override
-    public  String getFileContent(File f){
+    public  String readFileContent(File f){
         Reader reader = null;
         try{
             reader = new FileReader(f);
@@ -68,9 +68,9 @@ public class FileServiceImpl implements FileService {
      * 根据路径和名字，获取FileContent
      * */
     @Override
-    public String getFileContent(String path,String name){
+    public String readFileContent(String path,String name){
         File f = new File(path+"\\"+name);
-        return getFileContent(f);
+        return readFileContent(f);
     }
 
     /**
@@ -236,6 +236,13 @@ public class FileServiceImpl implements FileService {
         return Arrays.stream(roots)
                 .map(File::getAbsolutePath)
                 .collect(Collectors.toList());
+
+    }
+
+
+
+    @Override
+    public void writeFileContent() {
 
     }
 
