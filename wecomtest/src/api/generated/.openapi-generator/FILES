@@ -6,10 +6,12 @@ base.ts
 common.ts
 configuration.ts
 docs/JsonControllerApi.md
+docs/MarkDownFileDto.md
 docs/OnePathFileVo.md
 docs/OnePathFilesVo.md
 git_push.sh
 index.ts
 models/index.ts
+models/mark-down-file-dto.ts
 models/one-path-file-vo.ts
 models/one-path-files-vo.ts

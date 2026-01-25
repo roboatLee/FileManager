@@ -2,6 +2,7 @@ package com.lee.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.lee.dao.file.FileType;
+import com.lee.dao.file.MarkDownFile.MarkDownFileDto;
 import com.lee.dao.file.OnePathFilesVo;
 import org.springframework.stereotype.Service;
 
@@ -76,7 +77,7 @@ public interface FileService {
     /**
      * todo: 写文件
      * */
-    void writeFileContent();
+    void writeFileContent(MarkDownFileDto dto);
 
 
 

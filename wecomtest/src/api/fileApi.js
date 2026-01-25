@@ -1,6 +1,8 @@
 // import axios from 'axios'
 import { JsonControllerApi } from './generated'
+
 import { http } from './http'
+
 const api = new JsonControllerApi(undefined, undefined, http)
 
 
@@ -27,4 +29,8 @@ export function getDisk() {
 
 export function readFileContent(path,name){
   return api.readFileContent(path,name)
+}
+
+export function writeMarkDownFile(dto){
+  return api.saveMarkdown(dto)
 }

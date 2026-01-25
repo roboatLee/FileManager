@@ -1,14 +1,12 @@
 package com.lee.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.lee.dao.file.MarkDownFile.MarkDownFileDto;
 import com.lee.dao.file.OnePathFilesVo;
 import com.lee.service.FileService;
 import com.lee.service.MyJsonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -52,4 +50,9 @@ public class JsonController {
 
     @GetMapping("/readfile")
     public String readFileContent(@RequestParam String path,@RequestParam String name){return fileService.readFileContent(path,name);}
+
+    @PostMapping("/saveMarkdown")
+    public void saveMarkdown(@RequestBody MarkDownFileDto dto) {
+        fileService.writeFileContent(dto);
+    }
 }

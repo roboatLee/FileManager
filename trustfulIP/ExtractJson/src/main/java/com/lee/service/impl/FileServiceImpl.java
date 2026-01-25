@@ -5,13 +5,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lee.dao.file.FileType;
+import com.lee.dao.file.MarkDownFile.MarkDownFileDto;
 import com.lee.dao.file.OnePathFileVo;
 import com.lee.dao.file.OnePathFilesVo;
 import com.lee.service.FileService;
 import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -242,9 +249,27 @@ public class FileServiceImpl implements FileService {
 
 
     @Override
-    public void writeFileContent() {
+    public void writeFileContent(MarkDownFileDto dto) {
+        try {
+            Path dir = Paths.get(dto.getPath());
+            Path file = dir.resolve(dto.getFilename());
 
+            // 目录不存在就创建
+            if (!Files.exists(dir)) {
+                Files.createDirectories(dir);
+            }
+
+            // 写 markdown 内容
+            Files.write(
+                    file,
+                    dto.getContent().getBytes(StandardCharsets.UTF_8),
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING
+            );
+
+        } catch (IOException e) {
+            throw new RuntimeException("保存 Markdown 失败", e);
+        }
     }
-
 
 }

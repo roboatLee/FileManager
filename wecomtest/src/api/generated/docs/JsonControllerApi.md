@@ -11,6 +11,7 @@ All URIs are relative to *http://localhost:8080*
 |[**getJsonFile2txt**](#getjsonfile2txt) | **GET** /api/file/getcontenttxt | |
 |[**getParetn**](#getparetn) | **GET** /api/file/getparent | |
 |[**readFileContent**](#readfilecontent) | **GET** /api/file/readfile | |
+|[**saveMarkdown**](#savemarkdown) | **POST** /api/file/saveMarkdown | |
 
 # **changeVolume**
 > OnePathFilesVo changeVolume()
@@ -345,6 +346,57 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **saveMarkdown**
+> saveMarkdown(markDownFileDto)
+
+
+### Example
+
+```typescript
+import {
+    JsonControllerApi,
+    Configuration,
+    MarkDownFileDto
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new JsonControllerApi(configuration);
+
+let markDownFileDto: MarkDownFileDto; //
+
+const { status, data } = await apiInstance.saveMarkdown(
+    markDownFileDto
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **markDownFileDto** | **MarkDownFileDto**|  | |
+
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: Not defined
 
 
 ### HTTP response details

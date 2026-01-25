@@ -6,11 +6,7 @@
         📁 {{ dirPath }}
       </div>
 
-      <SidebarFileList
-        :path="dirPath"
-        :active="fileName"
-        @open="openFile"
-      />
+      <SidebarFileList :path="dirPath" :active="fileName" @open="openFile" />
     </aside>
 
     <!-- 右侧：编辑区 -->
@@ -19,6 +15,9 @@
         <span class="filename">
           {{ fileName || '未打开文件' }}
         </span>
+        <button class="save-btn" :disabled="!fileName" @click="saveFile">
+          💾 保存
+        </button>
       </div>
 
       <MarkdownEditor v-model="content" />
@@ -31,7 +30,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import SidebarFileList from './SidebarFileList.vue'
 import MarkdownEditor from '../vditor/vditor.vue'
-import { readFileContent } from '@/api/fileApi.js'
+import { readFileContent, writeMarkDownFile } from '@/api/fileApi.js'
 
 const route = useRoute()
 
@@ -53,6 +52,25 @@ const openFile = async (name) => {
   content.value = res.data
   fileName.value = name
 }
+
+const saveFile = async () => {
+  if (!fileName.value) return
+
+  try {
+
+    await writeMarkDownFile(
+      {
+        path: dirPath.value,
+        filename: fileName.value,
+        content: content.value
+      }
+    )
+    alert('保存成功')
+  } catch (e) {
+    alert('保存失败')
+  }
+}
+
 </script>
 
 <style scoped>
@@ -100,5 +118,12 @@ const openFile = async (name) => {
 .filename {
   font-size: 14px;
   font-weight: 500;
+}
+
+.save-btn {
+  margin-left: auto;
+  padding: 4px 10px;
+  font-size: 13px;
+  cursor: pointer;
 }
 </style>

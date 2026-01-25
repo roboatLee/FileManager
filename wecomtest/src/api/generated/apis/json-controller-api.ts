@@ -22,6 +22,8 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
+import type { MarkDownFileDto } from '../models';
+// @ts-ignore
 import type { OnePathFilesVo } from '../models';
 /**
  * JsonControllerApi - axios parameter creator
@@ -280,6 +282,39 @@ export const JsonControllerApiAxiosParamCreator = function (configuration?: Conf
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {MarkDownFileDto} markDownFileDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveMarkdown: async (markDownFileDto: MarkDownFileDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'markDownFileDto' is not null or undefined
+            assertParamExists('saveMarkdown', 'markDownFileDto', markDownFileDto)
+            const localVarPath = `/api/file/saveMarkdown`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(markDownFileDto, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -373,6 +408,18 @@ export const JsonControllerApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['JsonControllerApi.readFileContent']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * 
+         * @param {MarkDownFileDto} markDownFileDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async saveMarkdown(markDownFileDto: MarkDownFileDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.saveMarkdown(markDownFileDto, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['JsonControllerApi.saveMarkdown']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -444,6 +491,15 @@ export const JsonControllerApiFactory = function (configuration?: Configuration,
          */
         readFileContent(path: string, name: string, options?: RawAxiosRequestConfig): AxiosPromise<string> {
             return localVarFp.readFileContent(path, name, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {MarkDownFileDto} markDownFileDto 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        saveMarkdown(markDownFileDto: MarkDownFileDto, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.saveMarkdown(markDownFileDto, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -520,6 +576,16 @@ export class JsonControllerApi extends BaseAPI {
      */
     public readFileContent(path: string, name: string, options?: RawAxiosRequestConfig) {
         return JsonControllerApiFp(this.configuration).readFileContent(path, name, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {MarkDownFileDto} markDownFileDto 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public saveMarkdown(markDownFileDto: MarkDownFileDto, options?: RawAxiosRequestConfig) {
+        return JsonControllerApiFp(this.configuration).saveMarkdown(markDownFileDto, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
