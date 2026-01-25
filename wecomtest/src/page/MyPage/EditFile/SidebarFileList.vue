@@ -25,7 +25,8 @@ const files = ref([])
 const loadFiles = async () => {
   if (!props.path) return
   const res = await getChildFiles(props.path)
-  files.value = res.data.files.filter(f => f.type === 'file')
+  console.log(res)
+  files.value = res.data.files.filter(f => f.type === "FILE")
 }
 
 onMounted(loadFiles)

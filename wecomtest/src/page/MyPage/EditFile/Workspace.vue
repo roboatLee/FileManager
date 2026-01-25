@@ -41,7 +41,7 @@ const content = ref('')
 onMounted(async () => {
   dirPath.value = route.query.path
   fileName.value = route.query.name
-
+  
   if (dirPath.value && fileName.value) {
     await openFile(fileName.value)
   }
