@@ -9,11 +9,13 @@
     <packaging>pom</packaging>
     <version>1.0</version>
 
+
     <modules>
-        <module>ExtractJson</module>
+        <module>MyFile</module>
         <module>wecom</module>
         <module>web</module>
         <module>common</module>
+        <module>infrastructure</module>
     </modules>
 
     <parent>

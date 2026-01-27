@@ -129,7 +129,7 @@ const openInWorkspace = () => {
 
 <style scoped>
 .file-browser {
-    width: 520px;
+    width: 1000px;
     background: #fff;
     border-radius: 10px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);

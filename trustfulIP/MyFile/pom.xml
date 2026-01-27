@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.lee</groupId>
-    <artifactId>ExtractJson</artifactId>
+    <artifactId>MyFile</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
