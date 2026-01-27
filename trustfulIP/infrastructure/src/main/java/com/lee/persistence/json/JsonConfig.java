@@ -5,4 +5,5 @@ package com.lee.persistence.json;
  * * @date 2026/1/27
  */
 public class JsonConfig {
+
 }
