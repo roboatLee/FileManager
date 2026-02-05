@@ -7,11 +7,13 @@
     <span class="icon">{{ isDir(file) ? '📁' : '📄' }}</span>
     <span class="name">{{ file.name }}</span>
 
-    <!-- ⭐ 收藏按钮 -->
-    <FavoriteButton
-      :favorite="isFavorite(file)"
-      @toggle="$emit('toggle-favorite', file)"
-    />
+    <!-- ⭐ 收藏按钮（阻止冒泡） -->
+    <span @click.stop>
+      <FavoriteButton
+        :favorite="isFavorite(file)"
+        @toggle="$emit('toggle-favorite', file)"
+      />
+    </span>
   </li>
 </template>
 

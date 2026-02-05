@@ -1,12 +1,22 @@
 <template>
-    <ul class="file-list">
-        <FileItem v-for="file in files" :key="file.name" :file="file" :selected="selected" :is-favorite="isFavorite"
-            @select="$emit('select', $event)" @open="$emit('open', $event)"
-            @toggle-favorite="$emit('toggle-favorite', $event)" />
+  <ul class="file-list">
+    <FileItem
+      v-for="file in filteredFiles"
+      :key="file.name"
+      :file="file"
+      :selected="selected"
+      :is-favorite="isFavorite"
+      @select="$emit('select', $event)"
+      @open="$emit('open', $event)"
+      @toggle-favorite="$emit('toggle-favorite', $event)"
+    />
 
-        <li v-if="!filteredFiles.length" class="empty">📭 当前目录为空</li>
-    </ul>
+    <li v-if="!filteredFiles.length" class="empty">
+      📭 当前目录为空
+    </li>
+  </ul>
 </template>
+
 <script setup>
 import { computed } from 'vue'
 import FileItem from './FileItem.vue'
