@@ -14,6 +14,9 @@
 
 
 
-export * from './apis/favorite-controller-api';
-export * from './apis/json-controller-api';
+export interface FavoriteFolderDto {
+    'id'?: string;
+    'path'?: string;
+    'name'?: string;
+}
 

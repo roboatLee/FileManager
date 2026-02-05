@@ -16,8 +16,8 @@
         </div>
 
         <!-- 文件列表 -->
-        <FileList :files="current.files" :selected="selected" @select="selected = $event" @open="open" />
-
+        <FileList :files="current.files" :selected="selected" :is-favorite="isFavorite"
+            @toggle-favorite="toggleFavorite" />
         <!-- JSON / 字幕显示 -->
         <ContentViewer :content="subtitle" title="🎬 文件内容" />
 
@@ -34,6 +34,8 @@ import { getChildFiles, getDefaultFiles, getParentFiles, getContentTxt, getDisk 
 import { isDir, joinPath, filterFiles } from '@/page/MyPage/FileComponent/fileUtils.js'
 import { useRouter } from 'vue-router'
 const router = useRouter()
+
+const favorites = ref(new Set())
 
 
 const current = ref({ path: '', files: [] })
@@ -124,6 +126,22 @@ const openInWorkspace = () => {
         }
     })
 }
+
+const isFavorite = (file) => {
+  if (!file) return false
+  return favorites.value.has(file.name)
+}
+
+const toggleFavorite = (file) => {
+  if (!file) return
+  const key = file.name
+  if (favorites.value.has(key)) {
+    favorites.value.delete(key)
+  } else {
+    favorites.value.add(key)
+  }
+}
+
 
 </script>
 

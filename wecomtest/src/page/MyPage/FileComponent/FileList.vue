@@ -1,7 +1,9 @@
 <template>
     <ul class="file-list">
-        <FileItem v-for="file in filteredFiles" :key="file.name" :file="file" :selected="selected"
-            @select="$emit('select', $event)" @open="$emit('open', $event)" />
+        <FileItem v-for="file in files" :key="file.name" :file="file" :selected="selected" :is-favorite="isFavorite"
+            @select="$emit('select', $event)" @open="$emit('open', $event)"
+            @toggle-favorite="$emit('toggle-favorite', $event)" />
+
         <li v-if="!filteredFiles.length" class="empty">📭 当前目录为空</li>
     </ul>
 </template>
@@ -9,10 +11,18 @@
 import { computed } from 'vue'
 import FileItem from './FileItem.vue'
 import { filterFiles } from '@/page/MyPage/FileComponent/fileUtils.js'
-
 const props = defineProps({
-    files: Array,
-    selected: String
+  files: {
+    type: Array,
+    required: true
+  },
+  selected: String,
+
+  // 🔑 必须是 Function
+  isFavorite: {
+    type: Function,
+    required: true
+  }
 })
 
 const filteredFiles = computed(() => filterFiles(props.files))
