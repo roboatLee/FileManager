@@ -29,7 +29,6 @@ const props = defineProps({
   },
   selected: String,
 
-  // 🔑 父组件传进来的函数
   isFavorite: {
     type: Function,
     required: true

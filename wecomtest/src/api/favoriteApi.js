@@ -4,13 +4,13 @@ import { http } from './http'
 const api = new FavoriteControllerApi(undefined, undefined, http)
 
 export function getFavorites() {
-  return api.get('/api/favorite')
+  return api.list()
 }
 
 export function addFavorite(data) {
-  return api.post('/api/favorite', data)
+  return api.add(data)
 }
 
 export function deleteFavorite(id) {
-  return api.delete(`/api/favorite/${id}`)
+  return api._delete(id)
 }
