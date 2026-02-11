@@ -1,5 +1,6 @@
 package com.lee.controller;
 
+import com.lee.service.repository.ChatMessageRepositoryImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -12,8 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/chat")
 public class WeMessageController {
-    // 简单内存存储聊天记录
-    private final List<String> messages = new ArrayList<>();
+
 
     // 获取所有消息
     @GetMapping("/messages")

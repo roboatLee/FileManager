@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class JsonFileStore {
     private final ObjectMapper mapper = new ObjectMapper();
+    //文件存储地址
     private final Path filePath;
 
     public JsonFileStore(Path filePath) {

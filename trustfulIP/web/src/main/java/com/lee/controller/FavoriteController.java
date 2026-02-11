@@ -20,12 +20,12 @@ public class FavoriteController {
         this.service = service;
     }
 
-    @GetMapping
+    @GetMapping("/list")
     public List<FavoriteFolderDto> list() {
         return service.listFavorites();
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public void add(@RequestBody FavoriteFolderDto dto) {
         service.addFavorite(dto);
     }

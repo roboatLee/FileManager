@@ -12,6 +12,11 @@
     <artifactId>letChat</artifactId>
     <dependencies>
         <dependency>
+            <groupId>com.lee</groupId>
+            <artifactId>infrastructure</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
         </dependency>
