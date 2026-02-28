@@ -2,6 +2,9 @@ package com.lee.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lee.dao.ChatMessage;
+import com.lee.persistence.json.JsonFileStore;
+import com.lee.service.ChatMessageRepository;
+import com.lee.service.repository.ChatMessageRepositoryImpl;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -25,6 +28,9 @@ public class ChatHandler extends TextWebSocketHandler  {
     private static final ObjectMapper mapper
             = new ObjectMapper();
 
+    private final ChatMessageRepository repository =
+            new ChatMessageRepositoryImpl();
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
 
@@ -41,6 +47,7 @@ public class ChatHandler extends TextWebSocketHandler  {
         sessions.put(userName, session);
 
         System.out.println("当前在线人数: " + sessions.size());
+        sendHistory(session);
     }
 
     @Override
@@ -61,6 +68,7 @@ public class ChatHandler extends TextWebSocketHandler  {
         chat.setTime(System.currentTimeMillis());
         String json = mapper.writeValueAsString(chat);
 
+        repository.addMessage(chat);
         for (WebSocketSession s : sessions.values()) {
             s.sendMessage(new TextMessage(json));
         }
@@ -75,6 +83,23 @@ public class ChatHandler extends TextWebSocketHandler  {
         sessions.remove(userName);
         System.out.println("用户离开: " + userName);
         System.out.println("当前在线人数: " + sessions.size());
+
+    }
+
+    private void sendHistory(WebSocketSession session) {
+        try {
+            List<ChatMessage> list =
+                    repository.getMessages();
+            for(ChatMessage m : list){
+                String json =
+                        mapper.writeValueAsString(m);
+                session.sendMessage(
+                        new TextMessage(json)
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

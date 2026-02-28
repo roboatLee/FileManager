@@ -29,8 +29,8 @@ public abstract class JsonRepository<T,ID> {
 
     public void save(T entity) {
         List<T> list = findAll();
-        ID id = getId(entity);
-        list.removeIf(e -> Objects.equals(getId(e), id));
+//        ID id = getId(entity);
+//        list.removeIf(e -> Objects.equals(getId(e), id));
         list.add(entity);
         store.writeList(list);
     }

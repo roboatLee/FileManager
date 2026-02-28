@@ -21,8 +21,6 @@ public class ChatMessageRepositoryImpl
         implements ChatMessageRepository
 {
 
-    private final AtomicLong idGenerator = new AtomicLong(1);
-
     public  ChatMessageRepositoryImpl() {
         super(
                 new JsonFileStore(Paths.get("data", "chat-messages.json")),
@@ -32,13 +30,12 @@ public class ChatMessageRepositoryImpl
 
     @Override
     public void addMessage(ChatMessage entity) throws IOException {
-
         super.save(entity);
     }
 
     @Override
     public List<ChatMessage> getMessages() throws IOException {
-        return null;
+        return super.findAll();
     }
 
     @Override
