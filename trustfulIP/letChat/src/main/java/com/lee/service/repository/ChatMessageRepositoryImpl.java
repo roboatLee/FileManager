@@ -32,9 +32,7 @@ public class ChatMessageRepositoryImpl
 
     @Override
     public void addMessage(ChatMessage entity) throws IOException {
-        if (entity.getId() == null) {
-            entity.setId(idGenerator.getAndIncrement());
-        }
+
         super.save(entity);
     }
 

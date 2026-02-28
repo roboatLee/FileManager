@@ -1,28 +1,30 @@
 <template>
 
-<h2>聊天</h2>
+    <h2>聊天</h2>
 
-用户名：
+    用户名：
 
-<input v-model="userName">
+    <input v-model="userName">
 
-<br><br>
+    <br><br>
 
-<button @click="connect">
-连接
-</button>
+    <button @click="connect">
+        连接
+    </button>
 
-<br><br>
+    <br><br>
 
-<div v-for="m in messages">
-{{ m }}
-</div>
+    <div v-for="(m, index) in messages" :key="index">
+        {{ m.sender }} : {{ m.content }}
+    </div>
 
-<input v-model="text">
+    <br>
 
-<button @click="send">
-发送
-</button>
+    <input v-model="text">
+
+    <button @click="send">
+        发送
+    </button>
 
 </template>
 
@@ -38,22 +40,35 @@ const text = ref("")
 const messages = ref([])
 
 
-function connect(){
+function connect() {
 
-  ws = new WebSocket(
-    "ws://10un4gz933676.vicp.fun:80/chat?user=" + userName.value
-  )
+    ws = new WebSocket(
+        `ws://10un4gz933676.vicp.fun:80/chat?user=${userName.value}`
+    )
 
-  ws.onmessage = e=>{
-    messages.value.push(e.data)
-  }
+    ws.onopen = () => {
+
+        console.log("连接成功")
+
+    }
+
+    ws.onmessage = (e) => {
+
+        const msg = JSON.parse(e.data)
+        messages.value.push(msg)
+
+    }
 
 }
 
 
-function send(){
+function send() {
 
-  ws.send(text.value)
+    if (!ws) return
+
+    ws.send(text.value)
+
+    text.value = ""
 
 }
 

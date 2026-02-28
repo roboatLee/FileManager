@@ -13,10 +13,9 @@ import java.time.LocalDateTime;
  */
 @Data
 public class ChatMessage {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String sender;
     private String content;
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private long time;
+    private String type;
+
 }
