@@ -18,6 +18,11 @@ const router = createRouter({
       name: "workspace",
       component: () => import("@/page/MyPage/EditFile/Workspace.vue"),
     },
+    {
+      path: "/chat",
+      name: "chat",
+      component: () => import("@/page/MyPage/Chat/Chat.vue"),
+    },
   ],
 });
 

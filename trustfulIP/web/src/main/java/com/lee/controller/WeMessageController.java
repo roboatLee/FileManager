@@ -18,13 +18,13 @@ public class WeMessageController {
     // 获取所有消息
     @GetMapping("/messages")
     public List<String> getMessages() {
-        return messages;
+        return null;
     }
 
     // 发送消息
     @PostMapping("/send")
     public void sendMessage(@RequestParam String msg) {
-        messages.add(msg);
+
     }
 
 }
