@@ -1,11 +1,13 @@
 [ {
   "sender" : "LiChengXin",
-  "content" : "怎么样？是不是感觉有点水平",
-  "time" : 1772260081593,
-  "type" : "chat"
+  "content" : "你好",
+  "time" : 1772360091008
 }, {
   "sender" : "LiChengXin",
-  "content" : "这样我们的文字聊天都可以保存在本地咯",
-  "time" : 1772260261532,
-  "type" : "chat"
+  "content" : "我们的聊天记录就保存到这里了",
+  "time" : 1772360111665
+}, {
+  "sender" : "LiChengXin",
+  "content" : "这是手机测试结果",
+  "time" : 1772360749244
 } ]

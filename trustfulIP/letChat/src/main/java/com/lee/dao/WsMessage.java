@@ -7,10 +7,10 @@ import lombok.Data;
  * * @date 2026/2/28
  */
 @Data
-public class WeMessage {
+public class WsMessage<T> {
     private String type;
 
-    private Object data;
+    private T data;
 
     private Long time;
 }

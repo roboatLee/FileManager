@@ -1,400 +1,549 @@
 <template>
+  <div class="app">
 
-    <h2>聊天系统</h2>
-
+    <!-- 顶部栏 -->
     <div class="top-bar">
+      <div class="title">聊天系统</div>
 
-        <div class="title">
-            💬 WebSocket聊天
-        </div>
-
-        <div class="connect-area">
-
-            <input v-model="userName" placeholder="输入用户名" class="name-input" />
-
-            <button @click="connect" :disabled="connected" class="connect-btn">
-                {{ connected ? "已连接" : "连接" }}
-            </button>
-
-        </div>
-
+      <div class="connect-area">
+        <input
+          v-model="userName"
+          placeholder="输入用户名"
+          class="name-input"
+        />
+        <button
+          @click="connect"
+          :disabled="connected"
+          class="connect-btn"
+        >
+          {{ connected ? "已连接" : "连接" }}
+        </button>
+      </div>
     </div>
 
+    <!-- 主体区域 -->
+    <div class="main-area">
 
-    <div class="chat-box" ref="chatBox">
+      <!-- 左侧用户列表 -->
+      <div class="user-panel">
+        <div class="user-title">在线用户</div>
 
-        <div v-for="(m, index) in messages" :key="index" :class="[
-            'msg-row',
-            m.sender === userName ? 'me' : 'other'
-        ]">
+        <div class="user-list">
+          <div
+            v-for="u in users"
+            :key="u"
+            class="user-item"
+            :class="{ self: u === userName }"
+          >
+            <span class="dot"></span>
+            {{ u }}
+          </div>
+        </div>
+      </div>
 
-            <div class="bubble">
+      <!-- 右侧聊天区 -->
+      <div class="chat-area">
 
-                <div class="name">
+        <!-- 消息区 -->
+        <div class="chat-box" ref="chatBox">
 
-                    {{ m.sender }}
+          <div
+            v-for="(m, index) in messages"
+            :key="index"
+            :class="[
+              m.type === 'system'
+                ? 'system-msg'
+                : ['msg-row', m.sender === userName ? 'me' : 'other']
+            ]"
+          >
 
-                </div>
-
-                <div class="text">
-
-                    {{ m.content }}
-
-                </div>
-
+            <!-- 系统消息 -->
+            <div v-if="m.type === 'system'" class="system-text">
+              {{ m.content }}
             </div>
 
+            <!-- 聊天气泡 -->
+            <div v-else class="bubble">
+              <div class="name">
+                {{ m.sender }}
+              </div>
+              <div class="text">
+                {{ m.content }}
+              </div>
+            </div>
+
+          </div>
+
         </div>
 
-    </div>
-
-
-    <div class="input-bar">
-
-        <input v-model="text" @keyup.enter="send" placeholder="输入消息..." />
-
-        <button @click="send" :disabled="!connected">
-
+        <!-- 输入框固定底部 -->
+        <div class="input-bar">
+          <input
+            v-model="text"
+            @keyup.enter="send"
+            placeholder="输入消息..."
+          />
+          <button
+            @click="send"
+            :disabled="!connected"
+          >
             发送
+          </button>
+        </div>
 
-        </button>
+      </div>
 
     </div>
 
+  </div>
 </template>
 
-
-
 <script setup>
-
-import { ref, nextTick } from 'vue'
+import { ref, nextTick } from "vue"
 
 let ws = null
 
 const userName = ref("")
-
 const text = ref("")
-
 const messages = ref([])
-
 const connected = ref(false)
-
 const chatBox = ref(null)
-
-
+const users = ref([])
 
 function connect() {
+  if (connected.value) return
+  if (!userName.value.trim()) {
+    alert("请输入用户名")
+    return
+  }
 
-    if (connected.value) return
+  ws = new WebSocket(
+    `ws://10un4gz933676.vicp.fun:80/chat?user=${userName.value}`
+  )
 
-    if (!userName.value) {
+  ws.onopen = () => {
+    connected.value = true
+  }
 
-        alert("请输入用户名")
+  ws.onmessage = async (e) => {
+    const msg = JSON.parse(e.data)
 
-        return
+    switch (msg.type) {
+      case "chat":
+        messages.value.push(msg.data)
+        break
 
+      case "history":
+        messages.value.push(...msg.data)
+        break
+
+      case "join":
+        messages.value.push({
+          type: "system",
+          content: msg.data.user + " 加入了聊天室"
+        })
+        break
+
+      case "leave":
+        messages.value.push({
+          type: "system",
+          content: msg.data.user + " 离开了聊天室"
+        })
+        break
+
+      case "users":
+        users.value = msg.data
+        break
     }
 
+    await nextTick()
+    scrollToBottom()
+  }
 
-    ws = new WebSocket(
-
-        `ws://10un4gz933676.vicp.fun:80/chat?user=${userName.value}`
-
-    )
-
-
-    ws.onopen = () => {
-
-        connected.value = true
-
-        console.log("连接成功")
-
-    }
-
-
-    ws.onmessage = async (e) => {
-
-        const msg = JSON.parse(e.data)
-
-        messages.value.push(msg)
-
-
-        await nextTick()
-
-        scrollToBottom()
-
-    }
-
-
-    ws.onclose = () => {
-
-        connected.value = false
-
-        console.log("连接关闭")
-
-    }
-
+  ws.onclose = () => {
+    connected.value = false
+  }
 }
-
-
 
 function send() {
+  if (!connected.value) return
+  if (!text.value.trim()) return
 
-    if (!connected.value) return
+  ws.send(JSON.stringify({
+    type: "chat",
+    data: { content: text.value }
+  }))
 
-    if (!text.value.trim()) return
-
-
-    ws.send(text.value)
-
-    text.value = ""
-
+  text.value = ""
 }
-
-
 
 function scrollToBottom() {
+  if (!chatBox.value) return
 
-    if (!chatBox.value) return
-
-    chatBox.value.scrollTop =
-
-        chatBox.value.scrollHeight
-
+  chatBox.value.scrollTo({
+    top: chatBox.value.scrollHeight,
+    behavior: "smooth"
+  })
 }
 
+function fixMobileHeight() {
+  document.documentElement.style.setProperty(
+    "--vh",
+    window.innerHeight * 0.01 + "px"
+  )
+}
+
+fixMobileHeight()
+window.addEventListener("resize", fixMobileHeight)
 </script>
 
-
-
 <style>
-body {
-
-    font-family: Arial;
-
+html, body, #app {
+  height: 100%;
+  margin: 0;
 }
 
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial;
+  background: #f0f2f5;
+}
 
-/* 顶部 */
-
+/* 顶部栏 */
 .top-bar {
-
-    height: 60px;
-
-    border-bottom: 1px solid #ddd;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    padding: 0 20px;
-
-    background: white;
+  height: 60px;
+  flex-shrink: 0;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background: white;
 }
 
 .title {
-
-    font-size: 20px;
-
-    font-weight: bold;
-
-    color: #333;
-
+  font-size: 20px;
+  font-weight: bold;
 }
+
 .name-input {
-
-    height: 36px;
-
-    padding: 0 12px;
-
-    border-radius: 18px;
-
-    border: 1px solid #ddd;
-
-    outline: none;
-
-    font-size: 14px;
-
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 18px;
+  border: 1px solid #ddd;
 }
-.name-input:focus {
 
-    border-color: #07c160;
-
-}
 .connect-btn {
-
-    height: 36px;
-
-    padding: 0 18px;
-
-    border-radius: 18px;
-
-    border: none;
-
-    background: #07c160;
-
-    color: white;
-
-    font-size: 14px;
-
-    cursor: pointer;
-
+  height: 36px;
+  padding: 0 18px;
+  border-radius: 18px;
+  border: none;
+  background: #07c160;
+  color: white;
+  cursor: pointer;
 }
-.connect-btn:hover {
 
-    background: #06ad56;
-
-}
 .connect-btn:disabled {
-
-    background: #ccc;
-
-    cursor: not-allowed;
-
+  background: #ccc;
 }
 
+/* 主体区域 */
+.main-area {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  padding: 10px;
+}
+
+/* 左侧用户 */
+.user-panel {
+  width: 180px;
+  flex-shrink: 0;
+  border: 1px solid #ccc;
+  background: #fafafa;
+  border-radius: 6px;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-title {
+  padding: 10px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  background: #f0f0f0;
+}
+
+.user-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 5px;
+}
+
+.user-item {
+  padding: 8px;
+  margin: 4px 0;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+}
+
+.user-item.self {
+  background: #d9f7be;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #52c41a;
+  border-radius: 50%;
+  margin-right: 6px;
+}
 
 /* 聊天区域 */
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 
 .chat-box {
-
-    height: 450px;
-
-    border: 1px solid #ccc;
-
-    overflow-y: auto;
-
-    padding: 10px;
-
-    background: #f5f5f5;
-
-    border-radius: 6px;
-
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
-
-
-/* 每行消息 */
-
+/* 消息 */
 .msg-row {
-
-    display: flex;
-
-    margin: 10px 0;
-
+  display: flex;
+  margin: 10px 0;
 }
-
-
-
-/* 自己 */
 
 .msg-row.me {
-
-    justify-content: flex-end;
-
+  justify-content: flex-end;
 }
-
-
-
-/* 别人 */
-
-.msg-row.other {
-
-    justify-content: flex-start;
-
-}
-
-
-
-/* 气泡 */
 
 .bubble {
-
-    max-width: 60%;
-
-    padding: 10px 14px;
-
-    border-radius: 12px;
-
-    background: white;
-
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-
+  max-width: 60%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
-
-
-
-/* 自己气泡 */
 
 .msg-row.me .bubble {
-
-    background: #95ec69;
-
+  background: #95ec69;
 }
-
-
-
-/* 名字 */
 
 .name {
-
-    font-size: 12px;
-
-    color: #666;
-
-    margin-bottom: 3px;
-
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 3px;
 }
-
-
-
-/* 内容 */
 
 .text {
-
-    font-size: 16px;
-
-    word-break: break-all;
-
+  font-size: 16px;
+  word-break: break-all;
 }
 
-
-
-/* 输入区域 */
-
+/* 输入框 */
 .input-bar {
-
-    margin-top: 10px;
-
-    display: flex;
-
-    gap: 10px;
-
+  height: 60px;
+  flex-shrink: 0;
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
 }
-
-
 
 .input-bar input {
-
-    flex: 1;
-
-    padding: 8px;
-
-    font-size: 16px;
-
-    border-radius: 4px;
-
-    border: 1px solid #ccc;
-
+  flex: 1;
+  padding: 8px;
+  font-size: 16px;
 }
 
-
-
 .input-bar button {
+  width: 80px;
+}
 
-    width: 80px;
+/* 系统消息 */
+.system-msg {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.system-text {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: #999;
+  background: #e5e5e5;
+  border-radius: 10px;
+}
+
+/* ================= ⭐移动端覆盖 ================= */
+
+@media (max-width:768px){
+
+  html,body,#app{
+    height:100%;
+  }
+
+  .app{
+    background:#ededed;
+  }
+
+  /* 顶部栏更像APP */
+  .top-bar{
+    height:52px;
+    padding:0 12px;
+    background:#07c160;
+    color:white;
+    border:none;
+  }
+
+  .title{
+    font-size:18px;
+  }
+
+  .connect-area{
+    display:flex;
+    gap:6px;
+  }
+
+  .name-input{
+    height:30px;
+    font-size:14px;
+    border-radius:6px;
+  }
+
+  .connect-btn{
+    height:30px;
+    font-size:14px;
+    padding:0 10px;
+    border-radius:6px;
+    background:white;
+    color:#07c160;
+  }
+
+  /* 隐藏用户列表 */
+  .user-panel{
+    display:none;
+  }
+
+  .main-area{
+    padding:0;
+  }
+
+  /* 聊天区全屏 */
+  .chat-area{
+    background:#ededed;
+  }
+
+  .chat-box{
+    border:none;
+    border-radius:0;
+    padding:10px 8px 70px 8px;
+    background:#ededed;
+  }
+
+  /* 行间距更紧凑 */
+  .msg-row{
+    margin:6px 0;
+  }
+
+  /* ⭐聊天气泡优化 */
+  .bubble{
+    max-width:75%;
+    padding:10px 12px;
+    border-radius:16px;
+    font-size:16px;
+    box-shadow:none;
+  }
+
+  .msg-row.me .bubble{
+    background:#95ec69;
+  }
+
+  .msg-row.other .bubble{
+    background:white;
+  }
+
+  /* 用户名更小 */
+  .name{
+    font-size:11px;
+    margin-bottom:2px;
+  }
+
+  .text{
+    font-size:16px;
+    line-height:1.4;
+  }
+
+  /* ⭐系统消息更像微信 */
+  .system-text{
+    background:#dcdcdc;
+    font-size:12px;
+  }
+
+  /* ⭐底部输入栏（重点优化） */
+  .input-bar{
+
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+
+    height:55px;
+
+    padding:6px 8px;
+
+    background:#f7f7f7;
+
+    border-top:1px solid #ddd;
+
+    display:flex;
+    gap:8px;
+
+    padding-bottom:
+      calc(env(safe-area-inset-bottom));
+  }
+
+  /* 输入框像微信 */
+  .input-bar input{
+
+    border-radius:20px;
+
+    border:1px solid #ddd;
+
+    padding:8px 14px;
+
+    font-size:16px;
+
+    background:white;
+  }
+
+  /* 发送按钮像APP */
+  .input-bar button{
+
+    width:70px;
+
+    border:none;
+
+    border-radius:20px;
+
+    background:#07c160;
+
+    color:white;
+
+    font-size:15px;
+  }
 
 }
 </style>
