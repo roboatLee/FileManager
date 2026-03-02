@@ -1,32 +1,12 @@
-import { createRouter, createWebHistory } from "vue-router";
-import Parent from "./page/StudyPage/Parent.vue";
-import Home from "./page/MyPage/Home.vue";
-import vditor from "./page/MyPage/vditor/vditor.vue";
+
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
-import FileBrowser from "./page/MyPage/FileComponent/FileBrowser.vue";
+import { createPinia } from "pinia"
+import router from "@/router/index.js" 
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes: [
-    { path: "/", name: "Home", component: Home },
-    { path: "/file", name: "Json", component: FileBrowser },
-    { path: "/vditor", name: "vditor", component: vditor },
-    { path: "/study", name: "study", component: Parent },
-    {
-      path: "/workspace",
-      name: "workspace",
-      component: () => import("@/page/MyPage/EditFile/Workspace.vue"),
-    },
-    {
-      path: "/chat",
-      name: "chat",
-      component: () => import("@/page/MyPage/Chat/Chat.vue"),
-    },
-  ],
-});
 
 import { createApp } from "vue";
 import App from "./App.vue";
 
-createApp(App).use(router).use(ElementPlus).mount("#app");
+
+createApp(App).use(router).use(ElementPlus).use(createPinia()).mount("#app");

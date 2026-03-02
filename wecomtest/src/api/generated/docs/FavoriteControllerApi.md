@@ -5,8 +5,8 @@ All URIs are relative to *http://localhost:8080*
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
 |[**_delete**](#_delete) | **DELETE** /api/favorite/{id} | |
-|[**add**](#add) | **POST** /api/favorite | |
-|[**list**](#list) | **GET** /api/favorite | |
+|[**add**](#add) | **POST** /api/favorite/add | |
+|[**list**](#list) | **GET** /api/favorite/list | |
 
 # **_delete**
 > _delete()

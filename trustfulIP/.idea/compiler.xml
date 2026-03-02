@@ -9,16 +9,18 @@
         <outputRelativeToContentRoot value="true" />
         <module name="common" />
         <module name="web" />
+        <module name="auth" />
         <module name="infrastructure" />
+        <module name="MyFile" />
         <module name="letChat" />
         <module name="wecom" />
-        <module name="MyFile" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="MyFile" options="-parameters" />
+      <module name="auth" options="-parameters" />
       <module name="common" options="-parameters" />
       <module name="infrastructure" options="-parameters" />
       <module name="letChat" options="-parameters" />

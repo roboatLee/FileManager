@@ -52,6 +52,16 @@
             <artifactId>letChat</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.lee</groupId>
+            <artifactId>auth</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

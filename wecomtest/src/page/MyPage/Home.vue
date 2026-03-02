@@ -1,5 +1,5 @@
 <template>
-    <h1>Man! what Can I say</h1>
+    <h1>首页</h1>
 </template>
 <script setup>
 

@@ -69,7 +69,7 @@ export const FavoriteControllerApiAxiosParamCreator = function (configuration?: 
         add: async (favoriteFolderDto: FavoriteFolderDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'favoriteFolderDto' is not null or undefined
             assertParamExists('add', 'favoriteFolderDto', favoriteFolderDto)
-            const localVarPath = `/api/favorite`;
+            const localVarPath = `/api/favorite/add`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -99,7 +99,7 @@ export const FavoriteControllerApiAxiosParamCreator = function (configuration?: 
          * @throws {RequiredError}
          */
         list: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/favorite`;
+            const localVarPath = `/api/favorite/list`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;

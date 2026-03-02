@@ -17,6 +17,7 @@
         <module>common</module>
         <module>infrastructure</module>
         <module>letChat</module>
+        <module>auth</module>
     </modules>
 
     <parent>
@@ -103,7 +104,28 @@
                 <artifactId>springdoc-openapi-ui</artifactId>
                 <version>1.6.15</version>
             </dependency>
+            <!-- API -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>0.11.5</version>
+            </dependency>
 
+            <!-- Runtime 实现 -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>0.11.5</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- Jackson 解析 JSON -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>0.11.5</version>
+                <scope>runtime</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
