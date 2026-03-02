@@ -3,8 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Parent from "@/page/StudyPage/Parent.vue";
 import vditor from "@/page/MyPage/vditor/vditor.vue";
 import FileBrowser from "@/page/MyPage/FileComponent/FileBrowser.vue";
-import { useAuthStore } from "@/auth/authStore"
-
+import { useAuthStore } from "@/auth/authStore";
 
 const routes = [
   {
@@ -28,6 +27,10 @@ const routes = [
     name: "chat",
     component: () => import("@/page/MyPage/Chat/Chat.vue"),
   },
+  {
+    path: "/register",
+    component: () => import("@/views/Register.vue"),
+  },
 ];
 
 const router = createRouter({
@@ -35,14 +38,26 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   const authStore = useAuthStore()
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
 
-//   if (to.path !== "/login" && !authStore.isLogin) {
-//     next("/login")
-//   } else {
-//     next()
-//   }
-// })
+  const token = localStorage.getItem("token")
+
+  // 白名单页面
+  const whiteList = ["/login", "/register"]
+
+  if (!token && !whiteList.includes(to.path)) {
+    next("/login")
+    return
+  }
+
+  // 已登录访问登录页，自动跳首页
+  if (token && to.path === "/login") {
+    next("/")
+    return
+  }
+
+  next()
+})
 
 export default router;

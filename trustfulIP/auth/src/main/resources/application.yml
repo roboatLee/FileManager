@@ -10,5 +10,5 @@ spring:
     configuration:
       map-underscore-to-camel-case: true
 jwt:
-  secret: your_jwt_secret
+  secret: LiChengXinAiZhaoXinLing
   expiration: 3600  # 过期时间，单位：秒

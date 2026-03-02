@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class JwtUtil {
 
-    private static final String SECRET = "trustful-secret-key";
+    private static final String SECRET = "LiChengXinAiZhaoXinLing5201314LiChengXinAiZhaoXinLing";
     private static final long EXPIRE = 86400000; // 1天
 
     public static String generateToken(User user) {
