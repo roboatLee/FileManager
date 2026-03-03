@@ -15,15 +15,26 @@
 
     <div class="main-area">
 
-      <!-- 左侧在线用户 -->
+      <!-- 左侧会话列表 -->
       <div class="user-panel">
-        <div class="user-title">在线用户</div>
+        <div class="user-title">会话列表</div>
 
+        <!-- 公共聊天室 -->
+        <div
+          class="user-item"
+          :class="{ active: activeUser === GLOBAL }"
+          @click="selectUser(GLOBAL)"
+        >
+          🌍 公共聊天室
+        </div>
+
+        <!-- 在线用户 -->
         <div
           v-for="u in users"
           :key="u"
           class="user-item"
-          :class="{ self: u === currentUser }"
+          :class="{ self: u === currentUser, active: u === activeUser }"
+          @click="selectUser(u)"
         >
           <span class="dot"></span>
           {{ u }}
@@ -32,61 +43,20 @@
 
       <!-- 右侧聊天区 -->
       <div class="chat-area">
-
-        <div class="chat-box" ref="chatBox">
-
-          <div
-            v-for="(m, index) in messages"
-            :key="index"
-            :class="[
-              m.type === 'system'
-                ? 'system-msg'
-                : ['msg-row', m.sender === currentUser ? 'me' : 'other']
-            ]"
-          >
-
-            <!-- 系统消息 -->
-            <div v-if="m.type === 'system'" class="system-text">
-              {{ m.content }}
-            </div>
-
-            <!-- 普通聊天 -->
-            <div v-else class="bubble">
-              <div class="name">
-                {{ m.sender }}
-              </div>
-              <div class="text">
-                {{ m.content }}
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-        <!-- 输入框 -->
-        <div class="input-bar">
-          <input
-            v-model="text"
-            @keyup.enter="send"
-            placeholder="输入消息..."
-            :disabled="!connected"
-          />
-          <button
-            @click="send"
-            :disabled="!connected"
-          >
-            发送
-          </button>
-        </div>
-
+        <ChatWindow
+          :messages="conversations[activeUser] || []"
+          :currentUser="currentUser"
+          @send="handleSend"
+        />
       </div>
+
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from "vue"
+import { ref, reactive, onMounted } from "vue"
+import ChatWindow from "./components/ChatWindow.vue"
 
 const token = localStorage.getItem("token")
 const currentUser = localStorage.getItem("username")
@@ -94,16 +64,22 @@ const currentUser = localStorage.getItem("username")
 const ws = ref(null)
 const connected = ref(false)
 
-const messages = ref([])
+const GLOBAL = "global"
+const activeUser = ref(GLOBAL)
+
 const users = ref([])
-const text = ref("")
-const chatBox = ref(null)
+
+/* =====================
+   所有会话
+===================== */
+const conversations = reactive({
+  [GLOBAL]: []
+})
 
 /* =====================
    自动连接
 ===================== */
 onMounted(() => {
-
   if (!token || !currentUser) {
     alert("请先登录")
     return
@@ -122,42 +98,59 @@ function connect() {
     connected.value = true
   }
 
-  ws.value.onmessage = async (e) => {
+  ws.value.onmessage = (e) => {
 
-    const msg = JSON.parse(e.data)
+  const msg = JSON.parse(e.data)
 
-    switch (msg.type) {
+  switch (msg.type) {
 
-      case "chat":
-        messages.value.push(msg.data)
-        break
+    case "history":
 
-      case "history":
-        messages.value.push(...msg.data)
-        break
+      conversations[GLOBAL].splice(
+        0,
+        conversations[GLOBAL].length,
+        ...msg.data
+      )
 
-      case "join":
-        messages.value.push({
-          type: "system",
-          content: msg.data.user + " 加入了聊天室"
-        })
-        break
+      break
 
-      case "leave":
-        messages.value.push({
-          type: "system",
-          content: msg.data.user + " 离开了聊天室"
-        })
-        break
+    case "chat":
 
-      case "users":
-        users.value = msg.data
-        break
-    }
+      const message = msg.data
+      const target = message.toUser || GLOBAL
 
-    await nextTick()
-    scrollToBottom()
+      if (!conversations[target]) {
+        conversations[target] = []
+      }
+
+      conversations[target].push(message)
+
+      break
+
+    case "join":
+
+      conversations[GLOBAL].push({
+        type: "system",
+        content: msg.data.user + " 加入了聊天室"
+      })
+
+      break
+
+    case "leave":
+
+      conversations[GLOBAL].push({
+        type: "system",
+        content: msg.data.user + " 离开了聊天室"
+      })
+
+      break
+
+    case "users":
+
+      users.value = msg.data
+      break
   }
+}
 
   ws.value.onclose = () => {
     connected.value = false
@@ -167,17 +160,35 @@ function connect() {
 /* =====================
    发送消息
 ===================== */
-function send() {
+function handleSend(content) {
 
   if (!connected.value) return
-  if (!text.value.trim()) return
+
+  const toUser = activeUser.value === GLOBAL
+    ? null
+    : activeUser.value
 
   ws.value.send(JSON.stringify({
     type: "chat",
-    data: { content: text.value }
+    data: {
+      content,
+      toUser
+    }
   }))
+}
 
-  text.value = ""
+/* =====================
+   切换会话
+===================== */
+function selectUser(u) {
+
+  if (u === currentUser) return
+
+  activeUser.value = u
+
+  if (!conversations[u]) {
+    conversations[u] = []
+  }
 }
 
 /* =====================
@@ -186,28 +197,6 @@ function send() {
 function disconnect() {
   ws.value?.close()
 }
-
-/* =====================
-   滚动到底部
-===================== */
-function scrollToBottom() {
-  if (!chatBox.value) return
-
-  chatBox.value.scrollTo({
-    top: chatBox.value.scrollHeight,
-    behavior: "smooth"
-  })
-}
-
-function fixMobileHeight() {
-  document.documentElement.style.setProperty(
-    "--vh",
-    window.innerHeight * 0.01 + "px"
-  )
-}
-
-fixMobileHeight()
-window.addEventListener("resize", fixMobileHeight)
 </script>
 
 <style>

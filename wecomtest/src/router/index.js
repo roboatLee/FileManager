@@ -31,6 +31,10 @@ const routes = [
     path: "/register",
     component: () => import("@/views/Register.vue"),
   },
+  {
+  path: "/private/:username",
+  component: () => import("@/views/PrivateChat.vue")
+},
 ];
 
 const router = createRouter({

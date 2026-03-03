@@ -15,11 +15,9 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * @author KitenLee
@@ -27,12 +25,15 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Component
 public class ChatHandler extends TextWebSocketHandler  {
-    private final ConcurrentHashMap<String, WebSocketSession> sessions
+    private final ConcurrentHashMap<String, Set<WebSocketSession>> sessions
             = new ConcurrentHashMap<>();
 
+    private final ChatMessageRepository repository;
 
-    private final ChatMessageRepository repository =
-            new ChatMessageRepositoryImpl();
+    public ChatHandler(ChatMessageRepository repository) {
+        this.repository = repository;
+    }
+    private static final String SESSION_USER_KEY = "username";
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -40,16 +41,26 @@ public class ChatHandler extends TextWebSocketHandler  {
     public void afterConnectionEstablished(WebSocketSession session) {
 
         String userName =
-                (String) session.getAttributes().get("username");
+                (String) session.getAttributes().get(SESSION_USER_KEY);
 
-        session.getAttributes().put("userName",userName);
         System.out.println("用户连接: " + userName);
-        sessions.put(userName, session);
+
+        Set<WebSocketSession> userSessions =
+                sessions.computeIfAbsent(userName,
+                        k -> ConcurrentHashMap.newKeySet());
+
+        boolean firstConnection = userSessions.isEmpty();
+
+        userSessions.add(session);
+
         System.out.println("当前在线人数: " + sessions.size());
 
+        if (firstConnection) {
+            broadcastJoin(userName);
+            broadcastUsers();
+        }
+
         sendHistory(session);
-        broadcastJoin(userName);
-        broadcastUsers();
     }
 
     @Override
@@ -80,21 +91,37 @@ public class ChatHandler extends TextWebSocketHandler  {
     public void afterConnectionClosed(
             WebSocketSession session,
             CloseStatus status) {
+
         String userName =
-                (String) session.getAttributes().get("username");
-        sessions.remove(userName);
-        broadcastLeave(userName);
+                (String) session.getAttributes().get(SESSION_USER_KEY);
+
+        Set<WebSocketSession> userSessions = sessions.get(userName);
+
+        if (userSessions != null) {
+
+            userSessions.remove(session);
+
+            if (userSessions.isEmpty()) {
+                sessions.remove(userName);
+                broadcastLeave(userName);
+            }
+        }
 
         System.out.println("用户离开: " + userName);
         System.out.println("当前在线人数: " + sessions.size());
-        broadcastUsers();
 
+        broadcastUsers();
     }
 
     private void sendHistory(WebSocketSession session) {
         try {
             List<ChatMessage> list = repository.getMessages();
-            send(session,"history",list);
+
+            List<ChatMessage> globalList = list.stream()
+                    .filter(m -> "global".equals(m.getConversationId()))
+                    .collect(Collectors.toList());
+
+            send(session,"history",globalList);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -104,20 +131,29 @@ public class ChatHandler extends TextWebSocketHandler  {
             throws Exception {
 
         String userName =
-                (String) session.getAttributes().get("username");
+                (String) session.getAttributes().get(SESSION_USER_KEY);
 
         Map data = (Map) ws.getData();
-
         String content = (String) data.get("content");
+
+        String toUser = (String) data.get("toUser");
+        String conversationId;
+        if (toUser != null && !"".equals(toUser)) {
+
+            conversationId = buildPrivateConversationId(userName, toUser);
+
+        } else {
+            conversationId = "global";
+        }
 
         ChatMessage chat = new ChatMessage();
 
         chat.setSender(userName);
         chat.setContent(content);
         chat.setTime(System.currentTimeMillis());
+        chat.setConversationId(conversationId);
 
         repository.addMessage(chat);
-
         broadcastChat(chat);
 
     }
@@ -144,12 +180,38 @@ public class ChatHandler extends TextWebSocketHandler  {
 
     private void broadcastChat(ChatMessage chat)
             throws Exception {
+        String convId = chat.getConversationId();
 
-        for (WebSocketSession s : sessions.values()) {
+        // 全局聊天室
+        if ("global".equals(convId)) {
 
-            send(s,"chat",chat);
+            for (Set<WebSocketSession> userSessions : sessions.values()) {
+                for (WebSocketSession s : userSessions) {
+                    if (s.isOpen()) {
+                        send(s, "chat", chat);
+                    }
+                }
+            }
+            return;
+        }
+
+        // 私聊：格式约定  userA_userB
+        String[] users = convId.split("_");
+
+        for (String user : users) {
+
+            Set<WebSocketSession> targetSessions = sessions.get(user);
+
+            if (targetSessions != null) {
+                for (WebSocketSession s : targetSessions) {
+                    if (s.isOpen()) {
+                        send(s, "chat", chat);
+                    }
+                }
+            }
 
         }
+
 
     }
 
@@ -160,11 +222,14 @@ public class ChatHandler extends TextWebSocketHandler  {
             Map<String,String> data = new HashMap<>();
             data.put("user", userName);
 
-            for (WebSocketSession s : sessions.values()) {
-
-                send(s,"join",data);
-
+            for (Set<WebSocketSession> userSessions : sessions.values()) {
+                for (WebSocketSession s : userSessions) {
+                    if (s.isOpen()) {
+                        send(s,"join",data);
+                    }
+                }
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -178,10 +243,14 @@ public class ChatHandler extends TextWebSocketHandler  {
             Map<String,String> data = new HashMap<>();
             data.put("user", userName);
 
-            for (WebSocketSession s : sessions.values()) {
-
-                send(s,"leave",data);
+            for (Set<WebSocketSession> userSessions : sessions.values()) {
+                for (WebSocketSession s : userSessions) {
+                    if (s.isOpen()) {
+                        send(s,"leave",data);
+                    }
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -194,16 +263,27 @@ public class ChatHandler extends TextWebSocketHandler  {
             List<String> userList =
                     new ArrayList<>(sessions.keySet());
 
-            for (WebSocketSession s : sessions.values()) {
-
-                send(s, "users", userList);
-
+            for (Set<WebSocketSession> userSessions : sessions.values()) {
+                for (WebSocketSession s : userSessions) {
+                    if (s.isOpen()) {
+                        send(s, "users", userList);
+                    }
+                }
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private String buildPrivateConversationId(String user1, String user2) {
+
+        if (user1.compareTo(user2) < 0) {
+            return user1 + "_" + user2;
+        } else {
+            return user2 + "_" + user1;
+        }
+    }
 }
 

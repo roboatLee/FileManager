@@ -10,7 +10,7 @@ import java.util.List;
  * @author KitenLee
  * * @date 2026/2/10
  */
-@Repository
+
 public interface ChatMessageRepository {
     void addMessage(ChatMessage msg) throws IOException;
     List<ChatMessage> getMessages() throws IOException;
