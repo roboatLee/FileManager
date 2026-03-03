@@ -54,9 +54,10 @@ const handleLogin = async () => {
         const res = await authApi.login(form)
 
         const token = res.data.token   // ⭐ 正确取值
+        const username = res.data.username   // ⭐ 取出来
 
         localStorage.setItem("token", token)
-
+        localStorage.setItem("username", username)   // ⭐ 加这一行
         authStore.loginSuccess(res.data)  // ⭐ 传 data
 
         ElMessage.success("登录成功")

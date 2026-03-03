@@ -7,6 +7,7 @@ import com.lee.dao.WsMessage;
 import com.lee.persistence.json.JsonFileStore;
 import com.lee.service.ChatMessageRepository;
 import com.lee.service.repository.ChatMessageRepositoryImpl;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -24,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author KitenLee
  * * @date 2026/2/28
  */
+@Component
 public class ChatHandler extends TextWebSocketHandler  {
     private final ConcurrentHashMap<String, WebSocketSession> sessions
             = new ConcurrentHashMap<>();
@@ -37,13 +39,8 @@ public class ChatHandler extends TextWebSocketHandler  {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
 
-        String query = session.getUri().getQuery();
-
-        String userName = "匿名";
-
-        if(query != null && query.startsWith("user=")){
-            userName = query.substring(5);
-        }
+        String userName =
+                (String) session.getAttributes().get("username");
 
         session.getAttributes().put("userName",userName);
         System.out.println("用户连接: " + userName);
@@ -84,7 +81,7 @@ public class ChatHandler extends TextWebSocketHandler  {
             WebSocketSession session,
             CloseStatus status) {
         String userName =
-                (String) session.getAttributes().get("userName");
+                (String) session.getAttributes().get("username");
         sessions.remove(userName);
         broadcastLeave(userName);
 
@@ -107,7 +104,7 @@ public class ChatHandler extends TextWebSocketHandler  {
             throws Exception {
 
         String userName =
-                (String) session.getAttributes().get("userName");
+                (String) session.getAttributes().get("username");
 
         Map data = (Map) ws.getData();
 

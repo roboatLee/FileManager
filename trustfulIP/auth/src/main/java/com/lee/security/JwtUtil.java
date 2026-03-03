@@ -14,7 +14,7 @@ import java.util.Date;
 public class JwtUtil {
 
     private static final String SECRET = "LiChengXinAiZhaoXinLing5201314LiChengXinAiZhaoXinLing";
-    private static final long EXPIRE = 86400000; // 1天
+    private static final long EXPIRE = 86400000;
 
     public static String generateToken(User user) {
         return Jwts.builder()
@@ -32,11 +32,21 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
     public static String getUsername(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        return parseToken(token).get("username", String.class);
+    }
+
+    public static Long getUserId(String token) {
+        return Long.parseLong(parseToken(token).getSubject());
+    }
+
+    public static boolean validateToken(String token) {
+        try {
+            parseToken(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
