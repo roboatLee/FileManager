@@ -115,13 +115,27 @@ public class ChatHandler extends TextWebSocketHandler  {
 
     private void sendHistory(WebSocketSession session) {
         try {
+
+            String userName =
+                    (String) session.getAttributes().get(SESSION_USER_KEY);
+
             List<ChatMessage> list = repository.getMessages();
 
-            List<ChatMessage> globalList = list.stream()
-                    .filter(m -> "global".equals(m.getConversationId()))
+            // 只发送和当前用户有关的聊天记录
+            List<ChatMessage> related = list.stream()
+                    .filter(m -> {
+                        String convId = m.getConversationId();
+
+                        if ("global".equals(convId)) {
+                            return true;
+                        }
+
+                        return convId.contains(userName);
+                    })
                     .collect(Collectors.toList());
 
-            send(session,"history",globalList);
+            send(session, "history", related);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

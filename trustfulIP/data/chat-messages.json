@@ -53,4 +53,24 @@
   "content" : "发消息了",
   "time" : 1772534657988,
   "conversationId" : "LiChengXin_lisi"
+}, {
+  "sender" : "lisi",
+  "content" : "你好",
+  "time" : 1772621212885,
+  "conversationId" : "LiChengXin_lisi"
+}, {
+  "sender" : "LiChengXin",
+  "content" : "你好",
+  "time" : 1772621222198,
+  "conversationId" : "LiChengXin_lisi"
+}, {
+  "sender" : "LiChengXin",
+  "content" : "你好",
+  "time" : 1772621493821,
+  "conversationId" : "LiChengXin_lisi"
+}, {
+  "sender" : "LiChengXin",
+  "content" : "你好",
+  "time" : 1772621975710,
+  "conversationId" : "LiChengXin_lisi"
 } ]

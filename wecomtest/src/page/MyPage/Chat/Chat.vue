@@ -12,7 +12,9 @@
         </button>
       </div>
     </div>
-
+    <button class="mobile-menu" @click="showUsers = true">
+      ☰
+    </button>
     <div class="main-area">
 
       <!-- 左侧会话列表 -->
@@ -20,22 +22,13 @@
         <div class="user-title">会话列表</div>
 
         <!-- 公共聊天室 -->
-        <div
-          class="user-item"
-          :class="{ active: activeUser === GLOBAL }"
-          @click="selectUser(GLOBAL)"
-        >
+        <div class="user-item" :class="{ active: activeUser === GLOBAL }" @click="selectUser(GLOBAL)">
           🌍 公共聊天室
         </div>
 
         <!-- 在线用户 -->
-        <div
-          v-for="u in users"
-          :key="u"
-          class="user-item"
-          :class="{ self: u === currentUser, active: u === activeUser }"
-          @click="selectUser(u)"
-        >
+        <div v-for="u in users" :key="u" class="user-item"
+          :class="{ self: u === currentUser, active: u === activeUser }" @click="selectUser(u)">
           <span class="dot"></span>
           {{ u }}
         </div>
@@ -43,13 +36,32 @@
 
       <!-- 右侧聊天区 -->
       <div class="chat-area">
-        <ChatWindow
-          :messages="conversations[activeUser] || []"
-          :currentUser="currentUser"
-          @send="handleSend"
-        />
+        <div class="chat-header">
+          <span v-if="activeUser === GLOBAL">
+            🌍 公共聊天室
+          </span>
+          <span v-else>
+            💬 正在和 {{ activeUser }} 私聊
+          </span>
+        </div>
+        <ChatWindow :messages="conversations[activeUser] || []" :currentUser="currentUser" @send="handleSend" />
       </div>
 
+    </div>
+    <div v-if="showUsers" class="mobile-user-panel">
+      <div class="mobile-user-header">
+        会话列表
+        <button @click="showUsers = false">关闭</button>
+      </div>
+
+      <div class="mobile-user-item" :class="{ active: activeUser === GLOBAL }"
+        @click="selectUser(GLOBAL); showUsers = false">
+        🌍 公共聊天室
+      </div>
+
+      <div v-for="u in users" :key="u" class="mobile-user-item" @click="selectUser(u); showUsers = false">
+        {{ u }}
+      </div>
     </div>
   </div>
 </template>
@@ -57,6 +69,7 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue"
 import ChatWindow from "./components/ChatWindow.vue"
+import { nextTick } from "vue"
 
 const token = localStorage.getItem("token")
 const currentUser = localStorage.getItem("username")
@@ -68,6 +81,7 @@ const GLOBAL = "global"
 const activeUser = ref(GLOBAL)
 
 const users = ref([])
+const showUsers = ref(false)
 
 /* =====================
    所有会话
@@ -100,57 +114,87 @@ function connect() {
 
   ws.value.onmessage = (e) => {
 
-  const msg = JSON.parse(e.data)
+    const msg = JSON.parse(e.data)
 
-  switch (msg.type) {
+    switch (msg.type) {
 
-    case "history":
+      case "history": {
 
-      conversations[GLOBAL].splice(
-        0,
-        conversations[GLOBAL].length,
-        ...msg.data
-      )
+        const historyList = msg.data
 
-      break
+        historyList.forEach(message => {
 
-    case "chat":
+          const convId = message.conversationId
 
-      const message = msg.data
-      const target = message.toUser || GLOBAL
+          let target
 
-      if (!conversations[target]) {
-        conversations[target] = []
+          if (convId === GLOBAL) {
+            target = GLOBAL
+          } else {
+            const users = convId.split("_")
+            target = users.find(u => u !== currentUser)
+          }
+
+          if (!conversations[target]) {
+            conversations[target] = []
+          }
+
+          conversations[target].push(message)
+        })
+
+        break
       }
 
-      conversations[target].push(message)
+      case "chat": {
 
-      break
+        const message = msg.data
+        const convId = message.conversationId
 
-    case "join":
+        let target
 
-      conversations[GLOBAL].push({
-        type: "system",
-        content: msg.data.user + " 加入了聊天室"
-      })
+        if (convId === GLOBAL) {
+          target = GLOBAL
+        } else {
+          // convId 例如 lisi_zhangsan
+          const users = convId.split("_")
 
-      break
+          // 找出对方
+          target = users.find(u => u !== currentUser)
+        }
 
-    case "leave":
+        if (!conversations[target]) {
+          conversations[target] = []
+        }
 
-      conversations[GLOBAL].push({
-        type: "system",
-        content: msg.data.user + " 离开了聊天室"
-      })
+        conversations[target].push(message)
 
-      break
+        break
+      }
 
-    case "users":
+      case "join":
 
-      users.value = msg.data
-      break
+        conversations[GLOBAL].push({
+          type: "system",
+          content: msg.data.user + " 加入了聊天室"
+        })
+
+        break
+
+      case "leave":
+
+        conversations[GLOBAL].push({
+          type: "system",
+          content: msg.data.user + " 离开了聊天室"
+        })
+
+        break
+
+      case "users":
+
+        users.value = msg.data
+        break
+    }
   }
-}
 
   ws.value.onclose = () => {
     connected.value = false
@@ -197,6 +241,14 @@ function selectUser(u) {
 function disconnect() {
   ws.value?.close()
 }
+
+nextTick(() => {
+  const box = document.querySelector(".chat-box")
+  if (box) {
+    box.scrollTop = box.scrollHeight
+  }
+})
+
 </script>
 
 <style>
@@ -392,6 +444,9 @@ body,
 }
 
 /* ================= ⭐移动端覆盖 ================= */
+.mobile-menu {
+  display: none;
+}
 
 @media (max-width:768px) {
 
@@ -412,6 +467,36 @@ body,
     background: #07c160;
     color: white;
     border: none;
+  }
+
+  .mobile-menu {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: white;
+  }
+
+  .mobile-user-panel {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 70%;
+    background: white;
+    z-index: 999;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+  }
+
+  .mobile-user-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .mobile-user-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
   }
 
   .title {
@@ -453,10 +538,9 @@ body,
   }
 
   .chat-box {
-    border: none;
-    border-radius: 0;
-    padding: 10px 8px 70px 8px;
-    background: #ededed;
+    padding: 10px 8px
+      calc(var(--input-height) + 20px + env(safe-area-inset-bottom))
+      8px;
   }
 
   /* 行间距更紧凑 */
@@ -500,25 +584,15 @@ body,
 
   /* ⭐底部输入栏（重点优化） */
   .input-bar {
-
+    height: var(--input-height);
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-
-    height: 55px;
-
     padding: 6px 8px;
-
     background: #f7f7f7;
-
     border-top: 1px solid #ddd;
-
-    display: flex;
-    gap: 8px;
-
-    padding-bottom:
-      calc(env(safe-area-inset-bottom));
+    padding-bottom: calc(env(safe-area-inset-bottom));
   }
 
   /* 输入框像微信 */
