@@ -12,6 +12,7 @@
         <module name="auth" />
         <module name="infrastructure" />
         <module name="MyFile" />
+        <module name="blog" />
         <module name="letChat" />
         <module name="wecom" />
       </profile>
@@ -21,6 +22,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="MyFile" options="-parameters" />
       <module name="auth" options="-parameters" />
+      <module name="blog" options="-parameters" />
       <module name="common" options="-parameters" />
       <module name="infrastructure" options="-parameters" />
       <module name="letChat" options="-parameters" />
