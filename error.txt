@@ -1,0 +1,602 @@
+diff --git a/mysql/article.sql b/mysql/article.sql
+deleted file mode 100644
+index 06e9aeb..0000000
+--- a/mysql/article.sql
++++ /dev/null
+@@ -1,40 +0,0 @@
+-/*
+- Navicat Premium Data Transfer
+-
+- Source Server         : ai_project
+- Source Server Type    : MySQL
+- Source Server Version : 80040
+- Source Host           : localhost:3306
+- Source Schema         : myblog
+-
+- Target Server Type    : MySQL
+- Target Server Version : 80040
+- File Encoding         : 65001
+-
+- Date: 17/03/2026 17:52:18
+-*/
+-
+-SET NAMES utf8mb4;
+-SET FOREIGN_KEY_CHECKS = 0;
+-
+--- ----------------------------
+--- Table structure for article
+--- ----------------------------
+-DROP TABLE IF EXISTS `article`;
+-CREATE TABLE `article`  (
+-  `id` int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
+-  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '标题',
+-  `html_content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'html内容',
+-  `user_id` int UNSIGNED NOT NULL COMMENT 'UserId外键',
+-  `markdown_content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'markdown内容',
+-  `status` tinyint NULL DEFAULT 1 COMMENT '1:草稿 2：已发布',
+-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更改时间',
+-  `like` int NULL DEFAULT 0,
+-  `view` int NULL DEFAULT 0,
+-  PRIMARY KEY (`id`) USING BTREE,
+-  INDEX `userid`(`user_id` ASC) USING BTREE,
+-  CONSTRAINT `UserId` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+-
+-SET FOREIGN_KEY_CHECKS = 1;
+diff --git a/trustfulIP/.idea/compiler.xml b/trustfulIP/.idea/compiler.xml
+index 3064b43..bd2afe8 100644
+--- a/trustfulIP/.idea/compiler.xml
++++ b/trustfulIP/.idea/compiler.xml
+@@ -12,7 +12,6 @@
+         <module name="auth" />
+         <module name="infrastructure" />
+         <module name="MyFile" />
+-        <module name="blog" />
+         <module name="letChat" />
+         <module name="wecom" />
+       </profile>
+@@ -22,7 +21,6 @@
+     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+       <module name="MyFile" options="-parameters" />
+       <module name="auth" options="-parameters" />
+-      <module name="blog" options="-parameters" />
+       <module name="common" options="-parameters" />
+       <module name="infrastructure" options="-parameters" />
+       <module name="letChat" options="-parameters" />
+diff --git a/trustfulIP/.idea/encodings.xml b/trustfulIP/.idea/encodings.xml
+index ec33fa6..024a74a 100644
+--- a/trustfulIP/.idea/encodings.xml
++++ b/trustfulIP/.idea/encodings.xml
+@@ -3,7 +3,6 @@
+   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+     <file url="file://$PROJECT_DIR$/MyFile/src/main/java" charset="UTF-8" />
+     <file url="file://$PROJECT_DIR$/auth/src/main/java" charset="UTF-8" />
+-    <file url="file://$PROJECT_DIR$/blog/src/main/java" charset="UTF-8" />
+     <file url="file://$PROJECT_DIR$/common/src/main/java" charset="UTF-8" />
+     <file url="file://$PROJECT_DIR$/infrastructure/src/main/java" charset="UTF-8" />
+     <file url="file://$PROJECT_DIR$/letChat/src/main/java" charset="UTF-8" />
+diff --git a/trustfulIP/blog/pom.xml b/trustfulIP/blog/pom.xml
+deleted file mode 100644
+index 2cec77f..0000000
+--- a/trustfulIP/blog/pom.xml
++++ /dev/null
+@@ -1,43 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project xmlns="http://maven.apache.org/POM/4.0.0"
+-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+-    <parent>
+-        <artifactId>trustfulIP</artifactId>
+-        <groupId>com.lee</groupId>
+-        <version>1.0</version>
+-    </parent>
+-    <modelVersion>4.0.0</modelVersion>
+-
+-    <artifactId>blog</artifactId>
+-
+-    <properties>
+-        <maven.compiler.source>8</maven.compiler.source>
+-        <maven.compiler.target>8</maven.compiler.target>
+-    </properties>
+-
+-    <dependencies>
+-        <dependency>
+-            <groupId>org.springframework.boot</groupId>
+-            <artifactId>spring-boot-starter</artifactId>
+-        </dependency>
+-        <dependency>
+-            <groupId>org.springframework.boot</groupId>
+-            <artifactId>spring-boot-starter-web</artifactId>
+-        </dependency>
+-        <dependency>
+-            <groupId>org.projectlombok</groupId>
+-            <artifactId>lombok</artifactId>
+-        </dependency>
+-
+-        <dependency>
+-            <groupId>com.baomidou</groupId>
+-            <artifactId>mybatis-plus-boot-starter</artifactId>
+-        </dependency>
+-
+-        <dependency>
+-            <groupId>mysql</groupId>
+-            <artifactId>mysql-connector-java</artifactId>
+-        </dependency>
+-    </dependencies>
+-</project>
+\ No newline at end of file
+diff --git a/trustfulIP/blog/src/main/java/com/lee/blog/controller/ArticleController.java b/trustfulIP/blog/src/main/java/com/lee/blog/controller/ArticleController.java
+deleted file mode 100644
+index 7e72988..0000000
+--- a/trustfulIP/blog/src/main/java/com/lee/blog/controller/ArticleController.java
++++ /dev/null
+@@ -1,33 +0,0 @@
+-package com.lee.blog.controller;
+-
+-import com.lee.blog.entity.Article;
+-import com.lee.blog.service.IArticleService;
+-import com.lee.blog.service.impl.ArticleServiceImpl;
+-import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.web.bind.annotation.GetMapping;
+-import org.springframework.web.bind.annotation.RequestMapping;
+-import org.springframework.stereotype.Controller;
+-
+-import java.util.List;
+-
+-/**
+- * <p>
+- *  前端控制器
+- * </p>
+- *
+- * @author lee
+- * @since 2026-03-17
+- */
+-@Controller
+-@RequestMapping("/article")
+-public class ArticleController {
+-    @Autowired
+-    public IArticleService articleService = new ArticleServiceImpl();
+-
+-    @GetMapping("/getAllArticle")
+-    public List<Article> getAllArtile(){
+-        return articleService.list();
+-    }
+-    
+-
+-}
+diff --git a/trustfulIP/blog/src/main/java/com/lee/blog/entity/Article.java b/trustfulIP/blog/src/main/java/com/lee/blog/entity/Article.java
+deleted file mode 100644
+index ce6cd07..0000000
+--- a/trustfulIP/blog/src/main/java/com/lee/blog/entity/Article.java
++++ /dev/null
+@@ -1,71 +0,0 @@
+-package com.lee.blog.entity;
+-
+-import com.baomidou.mybatisplus.annotation.IdType;
+-import com.baomidou.mybatisplus.annotation.TableId;
+-import lombok.Getter;
+-import lombok.Setter;
+-import lombok.ToString;
+-
+-import java.io.Serializable;
+-import java.time.LocalDateTime;
+-
+-/**
+- * <p>
+- * 
+- * </p>
+- *
+- * @author lee
+- * @since 2026-03-17
+- */
+-@Getter
+-@Setter
+-@ToString
+-public class Article implements Serializable {
+-
+-    private static final long serialVersionUID = 1L;
+-
+-    /**
+-     * 主键
+-     */
+-    @TableId(value = "id", type = IdType.AUTO)
+-    private Integer id;
+-
+-    /**
+-     * 标题
+-     */
+-    private String title;
+-
+-    /**
+-     * html内容
+-     */
+-    private String htmlContent;
+-
+-    /**
+-     * UserId外键
+-     */
+-    private Integer userId;
+-
+-    /**
+-     * markdown内容
+-     */
+-    private String markdownContent;
+-
+-    /**
+-     * 1:草稿 2：已发布
+-     */
+-    private Byte status;
+-
+-    /**
+-     * 创建时间
+-     */
+-    private LocalDateTime createTime;
+-
+-    /**
+-     * 更改时间
+-     */
+-    private LocalDateTime updateTime;
+-
+-    private Integer like;
+-
+-    private Integer view;
+-}
+diff --git a/trustfulIP/blog/src/main/java/com/lee/blog/mapper/ArticleMapper.java b/trustfulIP/blog/src/main/java/com/lee/blog/mapper/ArticleMapper.java
+deleted file mode 100644
+index 19e2458..0000000
+--- a/trustfulIP/blog/src/main/java/com/lee/blog/mapper/ArticleMapper.java
++++ /dev/null
+@@ -1,18 +0,0 @@
+-package com.lee.blog.mapper;
+-
+-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+-import com.lee.blog.entity.Article;
+-import org.apache.ibatis.annotations.Mapper;
+-
+-/**
+- * <p>
+- *  Mapper 接口
+- * </p>
+- *
+- * @author lee
+- * @since 2026-03-17
+- */
+-@Mapper
+-public interface ArticleMapper extends BaseMapper<Article> {
+-
+-}
+diff --git a/trustfulIP/blog/src/main/java/com/lee/blog/mapper/xml/ArticleMapper.xml b/trustfulIP/blog/src/main/java/com/lee/blog/mapper/xml/ArticleMapper.xml
+deleted file mode 100644
+index a8364de..0000000
+--- a/trustfulIP/blog/src/main/java/com/lee/blog/mapper/xml/ArticleMapper.xml
++++ /dev/null
+@@ -1,5 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+-<mapper namespace="com.lee.blog.mapper.ArticleMapper">
+-
+-</mapper>
+diff --git a/trustfulIP/blog/src/main/java/com/lee/blog/service/IArticleService.java b/trustfulIP/blog/src/main/java/com/lee/blog/service/IArticleService.java
+deleted file mode 100644
+index 94d4fa6..0000000
+--- a/trustfulIP/blog/src/main/java/com/lee/blog/service/IArticleService.java
++++ /dev/null
+@@ -1,17 +0,0 @@
+-package com.lee.blog.service;
+-
+-import com.lee.blog.entity.Article;
+-import com.baomidou.mybatisplus.extension.service.IService;
+-
+-/**
+- * <p>
+- *  服务类
+- * </p>
+- *
+- * @author lee
+- * @since 2026-03-17
+- */
+-public interface IArticleService extends IService<Article> {
+-
+-
+-}
+diff --git a/trustfulIP/blog/src/main/java/com/lee/blog/service/impl/ArticleServiceImpl.java b/trustfulIP/blog/src/main/java/com/lee/blog/service/impl/ArticleServiceImpl.java
+deleted file mode 100644
+index de6a870..0000000
+--- a/trustfulIP/blog/src/main/java/com/lee/blog/service/impl/ArticleServiceImpl.java
++++ /dev/null
+@@ -1,25 +0,0 @@
+-package com.lee.blog.service.impl;
+-
+-import com.lee.blog.entity.Article;
+-import com.lee.blog.mapper.ArticleMapper;
+-import com.lee.blog.service.IArticleService;
+-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+-import org.springframework.beans.factory.annotation.Autowired;
+-import org.springframework.stereotype.Service;
+-
+-/**
+- * <p>
+- *  服务实现类
+- * </p>
+- *
+- * @author lee
+- * @since 2026-03-17
+- */
+-@Service
+-public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements IArticleService {
+-
+-    public void addArticle(Article article){
+-
+-    }
+-
+-}
+diff --git a/trustfulIP/common/pom.xml b/trustfulIP/common/pom.xml
+index adbeccf..7c1c00d 100644
+--- a/trustfulIP/common/pom.xml
++++ b/trustfulIP/common/pom.xml
+@@ -18,20 +18,10 @@
+ 
+     <dependencies>
+         <dependency>
+-            <groupId>com.baomidou</groupId>
+-            <artifactId>mybatis-plus-generator</artifactId>
+-        </dependency>
+-        <dependency>
+-            <groupId>org.springframework.boot</groupId>
+-            <artifactId>spring-boot-starter-freemarker</artifactId>
+-        </dependency>
+-        <dependency>
+-            <groupId>com.baomidou</groupId>
+-            <artifactId>mybatis-plus-boot-starter</artifactId>
+-        </dependency>
+-        <dependency>
+-            <groupId>mysql</groupId>
+-            <artifactId>mysql-connector-java</artifactId>
++            <groupId>org.springdoc</groupId>
++            <artifactId>springdoc-openapi-ui</artifactId>
+         </dependency>
++
++
+     </dependencies>
+ </project>
+\ No newline at end of file
+diff --git a/trustfulIP/common/src/main/java/com/lee/CodeGenerator.java b/trustfulIP/common/src/main/java/com/lee/CodeGenerator.java
+deleted file mode 100644
+index 8c6aa75..0000000
+--- a/trustfulIP/common/src/main/java/com/lee/CodeGenerator.java
++++ /dev/null
+@@ -1,128 +0,0 @@
+-package com.lee;
+-
+-import com.baomidou.mybatisplus.annotation.FieldFill;
+-import com.baomidou.mybatisplus.generator.FastAutoGenerator;
+-import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+-import com.baomidou.mybatisplus.generator.fill.Column;
+-
+-import java.io.File;
+-import java.sql.Connection;
+-import java.sql.DatabaseMetaData;
+-import java.sql.DriverManager;
+-import java.sql.ResultSet;
+-import java.util.*;
+-
+-/**
+- * @author KitenLee
+- * * @date 2026/3/17
+- */
+-public class CodeGenerator {
+-    private static final Scanner SCANNER = new Scanner(System.in);
+-
+-    public static void main(String[] args) {
+-
+-        String url = "jdbc:mysql://localhost:3306/trustful_platform?useSSL=false&serverTimezone=UTC";
+-        String username = "root";
+-        String password = "Lcx0618.";
+-
+-        try {
+-            List<String> allModules = getModules();
+-            System.out.println("当前模块：");
+-            allModules.forEach(System.out::println);
+-        }catch (Exception e){
+-            System.out.println("连接失败");
+-        }
+-
+-        String moduleName = scanner("请输入模块名（如 module-user）");
+-        String projectPath = System.getProperty("user.dir");
+-
+-        String outputDir = projectPath + "/" + moduleName + "/src/main/java";
+-        List<String> allTables = new ArrayList<>();
+-
+-        try {
+-            allTables = getAllTables(url, username, password);
+-            System.out.println("当前数据库表：");
+-            allTables.forEach(System.out::println);
+-        }catch (Exception e){
+-            System.out.println("数据库连接失败");
+-        }
+-
+-        String tableInput = scanner("请输入表名（all 或 user,order）");
+-
+-        List<String> tables = "all".equals(tableInput)
+-                ? allTables
+-                : Arrays.asList(tableInput.split(","));
+-
+-
+-        FastAutoGenerator.create(url, username, password)
+-                .globalConfig(builder -> builder
+-                        .author("lee")
+-                        .outputDir(outputDir)
+-                )
+-                .packageConfig(builder -> builder
+-                        .parent("com.lee." + moduleName.replace("module-", ""))
+-                )
+-                .strategyConfig(builder -> builder
+-                        .addInclude(tables)
+-                        .mapperBuilder().enableFileOverride()
+-                        .entityBuilder().enableFileOverride()
+-                        .enableLombok()
+-                )
+-                .templateEngine(new FreemarkerTemplateEngine())
+-                .execute();
+-    }
+-
+-    // 处理 all 情况
+-    protected static List<String> getTables(String tables) {
+-        return "all".equals(tables) ? Collections.emptyList() : Arrays.asList(tables.split(","));
+-    }
+-
+-    /**
+-     * 列出所有表
+-     * */
+-    public static List<String> getAllTables(String url, String username, String password) {
+-        List<String> tables = new ArrayList<>();
+-        try (Connection conn = DriverManager.getConnection(url, username, password)) {
+-            String catalog = conn.getCatalog();
+-            DatabaseMetaData metaData = conn.getMetaData();
+-            ResultSet rs = metaData.getTables(catalog, null, "%", new String[]{"TABLE"});
+-            while (rs.next()) {
+-                tables.add(rs.getString("TABLE_NAME"));
+-            }
+-        } catch (Exception e) {
+-            e.printStackTrace();
+-        }
+-        return tables;
+-    }
+-
+-    //得到Moudules类型
+-    public static List<String> getModules() {
+-        String projectPath = System.getProperty("user.dir");
+-        File root = new File(projectPath);
+-
+-        File[] files = root.listFiles();
+-
+-        List<String> modules = new ArrayList<>();
+-
+-        if (files != null) {
+-            for (File file : files) {
+-                // 判断是否是目录 + 是否包含 pom.xml
+-                if (file.isDirectory()) {
+-                    File pom = new File(file, "pom.xml");
+-                    if (pom.exists()) {
+-                        modules.add(file.getName());
+-                    }
+-                }
+-            }
+-        }
+-        return modules;
+-    }
+-
+-    public static String scanner(String tip) {
+-        System.out.print(tip + "：");
+-        if (SCANNER.hasNextLine()) {
+-            return SCANNER.nextLine();
+-        }
+-        throw new RuntimeException("输入不能为空");
+-    }
+-}
+diff --git a/trustfulIP/common/src/main/resources/application.yml b/trustfulIP/common/src/main/resources/application.yml
+deleted file mode 100644
+index f379bcc..0000000
+--- a/trustfulIP/common/src/main/resources/application.yml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-spring:
+-  datasource:
+-    url: jdbc:mysql://localhost:3306/trustful_platform?useSSL=false&serverTimezone=UTC
+-    username: root
+-    password: Lcx0618.
+-    driver-class-name: com.mysql.cj.jdbc.Driver
+diff --git a/trustfulIP/common/target/classes/application.yml b/trustfulIP/common/target/classes/application.yml
+deleted file mode 100644
+index f379bcc..0000000
+--- a/trustfulIP/common/target/classes/application.yml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-spring:
+-  datasource:
+-    url: jdbc:mysql://localhost:3306/trustful_platform?useSSL=false&serverTimezone=UTC
+-    username: root
+-    password: Lcx0618.
+-    driver-class-name: com.mysql.cj.jdbc.Driver
+diff --git a/trustfulIP/common/target/classes/com/lee/CodeGenerator.class b/trustfulIP/common/target/classes/com/lee/CodeGenerator.class
+deleted file mode 100644
+index acc6620..0000000
+Binary files a/trustfulIP/common/target/classes/com/lee/CodeGenerator.class and /dev/null differ
+diff --git a/trustfulIP/pom.xml b/trustfulIP/pom.xml
+index c453c8e..3926beb 100644
+--- a/trustfulIP/pom.xml
++++ b/trustfulIP/pom.xml
+@@ -18,7 +18,6 @@
+         <module>infrastructure</module>
+         <module>letChat</module>
+         <module>auth</module>
+-        <module>blog</module>
+     </modules>
+ 
+     <parent>
+@@ -73,8 +72,6 @@
+                 <artifactId>spring-boot-starter-data-redis</artifactId>
+             </dependency>
+ 
+-
+-            <!--数据库以及的代码生成器-->
+             <dependency>
+                 <groupId>com.baomidou</groupId>
+                 <artifactId>mybatis-plus-boot-starter</artifactId>
+@@ -96,7 +93,6 @@
+                 <version>3.3.5</version>
+             </dependency>
+ 
+-
+             <dependency>
+                 <groupId>com.fasterxml.jackson.core</groupId>
+                 <artifactId>jackson-databind</artifactId>
+@@ -131,7 +127,6 @@
+                 <scope>runtime</scope>
+             </dependency>
+         </dependencies>
+-
+     </dependencyManagement>
+ 
+ 
+diff --git a/wecomtest/src/page/MyPage/letBlog/addBlog.vue b/wecomtest/src/page/MyPage/letBlog/addBlog.vue
+deleted file mode 100644
+index f6b5481..0000000
+--- a/wecomtest/src/page/MyPage/letBlog/addBlog.vue
++++ /dev/null
+@@ -1,13 +0,0 @@
+-<template>
+-    <li v-for="value in source">
+-        
+-    </li>
+-</template>
+-
+-<script setup>
+-
+-</script>
+-
+-<style scoped>
+-
+-</style>
+\ No newline at end of file
+diff --git a/wecomtest/src/page/MyPage/letBlog/blog.vue b/wecomtest/src/page/MyPage/letBlog/blog.vue
+deleted file mode 100644
+index f6b5481..0000000
+--- a/wecomtest/src/page/MyPage/letBlog/blog.vue
++++ /dev/null
+@@ -1,13 +0,0 @@
+-<template>
+-    <li v-for="value in source">
+-        
+-    </li>
+-</template>
+-
+-<script setup>
+-
+-</script>
+-
+-<style scoped>
+-
+-</style>
+\ No newline at end of file
