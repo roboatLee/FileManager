@@ -23,8 +23,9 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
             ServerHttpResponse response,
             WebSocketHandler wsHandler,
             Map<String, Object> attributes
-    ) throws Exception {   // 🔥 这里必须加
+    ) throws Exception {
 
+        //如果请求(request)是一个ServletServerHttpRequest的实例，那么就执行下面的代码
         if (request instanceof ServletServerHttpRequest) {
 
             ServletServerHttpRequest servletRequest =
@@ -35,21 +36,15 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
                     servletRequest.getServletRequest()
                             .getParameter("token");
             System.out.println("token = " + token);
-            if (token != null) {
-                System.out.println("username = " + JwtUtil.getUsername(token));
-            }
 
             if (token == null) {
                 return false;
             }
 
             if (JwtUtil.validateToken(token)) {
-
                 String username =
                         JwtUtil.getUsername(token);
-
                 attributes.put("username", username);
-
                 return true;
             }
         }

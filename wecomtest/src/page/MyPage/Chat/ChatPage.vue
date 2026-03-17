@@ -71,8 +71,10 @@ import UserPanel from "./components/UserPanel.vue"
 import { connect, send, close } from "./services/websocket"
 import { handleMessage } from "./services/messageHandler"
 
-const token = localStorage.getItem("token")
-const currentUser = localStorage.getItem("username")
+const token = localStorage.getItem("token") //在本地存储中拿到token
+const currentUser = localStorage.getItem("username") //在本地存储中拿到目前账号的名称
+
+
 const connected = ref(false)
 const GLOBAL = "global"
 const activeUser = ref(GLOBAL)
@@ -111,7 +113,6 @@ function connectSocket() {
     }
 
   })
-
 }
 
 

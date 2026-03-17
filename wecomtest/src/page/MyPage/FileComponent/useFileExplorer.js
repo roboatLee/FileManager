@@ -7,6 +7,7 @@ import {
   getContentTxt,
   getDisk,
 } from "@/api/fileApi";
+
 import { isDir, joinPath } from "@/page/MyPage/FileComponent/fileUtils";
 import { printTree } from "../utils/fileTreePrinter";
 import { getFavorites, addFavorite, deleteFavorite } from "@/api/favoriteApi";
@@ -116,3 +117,5 @@ export function useFileExplorer() {
     toggleFavorite,
   };
 }
+
+
