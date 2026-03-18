@@ -1,9 +1,9 @@
-import Login from "@/views/Login.vue";
+import Login from "@/auth/view//Login.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import Parent from "@/page/StudyPage/EmitAndProps/Parent.vue";
 import vditor from "@/page/MyPage/vditor/vditor.vue";
 import FileBrowser from "@/page/MyPage/FileComponent/FileBrowser.vue";
-import { useAuthStore } from "@/auth/authStore";
+import { useAuthStore } from "@/auth/store/authStore";
 
 const routes = [
   {
@@ -39,9 +39,13 @@ const routes = [
     path: "/blog",
     component: () => import("@/page/MyPage/letBlog/blog.vue"),
   },
-    {
+  {
     path: "/addblog",
     component: () => import("@/page/MyPage/letBlog/addBlog.vue"),
+  },
+  {
+    path: "/todo",
+    component: () => import("@/todoList/ToDoList.vue"),
   },
 ];
 

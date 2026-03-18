@@ -20,11 +20,24 @@ import java.time.LocalDateTime;
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements IArticleService {
 
+    @Override
     public void addArticle(ArticleDto articleDto){
-        Article article = new Article();
-
+        Article article =dto2Entity(articleDto);
+        super.save(article);
     }
 
+
+    public Article dto2Entity(ArticleDto articleDto){
+        Article article = new Article();
+        article.setTitle(articleDto.getTitle());
+        article.setHtmlContent(articleDto.getHtmlContent());
+        article.setMarkdownContent(articleDto.getMarkdownContent());
+        article.setCreateTime(LocalDateTime.now());
+        article.setCreateTime(LocalDateTime.now());
+        article.setLikeNumber(0);
+        article.setViewNumber(0);
+        return article;
+    }
 
 
 

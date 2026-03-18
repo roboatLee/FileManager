@@ -13,7 +13,5 @@ import com.lee.entity.Article.ArticleDto;
  * @since 2026-03-17
  */
 public interface IArticleService extends IService<Article> {
-
-
     void addArticle(ArticleDto articleDto);
 }

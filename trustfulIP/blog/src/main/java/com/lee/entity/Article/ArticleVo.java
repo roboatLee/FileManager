@@ -23,4 +23,9 @@ public class ArticleVo {
      */
     private String markdownContent;
 
+    /**
+     * html内容
+     */
+    private String htmlContent;
+
 }

@@ -27,30 +27,11 @@ public interface BaseConverter<T, V, B, Dto> {
     V entity2vo(T t);
 
     /**
-     * VO转实体类
-     *
-     * @param v
-     * @return
-     */
-    T vo2entity(V v);
-
-
-    /**
      * 实体类集合转VO集合
      *
      * @param tList
      * @return
      */
     List<V> entityList2voList(List<T> tList);
-
-    /**
-     * VO集合转实体类集合
-     *
-     * @param vList
-     * @return
-     */
-    List<T> voList2entityList(List<V> vList);
-
-
 
 }

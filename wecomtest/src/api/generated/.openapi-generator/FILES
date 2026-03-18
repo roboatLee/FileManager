@@ -9,8 +9,8 @@ apis/we-message-controller-api.ts
 base.ts
 common.ts
 configuration.ts
-docs/Article.md
 docs/ArticleControllerApi.md
+docs/ArticleVo.md
 docs/AuthControllerApi.md
 docs/FavoriteControllerApi.md
 docs/FavoriteFolderDto.md
@@ -24,7 +24,7 @@ docs/RegisterRequest.md
 docs/WeMessageControllerApi.md
 git_push.sh
 index.ts
-models/article.ts
+models/article-vo.ts
 models/favorite-folder-dto.ts
 models/index.ts
 models/login-request.ts

@@ -14,11 +14,13 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits([
+  'update:modelValue',   // Markdown 源码
+  'update:html'          // ← 新增：HTML 格式内容
+])
 
 const editorRef = ref(null)
 let vditor = null
-const vditorValue = ref()
 
 onMounted(() => {
   vditor = new Vditor(editorRef.value, {
@@ -28,11 +30,14 @@ onMounted(() => {
 
     after: () => {
       vditor.setValue(props.modelValue)
+      emit('update:html', vditor.getHTML())
     },
 
     input: (value) => {
       emit('update:modelValue', value)
+      emit('update:html', vditor.getHTML())
     }
+
   })
 })
 
@@ -41,6 +46,7 @@ watch(
   (val) => {
     if (vditor && val !== vditor.getValue()) {
       vditor.setValue(val)
+      emit('update:html', vditor.getHTML())
     }
   }
 )

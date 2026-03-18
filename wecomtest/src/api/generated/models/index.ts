@@ -1,4 +1,4 @@
-export * from './article';
+export * from './article-vo';
 export * from './favorite-folder-dto';
 export * from './login-request';
 export * from './login-response';

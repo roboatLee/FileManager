@@ -3,6 +3,7 @@
     <div class="nav">
         <RouterLink to="/chat">chat</RouterLink>
         <RouterLink to="/blog">blog</RouterLink>
+        <RouterLink to="/todo">todo</RouterLink>
     </div>
 
 
