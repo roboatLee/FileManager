@@ -1,10 +1,26 @@
 <template>
     <h1>首页</h1>
-    <RouterLink to="/chat">chat</RouterLink>
+    <div class="nav">
+        <RouterLink to="/chat">chat</RouterLink>
+        <RouterLink to="/blog">blog</RouterLink>
+    </div>
+
+
 </template>
 <script setup>
 
 </script>
-<script>
+<style scoped>
+.nav {
+  display: flex;
+  gap: 10px;
+  color: #000;
+}
 
-</script>
+.nav a {
+  text-decoration: none;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+</style>

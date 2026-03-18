@@ -60,7 +60,7 @@ public class CodeGenerator {
                         .outputDir(outputDir)
                 )
                 .packageConfig(builder -> builder
-                        .parent("com.lee." + moduleName.replace("module-", ""))
+                        .parent("com.lee")
                 )
                 .strategyConfig(builder -> builder
                         .addInclude(tables)

@@ -1,6 +1,7 @@
 .gitignore
 .npmignore
 api.ts
+apis/article-controller-api.ts
 apis/auth-controller-api.ts
 apis/favorite-controller-api.ts
 apis/json-controller-api.ts
@@ -8,6 +9,8 @@ apis/we-message-controller-api.ts
 base.ts
 common.ts
 configuration.ts
+docs/Article.md
+docs/ArticleControllerApi.md
 docs/AuthControllerApi.md
 docs/FavoriteControllerApi.md
 docs/FavoriteFolderDto.md
@@ -21,6 +24,7 @@ docs/RegisterRequest.md
 docs/WeMessageControllerApi.md
 git_push.sh
 index.ts
+models/article.ts
 models/favorite-folder-dto.ts
 models/index.ts
 models/login-request.ts

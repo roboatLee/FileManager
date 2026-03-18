@@ -29,12 +29,6 @@
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.lee</groupId>
-            <artifactId>MyFile</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
 </project>

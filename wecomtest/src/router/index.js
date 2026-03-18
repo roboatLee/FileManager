@@ -1,6 +1,6 @@
 import Login from "@/views/Login.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import Parent from "@/page/StudyPage/Parent.vue";
+import Parent from "@/page/StudyPage/EmitAndProps/Parent.vue";
 import vditor from "@/page/MyPage/vditor/vditor.vue";
 import FileBrowser from "@/page/MyPage/FileComponent/FileBrowser.vue";
 import { useAuthStore } from "@/auth/authStore";
@@ -32,9 +32,17 @@ const routes = [
     component: () => import("@/views/Register.vue"),
   },
   {
-  path: "/private/:username",
-  component: () => import("@/views/PrivateChat.vue")
-},
+    path: "/private/:username",
+    component: () => import("@/views/PrivateChat.vue"),
+  },
+  {
+    path: "/blog",
+    component: () => import("@/page/MyPage/letBlog/blog.vue"),
+  },
+    {
+    path: "/addblog",
+    component: () => import("@/page/MyPage/letBlog/addBlog.vue"),
+  },
 ];
 
 const router = createRouter({
@@ -43,25 +51,25 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore()
+  const authStore = useAuthStore();
 
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
 
   // 白名单页面
-  const whiteList = ["/login", "/register"]
+  const whiteList = ["/login", "/register"];
 
   if (!token && !whiteList.includes(to.path)) {
-    next("/login")
-    return
+    next("/login");
+    return;
   }
 
   // 已登录访问登录页，自动跳首页
   if (token && to.path === "/login") {
-    next("/")
-    return
+    next("/");
+    return;
   }
 
-  next()
-})
+  next();
+});
 
 export default router;

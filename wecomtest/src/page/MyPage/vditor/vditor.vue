@@ -49,9 +49,5 @@ onBeforeUnmount(() => {
   vditor?.destroy()
 })
 
-// function getValue(){
-//   vditorValue.value =  vditor.getValue()
-//   console.log(vditorValue.value)
-// }
 
 </script>

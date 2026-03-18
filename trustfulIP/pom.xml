@@ -55,8 +55,8 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>RELEASE</version>
-                <scope>compile</scope>
+                <version>1.18.30</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -71,6 +71,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>2.7.18</version>
             </dependency>
 
 
@@ -130,24 +131,80 @@
                 <version>0.11.5</version>
                 <scope>runtime</scope>
             </dependency>
+
+<!--            四个模型之间的快速转换-->
+
+            <!-- MapStruct API -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>1.5.5.Final</version>
+            </dependency>
+
+            <!-- 注解处理器（核心！不加不会生成 Impl） -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>1.5.5.Final</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- 关键：让 Lombok 和 MapStruct 互相认识 -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-mapstruct-binding</artifactId>
+                <version>0.2.0</version>
+                <scope>provided</scope>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
 
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <!-- 只在这里管理版本，不让所有模块都继承执行 repackage -->
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>2.7.18</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.13.0</version>
+                    <configuration>
+                        <source>8</source>   <!-- 或 21，根据你的 JDK -->
+                        <target>8</target>
+                        <annotationProcessorPaths>
+                            <!-- Lombok 必须在 MapStruct 之前！ -->
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>1.18.34</version>
+                            </path>
+                            <path>
+                                <groupId>org.mapstruct</groupId>
+                                <artifactId>mapstruct-processor</artifactId>
+                                <version>1.6.3</version>
+                            </path>
+                        </annotationProcessorPaths>
+                        <!-- 可选：开启详细日志排查问题 -->
+                        <!-- <compilerArgs>
+                            <arg>-Amapstruct.verbose=true</arg>
+                        </compilerArgs> -->
+                    </configuration>
+                </plugin>
+
+
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.7.18</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

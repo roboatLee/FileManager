@@ -1,0 +1,22 @@
+wecom:
+  corp-id: yourcropid
+  corp-secret: o9hG4_ldOZ3jYzpE8OXfiIrqV2uL7Q8TfxCSxcbttB4
+  agent-id: 1000028
+
+server:
+  address: 0.0.0.0
+  port: 8080
+
+# redis配置
+spring:
+  redis:
+    host: localhost
+    port: 6379
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/myself?useSSL=false
+    username: root
+    password: yourpassword
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
