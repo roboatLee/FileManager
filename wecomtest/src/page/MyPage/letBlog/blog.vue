@@ -14,16 +14,16 @@
           <h2 class="blog-title">{{ blog.title }}</h2>
           
           <div class="meta">
-            <span v-if="blog.author" class="author">
-              <i class="icon-user"></i> {{ blog.author }}
+            <span v-if="blog.userName" class="author">
+              <i class="icon-user"></i> {{ blog.userName }}
             </span>
-            <time v-if="blog.createdAt" class="date">
-              <i class="icon-calendar"></i> {{ formatDate(blog.createdAt) }}
+            <time v-if="blog.createTime" class="date">
+              <i class="icon-calendar"></i> {{ formatDate(blog.createTime) }}
             </time>
           </div>
 
-          <p class="excerpt" v-if="blog.summary || blog.content">
-            {{ (blog.summary || blog.content || '').slice(0, 120) + '...' }}
+          <p class="excerpt" v-if="blog.summary || blog.htmlContent">
+            {{ (blog.summary || blog.htmlContent || '').slice(0, 120) + '...' }}
           </p>
 
           <router-link 

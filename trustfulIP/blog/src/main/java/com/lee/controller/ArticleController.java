@@ -1,7 +1,6 @@
 package com.lee.controller;
 
-import com.lee.convert.ArticleConvert;
-import com.lee.entity.Article.Article;
+import com.lee.convert.IArticleConvert;
 import com.lee.entity.Article.ArticleDto;
 import com.lee.entity.Article.ArticleVo;
 import com.lee.service.IArticleService;
@@ -25,7 +24,7 @@ public class ArticleController {
     @Autowired
     private IArticleService articleService;
     @Resource
-    private  ArticleConvert articleConvert;
+    private IArticleConvert articleConvert;
 
     @GetMapping("/getAllArticle")
     public List<ArticleVo> getAllArtile(){

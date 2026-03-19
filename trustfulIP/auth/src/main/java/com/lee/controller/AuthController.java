@@ -19,8 +19,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Value("${test.flag}")
-    private String ans;
+
 
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequest request) {
@@ -33,8 +32,5 @@ public class AuthController {
         return authService.login(request);
     }
 
-    @GetMapping("/ans")
-    public  String getAns(){
-        return ans;
-    }
+
 }

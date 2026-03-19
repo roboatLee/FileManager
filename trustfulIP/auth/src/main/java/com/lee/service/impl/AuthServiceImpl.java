@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEmail(request.getEmail());
         user.setRole("USER");
-        user.setStatus(1);
+        user.setStatus((byte) 1);
 
         userMapper.insert(user);
     }

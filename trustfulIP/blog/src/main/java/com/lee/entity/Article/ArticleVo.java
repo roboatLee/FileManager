@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 /**
  * @author KitenLee
  * * @date 2026/3/17
@@ -27,5 +29,15 @@ public class ArticleVo {
      * html内容
      */
     private String htmlContent;
+
+    /**
+     * 作者名字
+     * */
+    private String userName;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
 
 }

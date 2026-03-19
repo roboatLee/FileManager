@@ -1,0 +1,24 @@
+package com.lee.convert;
+
+import com.lee.entity.User;
+import com.lee.service.IUserService;
+import org.springframework.stereotype.Service;
+
+/**
+ * @author KitenLee
+ * * @date 2026/3/19
+ */
+@Service
+public class UserConvert {
+
+    private IUserService userService;
+
+    public UserConvert(IUserService userService) {
+        this.userService = userService;
+    }
+
+    public String convertUserId2UserName(Integer id){
+        User user =  userService.getById(id);
+        return user.getUsername();
+    }
+}
