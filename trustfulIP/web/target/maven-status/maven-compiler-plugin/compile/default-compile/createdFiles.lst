@@ -1,7 +1,0 @@
-com\lee\controller\WeMessageController.class
-com\lee\controller\FavoriteController.class
-com\lee\trustIP.class
-com\lee\config\SecurityConfig.class
-com\lee\dao\UserDTO.class
-com\lee\controller\JsonController.class
-com\lee\swagger\SwaggerConfig.class
