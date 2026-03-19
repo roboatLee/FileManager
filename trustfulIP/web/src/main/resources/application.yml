@@ -1,0 +1,11 @@
+spring:
+  config:
+    import:
+      - classpath:auth.yml
+      - classpath:blog.yml
+      - classpath:common.yml
+      - classpath:minio.yml
+
+test:
+  flag: nihao
+

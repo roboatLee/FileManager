@@ -25,7 +25,8 @@ const handleHtmlChange = (newHtml) => {
 
 const save = () => {
   const articleDto = new ArticleDto(title.value,markdown.value,html.value)
-  addArtile(articleDto)
+  const token = localStorage.getItem("token")
+  addArtile(token,articleDto)
 }
 
 </script>

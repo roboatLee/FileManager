@@ -22,6 +22,8 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
+import type { ArticleDto } from '../models';
+// @ts-ignore
 import type { ArticleVo } from '../models';
 /**
  * ArticleControllerApi - axios parameter creator
@@ -30,13 +32,16 @@ export const ArticleControllerApiAxiosParamCreator = function (configuration?: C
     return {
         /**
          * 
-         * @param {object} body 
+         * @param {string} authorization 
+         * @param {ArticleDto} articleDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addArticle: async (body: object, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'body' is not null or undefined
-            assertParamExists('addArticle', 'body', body)
+        addArticle: async (authorization: string, articleDto: ArticleDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'authorization' is not null or undefined
+            assertParamExists('addArticle', 'authorization', authorization)
+            // verify required parameter 'articleDto' is not null or undefined
+            assertParamExists('addArticle', 'articleDto', articleDto)
             const localVarPath = `/article/addArticle`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -51,10 +56,13 @@ export const ArticleControllerApiAxiosParamCreator = function (configuration?: C
 
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
+            if (authorization != null) {
+                localVarHeaderParameter['Authorization'] = String(authorization);
+            }
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(body, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(articleDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -101,12 +109,13 @@ export const ArticleControllerApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {object} body 
+         * @param {string} authorization 
+         * @param {ArticleDto} articleDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async addArticle(body: object, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.addArticle(body, options);
+        async addArticle(authorization: string, articleDto: ArticleDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addArticle(authorization, articleDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ArticleControllerApi.addArticle']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -133,12 +142,13 @@ export const ArticleControllerApiFactory = function (configuration?: Configurati
     return {
         /**
          * 
-         * @param {object} body 
+         * @param {string} authorization 
+         * @param {ArticleDto} articleDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addArticle(body: object, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.addArticle(body, options).then((request) => request(axios, basePath));
+        addArticle(authorization: string, articleDto: ArticleDto, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.addArticle(authorization, articleDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -157,12 +167,13 @@ export const ArticleControllerApiFactory = function (configuration?: Configurati
 export class ArticleControllerApi extends BaseAPI {
     /**
      * 
-     * @param {object} body 
+     * @param {string} authorization 
+     * @param {ArticleDto} articleDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public addArticle(body: object, options?: RawAxiosRequestConfig) {
-        return ArticleControllerApiFp(this.configuration).addArticle(body, options).then((request) => request(this.axios, this.basePath));
+    public addArticle(authorization: string, articleDto: ArticleDto, options?: RawAxiosRequestConfig) {
+        return ArticleControllerApiFp(this.configuration).addArticle(authorization, articleDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

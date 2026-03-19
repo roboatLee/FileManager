@@ -1,3 +1,4 @@
+export * from './article-dto';
 export * from './article-vo';
 export * from './favorite-folder-dto';
 export * from './login-request';
@@ -6,3 +7,4 @@ export * from './mark-down-file-dto';
 export * from './one-path-file-vo';
 export * from './one-path-files-vo';
 export * from './register-request';
+export * from './upload-request';

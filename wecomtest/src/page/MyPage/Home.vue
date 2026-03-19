@@ -1,10 +1,12 @@
 <template>
-    <h1>首页</h1>
-    <div class="nav">
-        <RouterLink to="/chat">chat</RouterLink>
-        <RouterLink to="/blog">blog</RouterLink>
-        <RouterLink to="/todo">todo</RouterLink>
-    </div>
+  <h1>首页</h1>
+  <div class="nav">
+    <RouterLink to="/chat">chat</RouterLink>
+    <RouterLink to="/blog">blog</RouterLink>
+    <RouterLink to="/todo">todo</RouterLink>
+    <RouterLink to="/minio">minio</RouterLink>
+
+  </div>
 
 
 </template>

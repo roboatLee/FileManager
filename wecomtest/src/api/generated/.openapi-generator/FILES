@@ -5,11 +5,13 @@ apis/article-controller-api.ts
 apis/auth-controller-api.ts
 apis/favorite-controller-api.ts
 apis/json-controller-api.ts
+apis/minio-test-controller-api.ts
 apis/we-message-controller-api.ts
 base.ts
 common.ts
 configuration.ts
 docs/ArticleControllerApi.md
+docs/ArticleDto.md
 docs/ArticleVo.md
 docs/AuthControllerApi.md
 docs/FavoriteControllerApi.md
@@ -18,12 +20,15 @@ docs/JsonControllerApi.md
 docs/LoginRequest.md
 docs/LoginResponse.md
 docs/MarkDownFileDto.md
+docs/MinioTestControllerApi.md
 docs/OnePathFileVo.md
 docs/OnePathFilesVo.md
 docs/RegisterRequest.md
+docs/UploadRequest.md
 docs/WeMessageControllerApi.md
 git_push.sh
 index.ts
+models/article-dto.ts
 models/article-vo.ts
 models/favorite-folder-dto.ts
 models/index.ts
@@ -33,3 +38,4 @@ models/mark-down-file-dto.ts
 models/one-path-file-vo.ts
 models/one-path-files-vo.ts
 models/register-request.ts
+models/upload-request.ts

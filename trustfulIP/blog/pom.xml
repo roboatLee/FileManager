@@ -64,5 +64,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok-mapstruct-binding</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.lee</groupId>
+            <artifactId>auth</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 </project>

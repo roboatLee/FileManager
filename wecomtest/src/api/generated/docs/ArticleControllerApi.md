@@ -8,7 +8,7 @@ All URIs are relative to *http://localhost:8080*
 |[**getAllArtile**](#getallartile) | **GET** /article/getAllArticle | |
 
 # **addArticle**
-> addArticle(body)
+> addArticle(articleDto)
 
 
 ### Example
@@ -16,16 +16,19 @@ All URIs are relative to *http://localhost:8080*
 ```typescript
 import {
     ArticleControllerApi,
-    Configuration
+    Configuration,
+    ArticleDto
 } from './api';
 
 const configuration = new Configuration();
 const apiInstance = new ArticleControllerApi(configuration);
 
-let body: object; //
+let authorization: string; // (default to undefined)
+let articleDto: ArticleDto; //
 
 const { status, data } = await apiInstance.addArticle(
-    body
+    authorization,
+    articleDto
 );
 ```
 
@@ -33,7 +36,8 @@ const { status, data } = await apiInstance.addArticle(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **body** | **object**|  | |
+| **articleDto** | **ArticleDto**|  | |
+| **authorization** | [**string**] |  | defaults to undefined|
 
 
 ### Return type

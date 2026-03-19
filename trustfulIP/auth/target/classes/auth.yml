@@ -9,6 +9,8 @@ spring:
     type-aliases-package: com.lee.auth.entity
     configuration:
       map-underscore-to-camel-case: true
+test:
+  flag: from-db-module
 jwt:
   secret: LiChengXinAiZhaoXinLing
   expiration: 3600  # 过期时间，单位：秒

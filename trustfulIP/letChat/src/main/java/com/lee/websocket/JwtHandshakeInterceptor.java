@@ -42,9 +42,9 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
             }
 
             if (JwtUtil.validateToken(token)) {
-                String username =
-                        JwtUtil.getUsername(token);
-                attributes.put("username", username);
+                Integer userId =
+                        JwtUtil.getUserIdInt(token);
+                attributes.put("userId", userId);
                 return true;
             }
         }

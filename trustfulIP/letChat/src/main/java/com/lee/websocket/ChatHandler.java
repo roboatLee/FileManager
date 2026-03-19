@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class ChatHandler extends TextWebSocketHandler  {
-    private final ConcurrentHashMap<String, Set<WebSocketSession>> sessions
+    private final ConcurrentHashMap<Integer, Set<WebSocketSession>> sessions
             = new ConcurrentHashMap<>();
 
     private final ChatMessageRepository repository;
@@ -29,22 +29,22 @@ public class ChatHandler extends TextWebSocketHandler  {
     public ChatHandler(ChatMessageRepository repository) {
         this.repository = repository;
     }
-    private static final String SESSION_USER_KEY = "username";
+    private static final String SESSION_USER_KEY = "userId";
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         //得到连进去之后用户的名字
-        String userName =
-                (String) session.getAttributes().get(SESSION_USER_KEY);
+        Integer userId =
+                (Integer) session.getAttributes().get(SESSION_USER_KEY);
         /**
          * 它尝试从 sessions 中获取 userName 的键值。
          * 如果这个键不存在，那么就使用提供的 lambda 表达式来创建一个新的 Set（在这种情况下，是 ConcurrentHashMap.newKeySet()，这将返回一个新的线程安全的 Set）
          * 并将其存储到 sessions map 中。
          * */
         Set<WebSocketSession> userSessions =
-                sessions.computeIfAbsent(userName,
+                sessions.computeIfAbsent(userId,
                         k -> ConcurrentHashMap.newKeySet());
         /**
          * 是否是第一次连接
@@ -53,7 +53,7 @@ public class ChatHandler extends TextWebSocketHandler  {
          * */
         boolean firstConnection = userSessions.isEmpty();
         if (firstConnection) {
-            broadcastJoin(userName);
+            broadcastJoin(userId);
             broadcastUsers();
         }
         userSessions.add(session);
@@ -249,11 +249,11 @@ public class ChatHandler extends TextWebSocketHandler  {
     /**
      * 广播谁加入了
      * */
-    private void broadcastJoin(String userName) {
+    private void broadcastJoin(Integer userName) {
 
         try {
 
-            Map<String,String> data = new HashMap<>();
+            Map<String,Integer> data = new HashMap<>();
             data.put("user", userName);
 
             for (Set<WebSocketSession> userSessions : sessions.values()) {
@@ -297,7 +297,7 @@ public class ChatHandler extends TextWebSocketHandler  {
      * */
     private void broadcastUsers() {
         try {
-            List<String> userList =
+            List<Integer> userList =
                     new ArrayList<>(sessions.keySet());
             for (Set<WebSocketSession> userSessions : sessions.values()) {
                 for (WebSocketSession s : userSessions) {

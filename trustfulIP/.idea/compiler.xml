@@ -19,6 +19,7 @@
         <module name="MyFile" />
         <module name="blog" />
         <module name="letChat" />
+        <module name="infrastructure-minio" />
         <module name="wecom" />
       </profile>
     </annotationProcessing>
@@ -30,6 +31,7 @@
       <module name="blog" options="-parameters" />
       <module name="common" options="-parameters" />
       <module name="infrastructure" options="-parameters" />
+      <module name="infrastructure-minio" options="-parameters" />
       <module name="letChat" options="-parameters" />
       <module name="trustfulIP" options="" />
       <module name="web" options="-parameters" />

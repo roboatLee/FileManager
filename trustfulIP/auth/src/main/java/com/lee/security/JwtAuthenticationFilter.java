@@ -42,10 +42,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = header.substring(7);
 
             try {
-                String username = JwtUtil.getUsername(token);
+                Integer userId = JwtUtil.getUserIdInt(token);
 
                 User user = userMapper.selectOne(
-                        new QueryWrapper<User>().eq("username", username)
+                        new QueryWrapper<User>().eq("userId", userId)
                 );
 
                 if (user != null) {

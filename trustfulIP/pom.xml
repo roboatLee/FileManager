@@ -19,6 +19,7 @@
         <module>letChat</module>
         <module>auth</module>
         <module>blog</module>
+        <module>infrastructure-minio</module>
     </modules>
 
     <parent>
@@ -155,6 +156,13 @@
                 <version>0.2.0</version>
                 <scope>provided</scope>
             </dependency>
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>8.5.7</version>
+            </dependency>
+
+
         </dependencies>
 
     </dependencyManagement>

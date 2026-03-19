@@ -8,6 +8,6 @@ export async function getAllArtile() {
   return api.getAllArtile()
 }
 
-export async function addArtile(dto: ArticleDto) {
-  return api.addArticle(dto)
+export async function addArtile(authorization: string,dto: ArticleDto) {
+  return api.addArticle(authorization,dto)
 }

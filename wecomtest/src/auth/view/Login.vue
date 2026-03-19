@@ -55,9 +55,14 @@ const handleLogin = async () => {
 
         const token = res.data.token   // ⭐ 正确取值
         const username = res.data.username   // ⭐ 取出来
+        const userId= res.data.userId // ⭐ 取出来
+
+        console.log(res.data)
 
         localStorage.setItem("token", token)
         localStorage.setItem("username", username)   // ⭐ 加这一行
+        localStorage.setItem("userId", userId)
+        
         authStore.loginSuccess(res.data)  // ⭐ 传 data
 
         ElMessage.success("登录成功")

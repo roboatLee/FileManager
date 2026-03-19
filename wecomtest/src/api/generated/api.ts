@@ -18,5 +18,6 @@ export * from './apis/article-controller-api';
 export * from './apis/auth-controller-api';
 export * from './apis/favorite-controller-api';
 export * from './apis/json-controller-api';
+export * from './apis/minio-test-controller-api';
 export * from './apis/we-message-controller-api';
 

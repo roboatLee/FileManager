@@ -47,6 +47,10 @@ const routes = [
     path: "/todo",
     component: () => import("@/todoList/ToDoList.vue"),
   },
+    {
+    path: "/minio",
+    component: () => import("@/minio/minio.vue"),
+  },
 ];
 
 const router = createRouter({

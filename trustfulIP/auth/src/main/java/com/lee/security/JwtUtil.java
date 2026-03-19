@@ -19,7 +19,7 @@ public class JwtUtil {
     public static String generateToken(User user) {
         return Jwts.builder()
                 .setSubject(String.valueOf(user.getId()))
-                .claim("username", user.getUsername())
+                .claim("userId", user.getId())
                 .claim("role", user.getRole())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE))
                 .signWith(SignatureAlgorithm.HS256, SECRET)
@@ -27,19 +27,22 @@ public class JwtUtil {
     }
 
     public static Claims parseToken(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
         return Jwts.parser()
                 .setSigningKey(SECRET)
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    public static String getUsername(String token) {
-        return parseToken(token).get("username", String.class);
+    public static int getUserIdInt(String token) {
+        Integer userId = parseToken(token).get("userId", Integer.class);
+        System.out.println(userId);
+        return userId;
     }
 
-    public static Long getUserId(String token) {
-        return Long.parseLong(parseToken(token).getSubject());
-    }
 
     public static boolean validateToken(String token) {
         try {

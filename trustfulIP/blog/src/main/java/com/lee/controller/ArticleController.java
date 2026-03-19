@@ -33,8 +33,8 @@ public class ArticleController {
     }
 
     @PostMapping("/addArticle")
-    public void addArticle(@RequestBody ArticleDto articleDto){
-        articleService.addArticle(articleDto);
+    public void addArticle(@RequestBody ArticleDto articleDto,@RequestHeader("Authorization") String token){
+        articleService.addArticle(articleDto,token);
     }
 
 }

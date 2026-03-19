@@ -5,10 +5,8 @@ import com.lee.dto.LoginResponse;
 import com.lee.dto.RegisterRequest;
 import com.lee.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author KitenLee
@@ -21,6 +19,9 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Value("${test.flag}")
+    private String ans;
+
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequest request) {
         authService.register(request);
@@ -30,5 +31,10 @@ public class AuthController {
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request) {
         return authService.login(request);
+    }
+
+    @GetMapping("/ans")
+    public  String getAns(){
+        return ans;
     }
 }
