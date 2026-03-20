@@ -14,12 +14,13 @@
 
 
 
-export interface ArticleVo {
-    'id'?: number;
+export interface ArticleDetailVo {
     'title'?: string;
     'markdownContent'?: string;
     'htmlContent'?: string;
     'userName'?: string;
     'createTime'?: string;
+    'likeNumber'?: number;
+    'viewNumber'?: number;
 }
 

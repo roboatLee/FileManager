@@ -8,9 +8,10 @@
     <main class="blog-list">
       <article 
         v-for="blog in blogs" 
+        
         class="blog-card"
       >
-        <div class="card-content">
+        <div class="card-content" @click="goDetail(blog.id)">
           <h2 class="blog-title">{{ blog.title }}</h2>
           
           <div class="meta">
@@ -35,22 +36,21 @@
           </router-link>
         </div>
       </article>
-
-      <div v-if="blogs.length === 0" class="empty-state">
-        <p>暂无文章～快来写一篇吧！</p>
-      </div>
     </main>
+    
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
 import { getAllArtile } from './myApi/articleApi'
+import { useRouter } from 'vue-router'
 
 // 可选：如果你的路由是 vue-router，可以导入 useRouter
 // import { useRouter } from 'vue-router'
 
 const blogs = ref([])
+const router = useRouter()
 
 onMounted(async () => {
   try {
@@ -72,6 +72,11 @@ const formatDate = (dateStr) => {
     day: 'numeric'
   })
 }
+
+const goDetail = (id) => {
+  router.push(`/blog/detail/${id}`)
+}
+
 </script>
 
 <style scoped>

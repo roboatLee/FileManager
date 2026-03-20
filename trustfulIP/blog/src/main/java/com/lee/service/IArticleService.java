@@ -2,6 +2,7 @@ package com.lee.service;
 
 import com.lee.entity.Article.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lee.entity.Article.ArticleDetailVo;
 import com.lee.entity.Article.ArticleDto;
 
 /**
@@ -14,4 +15,6 @@ import com.lee.entity.Article.ArticleDto;
  */
 public interface IArticleService extends IService<Article> {
     void addArticle(ArticleDto articleDto,String token);
+    ArticleDetailVo getOneDetailById(Integer id);
+    void deleteArticleById(Integer id,String token);
 }

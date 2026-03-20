@@ -1,16 +1,20 @@
 package com.lee.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.lee.convert.UserConvert;
 import com.lee.dto.LoginRequest;
 import com.lee.dto.LoginResponse;
 import com.lee.dto.RegisterRequest;
 import com.lee.entity.User;
+import com.lee.entity.user.UserVo;
 import com.lee.mapper.UserMapper;
 import com.lee.security.JwtUtil;
 import com.lee.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author KitenLee
@@ -22,6 +26,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+
+
 
     @Override
     public void register(RegisterRequest request) {
@@ -72,5 +78,14 @@ public class AuthServiceImpl implements AuthService {
                 user.getUsername(),
                 user.getRole()
         );
+    }
+
+    @Override
+    public UserVo getUserById(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        User user = userMapper.selectById(JwtUtil.getUserIdInt(token));
+        System.out.println(JwtUtil.getUserIdInt(token));
+        System.out.println(user);
+        return UserConvert.Entity2Vo(user);
     }
 }

@@ -3,6 +3,10 @@ package com.lee.service;
 import com.lee.dto.LoginRequest;
 import com.lee.dto.LoginResponse;
 import com.lee.dto.RegisterRequest;
+import com.lee.entity.User;
+import com.lee.entity.user.UserVo;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author KitenLee
@@ -12,4 +16,5 @@ public interface AuthService {
     void register(RegisterRequest request);
 
     LoginResponse login(LoginRequest request);
+    UserVo getUserById(HttpServletRequest request);
 }

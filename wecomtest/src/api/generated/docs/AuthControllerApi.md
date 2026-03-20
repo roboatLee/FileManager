@@ -4,12 +4,12 @@ All URIs are relative to *http://localhost:8080*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**getAns**](#getans) | **GET** /auth/ans | |
+|[**getUserByToken**](#getuserbytoken) | **GET** /auth/getter | |
 |[**login**](#login) | **POST** /auth/login | |
 |[**register**](#register) | **POST** /auth/register | |
 
-# **getAns**
-> string getAns()
+# **getUserByToken**
+> UserVo getUserByToken()
 
 
 ### Example
@@ -23,7 +23,7 @@ import {
 const configuration = new Configuration();
 const apiInstance = new AuthControllerApi(configuration);
 
-const { status, data } = await apiInstance.getAns();
+const { status, data } = await apiInstance.getUserByToken();
 ```
 
 ### Parameters
@@ -32,7 +32,7 @@ This endpoint does not have any parameters.
 
 ### Return type
 
-**string**
+**UserVo**
 
 ### Authorization
 

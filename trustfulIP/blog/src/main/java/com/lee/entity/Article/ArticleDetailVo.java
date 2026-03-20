@@ -1,24 +1,17 @@
 package com.lee.entity.Article;
 
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 /**
  * @author KitenLee
- * * @date 2026/3/17
+ * @date 2026/3/20
+ * 这个其实是单独的Article的一个页面
+ * 而ArticleVO其实更像一个列表里面的一个VO
  */
-@Getter
-@Setter
-@ToString
-public class ArticleVo {
-    /**
-     * 主键
-     */
-    private Integer id;
+@Data
+public class ArticleDetailVo {
     /**
      * 标题
      */
@@ -43,5 +36,9 @@ public class ArticleVo {
      * 创建时间
      */
     private LocalDateTime createTime;
+
+    private Integer likeNumber;
+
+    private Integer viewNumber;
 
 }

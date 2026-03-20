@@ -14,12 +14,9 @@
 
 
 
-export interface ArticleVo {
+export interface UserVo {
     'id'?: number;
-    'title'?: string;
-    'markdownContent'?: string;
-    'htmlContent'?: string;
-    'userName'?: string;
-    'createTime'?: string;
+    'username'?: string;
+    'role'?: string;
 }
 

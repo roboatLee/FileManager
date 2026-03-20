@@ -27,6 +27,8 @@ import type { LoginRequest } from '../models';
 import type { LoginResponse } from '../models';
 // @ts-ignore
 import type { RegisterRequest } from '../models';
+// @ts-ignore
+import type { UserVo } from '../models';
 /**
  * AuthControllerApi - axios parameter creator
  */
@@ -37,8 +39,8 @@ export const AuthControllerApiAxiosParamCreator = function (configuration?: Conf
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAns: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/auth/ans`;
+        getUserByToken: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/getter`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -143,10 +145,10 @@ export const AuthControllerApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAns(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAns(options);
+        async getUserByToken(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserVo>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserByToken(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthControllerApi.getAns']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AuthControllerApi.getUserByToken']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -187,8 +189,8 @@ export const AuthControllerApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAns(options?: RawAxiosRequestConfig): AxiosPromise<string> {
-            return localVarFp.getAns(options).then((request) => request(axios, basePath));
+        getUserByToken(options?: RawAxiosRequestConfig): AxiosPromise<UserVo> {
+            return localVarFp.getUserByToken(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -220,8 +222,8 @@ export class AuthControllerApi extends BaseAPI {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public getAns(options?: RawAxiosRequestConfig) {
-        return AuthControllerApiFp(this.configuration).getAns(options).then((request) => request(this.axios, this.basePath));
+    public getUserByToken(options?: RawAxiosRequestConfig) {
+        return AuthControllerApiFp(this.configuration).getUserByToken(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

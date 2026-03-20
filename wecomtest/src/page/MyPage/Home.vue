@@ -5,6 +5,8 @@
     <RouterLink to="/blog">blog</RouterLink>
     <RouterLink to="/todo">todo</RouterLink>
     <RouterLink to="/minio">minio</RouterLink>
+    <RouterLink to="/myprofile">user</RouterLink>
+
 
   </div>
 

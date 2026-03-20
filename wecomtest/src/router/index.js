@@ -47,9 +47,19 @@ const routes = [
     path: "/todo",
     component: () => import("@/todoList/ToDoList.vue"),
   },
-    {
+  {
     path: "/minio",
     component: () => import("@/minio/minio.vue"),
+  },
+  {
+    path: "/blog/detail/:id",
+    name: "BlogDetail",
+    component: () => import("@/page/MyPage/letBlog/BlogDetail.vue"),
+  },
+  {
+    path: "/myprofile",
+    name: "UserCenter",
+    component: () => import("@/usercenter/UserCenter.vue"),
   },
 ];
 

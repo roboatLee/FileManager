@@ -14,12 +14,14 @@
 
 
 
-export interface ArticleVo {
+export interface User {
     'id'?: number;
-    'title'?: string;
-    'markdownContent'?: string;
-    'htmlContent'?: string;
-    'userName'?: string;
+    'username'?: string;
+    'password'?: string;
+    'email'?: string;
+    'role'?: string;
+    'status'?: string;
     'createTime'?: string;
+    'updateTime'?: string;
 }
 

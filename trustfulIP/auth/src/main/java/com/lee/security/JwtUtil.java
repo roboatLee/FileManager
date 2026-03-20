@@ -39,7 +39,6 @@ public class JwtUtil {
 
     public static int getUserIdInt(String token) {
         Integer userId = parseToken(token).get("userId", Integer.class);
-        System.out.println(userId);
         return userId;
     }
 

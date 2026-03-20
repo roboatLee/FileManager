@@ -1,6 +1,7 @@
 package com.lee.controller;
 
 import com.lee.convert.IArticleConvert;
+import com.lee.entity.Article.ArticleDetailVo;
 import com.lee.entity.Article.ArticleDto;
 import com.lee.entity.Article.ArticleVo;
 import com.lee.service.IArticleService;
@@ -35,5 +36,15 @@ public class ArticleController {
     public void addArticle(@RequestBody ArticleDto articleDto,@RequestHeader("Authorization") String token){
         articleService.addArticle(articleDto,token);
     }
+    @GetMapping("/detail/{id}")
+    public ArticleDetailVo getArticleById(@PathVariable Integer id){
+        return articleService.getOneDetailById(id);
+    }
 
+    @DeleteMapping("/delete/{id}")
+    public void deleteArticleById(@PathVariable Integer id,
+                                  @RequestHeader("Authorization") String token){
+        articleService.deleteArticleById(id, token);
+
+    }
 }

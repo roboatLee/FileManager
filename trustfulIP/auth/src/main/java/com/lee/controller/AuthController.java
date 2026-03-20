@@ -3,10 +3,14 @@ package com.lee.controller;
 import com.lee.dto.LoginRequest;
 import com.lee.dto.LoginResponse;
 import com.lee.dto.RegisterRequest;
+import com.lee.entity.User;
+import com.lee.entity.user.UserVo;
 import com.lee.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author KitenLee
@@ -32,5 +36,7 @@ public class AuthController {
         return authService.login(request);
     }
 
+    @GetMapping("/getter")
+    public UserVo getUserByToken(HttpServletRequest request){return authService.getUserById(request);}
 
 }

@@ -11,3 +11,7 @@ export async function getAllArtile() {
 export async function addArtile(authorization: string,dto: ArticleDto) {
   return api.addArticle(authorization,dto)
 }
+
+export async function getArticleById(id:number) {
+  return api.getArticleById(id)
+}

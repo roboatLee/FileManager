@@ -11,6 +11,7 @@ base.ts
 common.ts
 configuration.ts
 docs/ArticleControllerApi.md
+docs/ArticleDetailVo.md
 docs/ArticleDto.md
 docs/ArticleVo.md
 docs/AuthControllerApi.md
@@ -25,9 +26,11 @@ docs/OnePathFileVo.md
 docs/OnePathFilesVo.md
 docs/RegisterRequest.md
 docs/UploadRequest.md
+docs/UserVo.md
 docs/WeMessageControllerApi.md
 git_push.sh
 index.ts
+models/article-detail-vo.ts
 models/article-dto.ts
 models/article-vo.ts
 models/favorite-folder-dto.ts
@@ -39,3 +42,4 @@ models/one-path-file-vo.ts
 models/one-path-files-vo.ts
 models/register-request.ts
 models/upload-request.ts
+models/user-vo.ts
