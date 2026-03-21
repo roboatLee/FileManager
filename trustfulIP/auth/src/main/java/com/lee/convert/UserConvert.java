@@ -18,7 +18,7 @@ public class UserConvert {
         this.userService = userService;
     }
 
-    public String convertUserId2UserName(Integer id){
+    public String convertUserId2UserName(Long id){
         User user =  userService.getById(id);
         return user.getUsername();
     }

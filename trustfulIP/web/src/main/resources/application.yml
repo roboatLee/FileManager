@@ -5,7 +5,10 @@ spring:
       - classpath:blog.yml
       - classpath:common.yml
       - classpath:minio.yml
-
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 test:
   flag: nihao
 

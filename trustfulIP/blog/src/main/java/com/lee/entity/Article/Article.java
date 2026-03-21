@@ -28,7 +28,7 @@ public class Article implements Serializable {
      * 主键
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     /**
      * 标题
@@ -43,7 +43,7 @@ public class Article implements Serializable {
     /**
      * UserId外键
      */
-    private Integer userId;
+    private Long userId;
 
     /**
      * markdown内容

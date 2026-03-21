@@ -24,4 +24,8 @@ public class UserVo {
      */
     private String role;
 
+    /**
+     * 角色头像
+     * */
+    private String avatarUrl;
 }

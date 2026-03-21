@@ -93,5 +93,17 @@
             <artifactId>common</artifactId>
             <version>1.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.lee</groupId>
+            <artifactId>infrastructure-minio</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lee</groupId>
+            <artifactId>MyFile</artifactId>
+            <version>1.0</version>
+        </dependency>
+
     </dependencies>
 </project>

@@ -1,30 +1,30 @@
-# MinioTestControllerApi
+# UserControllerApi
 
 All URIs are relative to *http://localhost:8080*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**upload1**](#upload1) | **POST** /minio/upload | |
+|[**upload**](#upload) | **POST** /user/upload | |
 
-# **upload1**
-> string upload1()
+# **upload**
+> string upload()
 
 
 ### Example
 
 ```typescript
 import {
-    MinioTestControllerApi,
+    UserControllerApi,
     Configuration,
     UploadRequest
 } from './api';
 
 const configuration = new Configuration();
-const apiInstance = new MinioTestControllerApi(configuration);
+const apiInstance = new UserControllerApi(configuration);
 
 let uploadRequest: UploadRequest; // (optional)
 
-const { status, data } = await apiInstance.upload1(
+const { status, data } = await apiInstance.upload(
     uploadRequest
 );
 ```

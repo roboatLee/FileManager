@@ -37,8 +37,8 @@ public class JwtUtil {
                 .getBody();
     }
 
-    public static int getUserIdInt(String token) {
-        Integer userId = parseToken(token).get("userId", Integer.class);
+    public static Long getUserIdInt(String token) {
+        Long userId = parseToken(token).get("userId", Long.class);
         return userId;
     }
 

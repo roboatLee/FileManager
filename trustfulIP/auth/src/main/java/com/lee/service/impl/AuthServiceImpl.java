@@ -85,7 +85,6 @@ public class AuthServiceImpl implements AuthService {
         String token = request.getHeader("Authorization");
         User user = userMapper.selectById(JwtUtil.getUserIdInt(token));
         System.out.println(JwtUtil.getUserIdInt(token));
-        System.out.println(user);
         return UserConvert.Entity2Vo(user);
     }
 }

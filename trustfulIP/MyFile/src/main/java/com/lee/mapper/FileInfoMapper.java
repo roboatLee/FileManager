@@ -1,7 +1,7 @@
 package com.lee.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.lee.entity.User;
+import com.lee.entity.FileInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2026-03-21
  */
 @Mapper
-public interface UserMapper extends BaseMapper<User> {
+public interface FileInfoMapper extends BaseMapper<FileInfo> {
 
 }

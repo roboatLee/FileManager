@@ -42,7 +42,7 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
             }
 
             if (JwtUtil.validateToken(token)) {
-                Integer userId =
+                Long userId =
                         JwtUtil.getUserIdInt(token);
                 attributes.put("userId", userId);
                 return true;

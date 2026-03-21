@@ -24,9 +24,9 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { UploadRequest } from '../models';
 /**
- * MinioTestControllerApi - axios parameter creator
+ * UserControllerApi - axios parameter creator
  */
-export const MinioTestControllerApiAxiosParamCreator = function (configuration?: Configuration) {
+export const UserControllerApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
@@ -34,8 +34,8 @@ export const MinioTestControllerApiAxiosParamCreator = function (configuration?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        upload1: async (uploadRequest?: UploadRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/minio/upload`;
+        upload: async (uploadRequest?: UploadRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/user/upload`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -64,10 +64,10 @@ export const MinioTestControllerApiAxiosParamCreator = function (configuration?:
 };
 
 /**
- * MinioTestControllerApi - functional programming interface
+ * UserControllerApi - functional programming interface
  */
-export const MinioTestControllerApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = MinioTestControllerApiAxiosParamCreator(configuration)
+export const UserControllerApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = UserControllerApiAxiosParamCreator(configuration)
     return {
         /**
          * 
@@ -75,20 +75,20 @@ export const MinioTestControllerApiFp = function(configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async upload1(uploadRequest?: UploadRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.upload1(uploadRequest, options);
+        async upload(uploadRequest?: UploadRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.upload(uploadRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['MinioTestControllerApi.upload1']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['UserControllerApi.upload']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * MinioTestControllerApi - factory interface
+ * UserControllerApi - factory interface
  */
-export const MinioTestControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = MinioTestControllerApiFp(configuration)
+export const UserControllerApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = UserControllerApiFp(configuration)
     return {
         /**
          * 
@@ -96,24 +96,24 @@ export const MinioTestControllerApiFactory = function (configuration?: Configura
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        upload1(uploadRequest?: UploadRequest, options?: RawAxiosRequestConfig): AxiosPromise<string> {
-            return localVarFp.upload1(uploadRequest, options).then((request) => request(axios, basePath));
+        upload(uploadRequest?: UploadRequest, options?: RawAxiosRequestConfig): AxiosPromise<string> {
+            return localVarFp.upload(uploadRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * MinioTestControllerApi - object-oriented interface
+ * UserControllerApi - object-oriented interface
  */
-export class MinioTestControllerApi extends BaseAPI {
+export class UserControllerApi extends BaseAPI {
     /**
      * 
      * @param {UploadRequest} [uploadRequest] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public upload1(uploadRequest?: UploadRequest, options?: RawAxiosRequestConfig) {
-        return MinioTestControllerApiFp(this.configuration).upload1(uploadRequest, options).then((request) => request(this.axios, this.basePath));
+    public upload(uploadRequest?: UploadRequest, options?: RawAxiosRequestConfig) {
+        return UserControllerApiFp(this.configuration).upload(uploadRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

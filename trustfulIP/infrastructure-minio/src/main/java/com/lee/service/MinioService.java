@@ -5,6 +5,7 @@ import io.minio.*;
 import io.minio.messages.Bucket;
 import io.minio.messages.Item;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -75,11 +76,20 @@ public class MinioService {
      */
     public String upload(MultipartFile file) {
         String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
-        try (InputStream inputStream = file.getInputStream()) {  // 自动关闭流
+        return getString(file, fileName);
+    }
+
+    public String upload(MultipartFile file, String objectName){
+        return getString(file, objectName);
+    }
+
+    @NotNull
+    private String getString(MultipartFile file, String objectName) {
+        try (InputStream inputStream = file.getInputStream()) {
             minioClient.putObject(
                     PutObjectArgs.builder()
                             .bucket(bucketName)
-                            .object(fileName)
+                            .object(objectName)
                             .stream(inputStream, file.getSize(), -1)
                             .contentType(file.getContentType())
                             .build()
@@ -88,9 +98,10 @@ public class MinioService {
             throw new RuntimeException("上传失败", e);
         }
 
-        return minioProperties.getEndpoint() + "/" + bucketName + "/" + fileName;
+        return minioProperties.getEndpoint()
+                + "/" + bucketName
+                + "/" + objectName;
     }
-
 
     /**
      * 获取全部bucket

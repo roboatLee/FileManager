@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author lee
- * @since 2026-03-19
+ * @since 2026-03-21
  */
 @Getter
 @Setter
@@ -58,4 +58,6 @@ public class User implements Serializable {
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
+
+    private Long avatarId;
 }

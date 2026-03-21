@@ -45,7 +45,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public void deleteArticleById(Integer id,String token) {
-        Integer currentUserId = null;
+        Long currentUserId = null;
         if (JwtUtil.validateToken(token))
         {
             currentUserId = JwtUtil.getUserIdInt(token);
