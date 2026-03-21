@@ -3,6 +3,11 @@
     <h1>👤 用户中心</h1>
 
     <div class="user-card">
+      <!-- 👇 头像 -->
+      <div class="avatar-box">
+        <img v-if="user.avatarUrl" :src="user.avatarUrl" class="avatar" />
+        <div v-else class="avatar placeholder">无头像</div>
+      </div>
       <p><strong>ID：</strong>{{ user.id }}</p>
       <p><strong>用户名：</strong>{{ user.username }}</p>
       <p><strong>角色：</strong>{{ user.role }}</p>
@@ -42,7 +47,8 @@ import { getUserByToken, uploadAvater } from './api/userCenterApi'
 const user = ref<UserVo>({
   id: 0,
   username: '',
-  role: ''
+  role: '',
+  avatarUrl: ''
 })
 
 const file = ref<File | null>(null)
@@ -71,7 +77,11 @@ async function upload() {
   try {
     const res = await uploadAvater(file.value)
 
-    imageUrl.value = res.data  // 后端返回的 URL
+    imageUrl.value = res.data   // 返回的URL
+
+    // 👇 关键：更新当前用户头像
+    user.value.avatarUrl = res.data
+
     alert("上传成功 🎉")
 
   } catch (err) {
@@ -83,6 +93,7 @@ async function upload() {
 onMounted(async () => {
   const res = await getUserByToken()
   user.value = res.data
+  console.log(user.value)
 })
 </script>
 
@@ -107,5 +118,26 @@ onMounted(async () => {
   max-width: 200px;
   border-radius: 6px;
   margin-top: 10px;
+}
+.avatar-box {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ddd;
+}
+
+.placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee;
+  color: #888;
+  font-size: 14px;
 }
 </style>

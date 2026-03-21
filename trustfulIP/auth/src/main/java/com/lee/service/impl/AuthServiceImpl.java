@@ -10,7 +10,6 @@ import com.lee.entity.user.UserVo;
 import com.lee.mapper.UserMapper;
 import com.lee.security.JwtUtil;
 import com.lee.service.AuthService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +20,17 @@ import javax.servlet.http.HttpServletRequest;
  * * @date 2026/3/2
  */
 @Service
-@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder;
+    private  UserMapper userMapper;
+    private  PasswordEncoder passwordEncoder;
+    private UserConvert userConvert;
 
+    public AuthServiceImpl(UserMapper userMapper, PasswordEncoder passwordEncoder, UserConvert userConvert) {
+        this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
+        this.userConvert = userConvert;
+    }
 
 
     @Override
@@ -83,8 +87,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserVo getUserById(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        User user = userMapper.selectById(JwtUtil.getUserIdInt(token));
+        System.out.println(token);
         System.out.println(JwtUtil.getUserIdInt(token));
-        return UserConvert.Entity2Vo(user);
+        User user = userMapper.selectById(JwtUtil.getUserIdInt(token));
+        System.out.println(user);
+        return userConvert.Entity2Vo(user);
     }
 }

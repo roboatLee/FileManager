@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **id** | **number** |  | [optional] [default to undefined]
 **username** | **string** |  | [optional] [default to undefined]
 **role** | **string** |  | [optional] [default to undefined]
+**avatarUrl** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -18,6 +19,7 @@ const instance: UserVo = {
     id,
     username,
     role,
+    avatarUrl,
 };
 ```
 

@@ -20,6 +20,7 @@
         <module>auth</module>
         <module>blog</module>
         <module>infrastructure-minio</module>
+        <module>letStudy</module>
     </modules>
 
     <parent>

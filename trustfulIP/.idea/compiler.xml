@@ -12,6 +12,7 @@
           <entry name="D:/environment/maven3.6.3/repository/org/mapstruct/mapstruct-processor/1.6.3/mapstruct-processor-1.6.3.jar" />
           <entry name="D:/environment/maven3.6.3/repository/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
         </processorPath>
+        <module name="letStudy" />
         <module name="common" />
         <module name="auth" />
         <module name="web" />
@@ -33,6 +34,7 @@
       <module name="infrastructure" options="-parameters" />
       <module name="infrastructure-minio" options="-parameters" />
       <module name="letChat" options="-parameters" />
+      <module name="letStudy" options="-parameters" />
       <module name="trustfulIP" options="" />
       <module name="web" options="-parameters" />
       <module name="wecom" options="-parameters" />
