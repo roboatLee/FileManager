@@ -35,7 +35,7 @@
       <module name="infrastructure-minio" options="-parameters" />
       <module name="letChat" options="-parameters" />
       <module name="letStudy" options="-parameters" />
-      <module name="trustfulIP" options="" />
+      <module name="trustfulIP" options="-parameters" />
       <module name="web" options="-parameters" />
       <module name="wecom" options="-parameters" />
     </option>

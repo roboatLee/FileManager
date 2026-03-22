@@ -6,6 +6,9 @@
     <RouterLink to="/todo">todo</RouterLink>
     <RouterLink to="/minio">minio</RouterLink>
     <RouterLink to="/myprofile">user</RouterLink>
+    <RouterLink to="/letstudy">letstdudy</RouterLink>
+    <RouterLink to="/letstudydetail">letstudydetail</RouterLink>
+    <RouterLink to="/addquetion">addquetion</RouterLink>
 
 
   </div>

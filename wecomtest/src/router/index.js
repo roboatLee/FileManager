@@ -61,6 +61,21 @@ const routes = [
     name: "UserCenter",
     component: () => import("@/usercenter/UserCenter.vue"),
   },
+    {
+    path: "/letstudy",
+    name: "letstudy",
+    component: () => import("@/letstudy/letstudy.vue"),
+  },
+      {
+    path: "/letstudydetail",
+    name: "letstudydetail",
+    component: () => import("@/letstudy/letstudydetail.vue"),
+  },
+        {
+    path: "/addquetion",
+    name: "addquetion",
+    component: () => import("@/letstudy/addquestion.vue"),
+  },
 ];
 
 const router = createRouter({
