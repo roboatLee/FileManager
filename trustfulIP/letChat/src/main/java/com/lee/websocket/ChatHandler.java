@@ -4,16 +4,17 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lee.dao.ChatMessage;
 import com.lee.dao.WsMessage;
+import com.lee.entity.FileInfo;
 import com.lee.entity.User;
 import com.lee.service.ChatMessageRepository;
 import com.lee.service.IUserService;
+import com.lee.service.impl.FileInfoServiceImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -29,10 +30,11 @@ public class ChatHandler extends TextWebSocketHandler  {
 
     private final ChatMessageRepository repository;
     private IUserService userService;
-
-    public ChatHandler(ChatMessageRepository repository, IUserService userService) {
+    private FileInfoServiceImpl fileInfoService;
+    public ChatHandler(ChatMessageRepository repository, IUserService userService, FileInfoServiceImpl fileInfoService) {
         this.repository = repository;
         this.userService = userService;
+        this.fileInfoService = fileInfoService;
     }
     private static final String SESSION_USER_KEY = "userId";
 
@@ -165,6 +167,8 @@ public class ChatHandler extends TextWebSocketHandler  {
 
         Long userId =
                 (Long) session.getAttributes().get(SESSION_USER_KEY);
+        User user = userService.getById(userId);
+
 
         Map data = (Map) ws.getData();
 
@@ -182,16 +186,17 @@ public class ChatHandler extends TextWebSocketHandler  {
         } else {
             conversationId = "global";
         }
-
+        FileInfo fileInfo  = fileInfoService.getById((user.getAvatarId()));
         /**
          * 设置聊天信息
          * */
         ChatMessage chat = new ChatMessage();
-        chat.setSender(userId);
+        chat.setSenderId(userId);
+        chat.setSenderAvatar(fileInfo.getUrl());
         chat.setContent(content);
         chat.setTime(System.currentTimeMillis());
         chat.setConversationId(conversationId);
-
+        chat.setSenderName(user.getUsername());
         //存储消息
         repository.addMessage(chat);
         broadcastChat(chat);

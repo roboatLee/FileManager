@@ -8,7 +8,10 @@ import lombok.Data;
  */
 @Data
 public class ChatMessage {
-    private Long sender;
+    private Long senderId;
+    private String senderName;
+    private String senderAvatar; // ⭐加这个
+
     private String content;
     private long time;
     private String conversationId;

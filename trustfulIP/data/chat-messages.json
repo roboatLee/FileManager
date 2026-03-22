@@ -1,11 +1,22 @@
 [ {
-  "sender" : 1,
-  "content" : "大家好",
-  "time" : 1774183635641,
+  "senderId" : 1,
+  "senderName" : "LiChengXin",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/1.png",
+  "content" : "你好",
+  "time" : 1774189079258,
   "conversationId" : "global"
 }, {
-  "sender" : 1,
-  "content" : "大家好",
-  "time" : 1774184524811,
+  "senderId" : 1,
+  "senderName" : "LiChengXin",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/1.png",
+  "content" : "你好",
+  "time" : 1774189360087,
+  "conversationId" : "global"
+}, {
+  "senderId" : 4,
+  "senderName" : "lisi",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/4.png",
+  "content" : "我靠，真nb",
+  "time" : 1774189629529,
   "conversationId" : "global"
 } ]

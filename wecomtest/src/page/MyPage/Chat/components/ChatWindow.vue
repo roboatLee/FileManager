@@ -1,33 +1,53 @@
 <template>
     <div class="chat-window">
 
-        <div class="chat-box" ref="chatBox">
-            <div v-for="(msg, index) in messages" :key="index" :class="[
-                'message',
-                msg.type === 'system'
-                    ? 'system-message'
-                    : msg.sender === currentUser
-                        ? 'self'
-                        : 'other'
-            ]">
-                <!-- 系统消息 -->
-                <div v-if="msg.type === 'system'" class="system-text">
-                    {{ msg.content }}
-                </div>
-
-                <!-- 普通聊天消息 -->
-                <div v-else class="bubble">
-                    <div class="name">
-                        {{ msg.sender }}
-                    </div>
-
-                    <div class="text">
+        <div class="message-container">
+            <div v-if="!messages || messages.length === 0" class="empty">
+                暂无消息，快来聊两句吧 👋
+            </div>
+            <!-- 有消息 -->
+            <div v-else>
+                <div v-for="(msg, index) in messages" :key="index" :class="[
+                    'message',
+                    msg.type === 'system'
+                        ? 'system-message'
+                        : msg.senderName === currentUser
+                            ? 'self'
+                            : 'other'
+                ]">
+                    <!-- 系统消息 -->
+                    <div v-if="msg.type === 'system'" class="system-text">
                         {{ msg.content }}
                     </div>
-                </div>
 
+                    <!-- 普通聊天消息 -->
+                    <div v-else class="message-row">
+
+                        <!-- 左侧头像（别人） -->
+                        <img v-if="msg.senderName !== currentUser" :src="msg.senderAvatar" class="avatar" />
+
+                        <div class="bubble">
+                            <div class="name">
+                                {{ msg.senderName }}
+                            </div>
+
+                            <div class="text">
+                                {{ msg.content }}
+                            </div>
+                        </div>
+
+                        <!-- 右侧头像（自己） -->
+                        <img v-if="msg.senderName === currentUser" :src="msg.senderAvatar" class="avatar" />
+
+                    </div>
+
+
+                </div>
             </div>
         </div>
+
+
+
 
         <div class="input-bar">
             <input v-model="inputText" @keyup.enter="emitSend" placeholder="输入消息..." />
@@ -69,7 +89,6 @@ watch(
 </script>
 
 <style scoped>
-
 .system-message {
     text-align: center;
     color: #999;
@@ -90,6 +109,7 @@ watch(
     overflow-y: auto;
     padding: 10px;
     background: #f5f5f5;
+    min-height: fit-content;
 }
 
 /* 每条消息一行（关键） */
@@ -152,4 +172,36 @@ watch(
     padding: 8px 16px;
 }
 
+.empty {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #999;
+    font-size: 14px;
+}
+
+.message-container {
+    flex: 1;
+    /* ⭐关键 */
+    overflow-y: auto;
+    /* ⭐防止撑开 */
+}
+
+.message-row {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 10px;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin: 0 8px;
+}
+
+.self {
+    justify-content: flex-end;
+}
 </style>
