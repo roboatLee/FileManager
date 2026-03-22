@@ -17,4 +17,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> implements IQuestionService {
 
+
+    @Override
+    public void addQuestion() {
+
+    }
 }

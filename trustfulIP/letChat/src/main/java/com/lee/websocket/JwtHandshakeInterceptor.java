@@ -45,6 +45,7 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
                 Long userId =
                         JwtUtil.getUserIdInt(token);
                 attributes.put("userId", userId);
+                System.out.println(userId);
                 return true;
             }
         }

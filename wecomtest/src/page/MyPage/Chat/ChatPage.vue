@@ -56,8 +56,6 @@
         {{ u }}
       </div>
     </div>
-
-
   </div>
 </template>
 
@@ -106,7 +104,12 @@ function connectSocket() {
       connected.value = true
     },
     onMessage(msg) {
-      handleMessage(msg)
+      handleMessage(msg, {
+        currentUser,
+        conversations,
+        users,
+        GLOBAL
+      })
     },
     onClose() {
       connected.value = false
@@ -164,6 +167,4 @@ nextTick(() => {
 
 </script>
 
-<style scoped src="./style/chat.css">
-
-</style>
+<style scoped src="./style/chat.css"></style>

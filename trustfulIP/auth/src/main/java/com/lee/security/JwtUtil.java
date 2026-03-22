@@ -31,6 +31,7 @@ public class JwtUtil {
             token = token.substring(7);
         }
 
+        System.out.println(token);
         return Jwts.parser()
                 .setSigningKey(SECRET)
                 .parseClaimsJws(token)

@@ -1,76 +1,11 @@
 [ {
-  "sender" : "LiChengXin",
-  "content" : "这是群聊消息",
-  "time" : 1772522526223,
+  "sender" : 1,
+  "content" : "大家好",
+  "time" : 1774183635641,
   "conversationId" : "global"
 }, {
-  "sender" : "zhangsan",
-  "content" : "发送消息",
-  "time" : 1772523178729,
-  "conversationId" : "zhangsan_lisi"
-}, {
-  "sender" : "zhangsan",
-  "content" : "你好啊李四",
-  "time" : 1772523341138,
-  "conversationId" : "zhangsan_lisi"
-}, {
-  "sender" : "LiChengXin",
-  "content" : "再来一个测试",
-  "time" : 1772530672373,
+  "sender" : 1,
+  "content" : "大家好",
+  "time" : 1774184524811,
   "conversationId" : "global"
-}, {
-  "sender" : "LiChengXin",
-  "content" : "发消息",
-  "time" : 1772532961723,
-  "conversationId" : "global"
-}, {
-  "sender" : "LiChengXin",
-  "content" : "发消息",
-  "time" : 1772532984281,
-  "conversationId" : "global"
-}, {
-  "sender" : "lisi",
-  "content" : "什么！？",
-  "time" : 1772533879043,
-  "conversationId" : "global"
-}, {
-  "sender" : "LiChengXin",
-  "content" : "之前的消息呢！",
-  "time" : 1772533886516,
-  "conversationId" : "global"
-}, {
-  "sender" : "LiChengXin",
-  "content" : "发消息了",
-  "time" : 1772534616578,
-  "conversationId" : "LiChengXin_lisi"
-}, {
-  "sender" : "lisi",
-  "content" : "发笑死了",
-  "time" : 1772534646920,
-  "conversationId" : "LiChengXin_lisi"
-}, {
-  "sender" : "lisi",
-  "content" : "发消息了",
-  "time" : 1772534657988,
-  "conversationId" : "LiChengXin_lisi"
-}, {
-  "sender" : "lisi",
-  "content" : "你好",
-  "time" : 1772621212885,
-  "conversationId" : "LiChengXin_lisi"
-}, {
-  "sender" : "LiChengXin",
-  "content" : "你好",
-  "time" : 1772621222198,
-  "conversationId" : "LiChengXin_lisi"
-}, {
-  "sender" : "LiChengXin",
-  "content" : "你好",
-  "time" : 1772621493821,
-  "conversationId" : "LiChengXin_lisi"
-}, {
-  "sender" : "LiChengXin",
-  "content" : "你好",
-  "time" : 1772621975710,
-  "conversationId" : "LiChengXin_lisi"
 } ]

@@ -4,13 +4,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lee.dao.ChatMessage;
 import com.lee.dao.WsMessage;
+import com.lee.entity.User;
 import com.lee.service.ChatMessageRepository;
+import com.lee.service.IUserService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -21,13 +24,15 @@ import java.util.stream.Collectors;
  */
 @Component
 public class ChatHandler extends TextWebSocketHandler  {
-    private final ConcurrentHashMap<Integer, Set<WebSocketSession>> sessions
+    private final ConcurrentHashMap<Long, Set<WebSocketSession>> sessions
             = new ConcurrentHashMap<>();
 
     private final ChatMessageRepository repository;
+    private IUserService userService;
 
-    public ChatHandler(ChatMessageRepository repository) {
+    public ChatHandler(ChatMessageRepository repository, IUserService userService) {
         this.repository = repository;
+        this.userService = userService;
     }
     private static final String SESSION_USER_KEY = "userId";
 
@@ -36,8 +41,7 @@ public class ChatHandler extends TextWebSocketHandler  {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         //得到连进去之后用户的名字
-        Integer userId =
-                (Integer) session.getAttributes().get(SESSION_USER_KEY);
+        Long userId = (Long) session.getAttributes().get(SESSION_USER_KEY);
         /**
          * 它尝试从 sessions 中获取 userName 的键值。
          * 如果这个键不存在，那么就使用提供的 lambda 表达式来创建一个新的 Set（在这种情况下，是 ConcurrentHashMap.newKeySet()，这将返回一个新的线程安全的 Set）
@@ -52,6 +56,7 @@ public class ChatHandler extends TextWebSocketHandler  {
          * 如果不是，那么就不广播
          * */
         boolean firstConnection = userSessions.isEmpty();
+
         if (firstConnection) {
             broadcastJoin(userId);
             broadcastUsers();
@@ -103,32 +108,32 @@ public class ChatHandler extends TextWebSocketHandler  {
             WebSocketSession session,
             CloseStatus status) {
 
-        String userName =
-                (String) session.getAttributes().get(SESSION_USER_KEY);
+        Long userId = (Long) session.getAttributes().get(SESSION_USER_KEY);
+        Set<WebSocketSession> userSessions = sessions.get(userId);
 
-        Set<WebSocketSession> userSessions = sessions.get(userName);
+
+        User user = userService.getById(userId);
+        String userName = user.getUsername();
+        System.out.println(userName);
+
 
         if (userSessions != null) {
-
             userSessions.remove(session);
-
             if (userSessions.isEmpty()) {
                 sessions.remove(userName);
                 broadcastLeave(userName);
             }
         }
-
         System.out.println("用户离开: " + userName);
         System.out.println("当前在线人数: " + sessions.size());
-
         broadcastUsers();
     }
 
     private void sendHistory(WebSocketSession session) {
         try {
 
-            String userName =
-                    (String) session.getAttributes().get(SESSION_USER_KEY);
+            Long userId = (Long) session.getAttributes().get(SESSION_USER_KEY);
+            User user = userService.getById(userId);
 
             List<ChatMessage> list = repository.getMessages();
 
@@ -140,8 +145,7 @@ public class ChatHandler extends TextWebSocketHandler  {
                         if ("global".equals(convId)) {
                             return true;
                         }
-
-                        return convId.contains(userName);
+                        return convId.contains(user.getUsername());
                     })
                     .collect(Collectors.toList());
 
@@ -159,8 +163,9 @@ public class ChatHandler extends TextWebSocketHandler  {
     private void handleChat(WebSocketSession session, WsMessage ws)
             throws Exception {
 
-        String userName =
-                (String) session.getAttributes().get(SESSION_USER_KEY);
+        Long userId =
+                (Long) session.getAttributes().get(SESSION_USER_KEY);
+
         Map data = (Map) ws.getData();
 
         String content = (String) data.get("content");
@@ -172,13 +177,17 @@ public class ChatHandler extends TextWebSocketHandler  {
          * 否则，就是群聊
          * */
         if (toUser != null && !"".equals(toUser)) {
-            conversationId = buildPrivateConversationId(userName, toUser);
+            Long toUserId = Long.valueOf(toUser);
+            conversationId = buildPrivateConversationId(userId, toUserId);
         } else {
             conversationId = "global";
         }
 
+        /**
+         * 设置聊天信息
+         * */
         ChatMessage chat = new ChatMessage();
-        chat.setSender(userName);
+        chat.setSender(userId);
         chat.setContent(content);
         chat.setTime(System.currentTimeMillis());
         chat.setConversationId(conversationId);
@@ -249,11 +258,11 @@ public class ChatHandler extends TextWebSocketHandler  {
     /**
      * 广播谁加入了
      * */
-    private void broadcastJoin(Integer userName) {
+    private void broadcastJoin(Long userName) {
 
         try {
 
-            Map<String,Integer> data = new HashMap<>();
+            Map<String,Long> data = new HashMap<>();
             data.put("user", userName);
 
             for (Set<WebSocketSession> userSessions : sessions.values()) {
@@ -297,7 +306,7 @@ public class ChatHandler extends TextWebSocketHandler  {
      * */
     private void broadcastUsers() {
         try {
-            List<Integer> userList =
+            List<Long> userList =
                     new ArrayList<>(sessions.keySet());
             for (Set<WebSocketSession> userSessions : sessions.values()) {
                 for (WebSocketSession s : userSessions) {
@@ -314,9 +323,9 @@ public class ChatHandler extends TextWebSocketHandler  {
     /**
      * 用户私聊
      * */
-    private String buildPrivateConversationId(String user1, String user2) {
+    private String buildPrivateConversationId(Long user1, Long user2) {
 
-        if (user1.compareTo(user2) < 0) {
+        if (user1 < user2) {
             return user1 + "_" + user2;
         } else {
             return user2 + "_" + user1;

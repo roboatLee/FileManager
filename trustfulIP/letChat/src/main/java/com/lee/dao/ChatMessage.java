@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 public class ChatMessage {
-    private String sender;
+    private Long sender;
     private String content;
     private long time;
     private String conversationId;

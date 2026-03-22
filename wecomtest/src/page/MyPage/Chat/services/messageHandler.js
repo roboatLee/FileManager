@@ -2,7 +2,9 @@
  * 消息处理器
  * 
 */
-export function handleMessage(msg) {
+
+export function handleMessage(msg,{ currentUser, conversations, users,GLOBAL }) {
+  console.log(msg)
   switch (msg.type) {
     case "history": {
       const historyList = msg.data
