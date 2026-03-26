@@ -19,19 +19,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/question")
 public class QuestionController {
-
     private QuestionServiceImpl questionService;
-
 
     public QuestionController(QuestionServiceImpl questionService) {
         this.questionService = questionService;
     }
 
-
-
     @PostMapping("/addQuestion")
     public void addQuestion(QuestionDto questionDto,@RequestHeader("Authorization") String token){
-
         questionService.addQuestion(questionDto,token);
     }
 

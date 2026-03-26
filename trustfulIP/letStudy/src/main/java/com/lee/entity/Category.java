@@ -2,7 +2,6 @@ package com.lee.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,24 +19,14 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
-@TableName("question_tag")
-public class QuestionTag implements Serializable {
+public class Category implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 主键
-     */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /**
-     * 问题id
-     */
-    private Long questionId;
+    private Long userId;
 
-    /**
-     * 标签id
-     */
-    private Long tagId;
+    private String name;
 }

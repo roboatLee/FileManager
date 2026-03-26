@@ -58,32 +58,41 @@ import 'vditor/dist/index.css'
 
 const route = useRoute()
 const blog = ref<ArticleDetailVo | null>(null)
+const loading = ref(true)
 
 const getDetail = async () => {
   console.log("getDetail开始启动")
 
-  const id = Number(route.params.id )
-  const res = await getArticleById(id)
+  loading.value = true  // ✅ 开始加载
 
-  blog.value = res.data
+  try {
+    const id = Number(route.params.id)
+    const res = await getArticleById(id)
 
-  if (!blog.value) {
-    console.log("博客不存在")
-    return
+    blog.value = res.data
+
+    if (!blog.value) {
+      console.log("博客不存在")
+      return
+    }
+
+    console.log(blog.value)
+
+    await nextTick()
+
+    const previewEl = document.getElementById('preview')
+    if (!previewEl) return
+
+    Vditor.preview(previewEl as HTMLDivElement, blog.value.markdownContent, {
+      mode: 'light',
+      hljs: { style: 'github' },
+      math: { engine: 'KaTeX' }
+    })
+  } catch (e) {
+    console.error("请求失败", e)
+  } finally {
+    loading.value = false  // ✅ 无论成功失败都关闭 loading
   }
-
-  console.log(blog.value)
-
-  await nextTick()
-
-  const previewEl = document.getElementById('preview')
-  if (!previewEl) return
-
-  Vditor.preview(previewEl as HTMLDivElement, blog.value.markdownContent, {
-    mode: 'light',
-    hljs: { style: 'github' },
-    math: { engine: 'KaTeX' }
-  })
 }
 
 onMounted(async () => {

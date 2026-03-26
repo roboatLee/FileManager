@@ -21,26 +21,22 @@ import java.util.List;
 @Service
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> implements IQuestionService {
 
+
+
     /**
      * 目前的json格式
      * {
-     *     "title": "# 这是一个问题\n\n\n\n",
-     *     "options": [
-     *         {
-     *             "key": "A",
-     *             "content": "问题1"
-     *         },
-     *         {
-     *             "key": "B",
-     *             "content": "问题2"
-     *         },
-     *         {
-     *             "key": "C",
-     *             "content": "问题3"
-     *         }
+     *     "title": "设函数$y = y(x)$是微分方程\n\n$$\ny^{\\prime} + \\frac{1}{2 \\sqrt{x}} y = 2 +\\sqrt{x}\n$$\n\n的满足$y(1)=3$的解，求曲线y的渐近线\n\n",
+     *     "type": "math",
+     *     "difficulty": 5,
+     *     "categoryId": 1,
+     *     "options": [],
+     *     "answer": "",
+     *     "analysis": "暂无解析\n\n",
+     *     "tags": [
+     *         "数学"
      *     ],
-     *     "analysis": "这是一个典型的什么什么问题\n\n\n",
-     *     "answer": "A"
+     *     "isPublic": true
      * }
      * */
     @Override
@@ -53,6 +49,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         question.setAuthorId(userId);
 
         //todo: 进行数据库存储
+        this.save(question);
 
     }
 

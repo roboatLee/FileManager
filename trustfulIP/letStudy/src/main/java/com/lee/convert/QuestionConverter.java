@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lee.entity.OptionDTO;
 import com.lee.entity.Question;
 import com.lee.entity.QuestionDto;
+import com.lee.persistence.json.JsonUtil;
 
 import java.util.List;
 
@@ -31,11 +32,11 @@ public class QuestionConverter {
      * */
     public static Question toEntity(QuestionDto dto) {
         Question q = new Question();
-        q.setTitle(dto.getTitle());
-        q.setType(dto.getType());
+        q.setTitle(JsonUtil.toJson(dto.getTitle()));
+        q.setType(JsonUtil.toJson(dto.getType()));
         q.setCategoryId(dto.getCategoryId());
         q.setDifficulty(dto.getDifficulty().byteValue());
-        q.setAnalysis(dto.getAnalysis());
+        q.setAnalysis(JsonUtil.toJson(dto.getAnalysis()));
         q.setIsPublic(dto.getIsPublic());
 
         try {

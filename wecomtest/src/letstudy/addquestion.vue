@@ -102,15 +102,21 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { reactive, ref, computed, onMounted, nextTick } from "vue"
+import type { QuestionDto } from "@/api/generated"
+import { addQuestion } from "./myApi/questionApi"
+
+
 import Vditor from "vditor"
 import "vditor/dist/index.css"
+
+const data = ref<QuestionDto | null>(null)
 
 const form = reactive({
   type: "single_choice",
   difficulty: 3,
-  options: [],
+  options: [] as Array<{ content: string }>,
   answer: "",
   isPublic: false
 })
@@ -190,18 +196,47 @@ const formatAnswer = () => {
   }
 }
 
-const submit = () => {
-  const data = {
-    id: Date.now(),
+const submit = async () => {
+
+  const dto: QuestionDto = {
     title: titleEditor.getValue(),
-    options: previewOptions.value,
+
+    type: form.type,
+    difficulty: form.difficulty,
+
+    categoryId: 1, //可以先写死，后面再做选择器
+
+    options: form.options.map((opt, index) => ({
+      content: opt.content
+    })),
+
+    answer: formatAnswer() as any,
+
     analysis: analysisEditor.getValue(),
-    answer: formatAnswer()
+
+    tags: tagsInput.value
+      ? tagsInput.value.split(",")
+      : [],
+
+    isPublic: form.isPublic
   }
 
-  console.log("提交数据：", data)
-  alert("成功（看控制台）")
+  console.log("提交数据：", dto)
+
+  // try {
+  //   const token = localStorage.getItem("token") // 或 pinia
+
+  //   const res = await addQuestion(`Bearer ${token}`, dto)
+
+  //   console.log("接口返回：", res)
+  //   alert("提交成功！")
+
+  // } catch (e) {
+  //   console.error(e)
+  //   alert("提交失败")
+  // }
 }
+
 </script>
 
 <style scoped>

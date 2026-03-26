@@ -6,6 +6,7 @@ apis/auth-controller-api.ts
 apis/favorite-controller-api.ts
 apis/json-controller-api.ts
 apis/minio-test-controller-api.ts
+apis/question-controller-api.ts
 apis/user-controller-api.ts
 apis/we-message-controller-api.ts
 base.ts
@@ -25,6 +26,9 @@ docs/MarkDownFileDto.md
 docs/MinioTestControllerApi.md
 docs/OnePathFileVo.md
 docs/OnePathFilesVo.md
+docs/OptionDTO.md
+docs/QuestionControllerApi.md
+docs/QuestionDto.md
 docs/RegisterRequest.md
 docs/UploadRequest.md
 docs/UserControllerApi.md
@@ -42,6 +46,8 @@ models/login-response.ts
 models/mark-down-file-dto.ts
 models/one-path-file-vo.ts
 models/one-path-files-vo.ts
+models/option-dto.ts
+models/question-dto.ts
 models/register-request.ts
 models/upload-request.ts
 models/user-vo.ts

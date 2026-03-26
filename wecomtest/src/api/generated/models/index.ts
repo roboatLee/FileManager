@@ -7,6 +7,8 @@ export * from './login-response';
 export * from './mark-down-file-dto';
 export * from './one-path-file-vo';
 export * from './one-path-files-vo';
+export * from './option-dto';
+export * from './question-dto';
 export * from './register-request';
 export * from './upload-request';
 export * from './user-vo';
