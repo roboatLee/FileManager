@@ -1,7 +1,11 @@
 package com.lee.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.lee.entity.QuestionDto;
+import com.lee.entity.QuestionVo;
+import com.lee.service.impl.QuestionServiceImpl;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -10,9 +14,30 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author lee
  * @since 2026-03-22
+ *
  */
 @RestController
 @RequestMapping("/question")
 public class QuestionController {
+
+    private QuestionServiceImpl questionService;
+
+
+    public QuestionController(QuestionServiceImpl questionService) {
+        this.questionService = questionService;
+    }
+
+
+
+    @PostMapping("/addQuestion")
+    public void addQuestion(QuestionDto questionDto,@RequestHeader("Authorization") String token){
+
+        questionService.addQuestion(questionDto,token);
+    }
+
+    @GetMapping("/list")
+    public List<QuestionVo> getListQuestionVo(){
+        return  questionService.getAllQuestion();
+    }
 
 }

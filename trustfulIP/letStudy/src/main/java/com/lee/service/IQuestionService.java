@@ -2,6 +2,10 @@ package com.lee.service;
 
 import com.lee.entity.Question;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lee.entity.QuestionDto;
+import com.lee.entity.QuestionVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,5 +17,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IQuestionService extends IService<Question> {
 
-    void addQuestion();
+    void addQuestion(QuestionDto questionDto, String token);
+    List<QuestionVo> getAllQuestion();
 }
