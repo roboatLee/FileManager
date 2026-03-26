@@ -20,6 +20,7 @@ export function connect(token, handlers) {
 
 export function send(data) {
   if (!ws) return
+  console.log(data)
   ws.send(JSON.stringify(data))
 }
 

@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **title** | **string** |  | [optional] [default to undefined]
 **markdownContent** | **string** |  | [optional] [default to undefined]
 **htmlContent** | **string** |  | [optional] [default to undefined]
-**userName** | **string** |  | [optional] [default to undefined]
+**userVo** | [**UserVo**](UserVo.md) |  | [optional] [default to undefined]
 **createTime** | **string** |  | [optional] [default to undefined]
 **likeNumber** | **number** |  | [optional] [default to undefined]
 **viewNumber** | **number** |  | [optional] [default to undefined]
@@ -22,7 +22,7 @@ const instance: ArticleDetailVo = {
     title,
     markdownContent,
     htmlContent,
-    userName,
+    userVo,
     createTime,
     likeNumber,
     viewNumber,

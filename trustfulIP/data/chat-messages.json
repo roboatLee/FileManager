@@ -19,4 +19,81 @@
   "content" : "我靠，真nb",
   "time" : 1774189629529,
   "conversationId" : "global"
+}, {
+  "senderId" : 1,
+  "senderName" : "LiChengXin",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/1.png",
+  "content" : "我要和你聊天",
+  "time" : 1774279150423,
+  "conversationId" : "1_4"
+}, {
+  "senderId" : 1,
+  "senderName" : "LiChengXin",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/1.png",
+  "content" : "我要和你聊天",
+  "time" : 1774279186769,
+  "conversationId" : "1_4"
+}, {
+  "senderId" : 4,
+  "senderName" : "lisi",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/4.png",
+  "content" : "我要和你聊天",
+  "time" : 1774279203765,
+  "conversationId" : "1_4"
+}, {
+  "senderId" : 1,
+  "senderName" : "LiChengXin",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/1.png",
+  "content" : "不能和你聊天吗？",
+  "time" : 1774279331836,
+  "conversationId" : "1_4"
+}, {
+  "senderId" : 1,
+  "senderName" : "LiChengXin",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/1.png",
+  "content" : "不能和你聊天吗？",
+  "time" : 1774279458672,
+  "conversationId" : "1_4"
+}, {
+  "senderId" : 4,
+  "senderName" : "lisi",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/4.png",
+  "content" : "？",
+  "time" : 1774279594708,
+  "conversationId" : "global"
+}, {
+  "senderId" : 4,
+  "senderName" : "lisi",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/4.png",
+  "content" : "你好",
+  "time" : 1774282545528,
+  "conversationId" : "1_4"
+}, {
+  "senderId" : 1,
+  "senderName" : "LiChengXin",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/1.png",
+  "content" : "好烦人啊",
+  "time" : 1774282575857,
+  "conversationId" : "global"
+}, {
+  "senderId" : 1,
+  "senderName" : "LiChengXin",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/1.png",
+  "content" : "try?",
+  "time" : 1774283066100,
+  "conversationId" : "1_4"
+}, {
+  "senderId" : 4,
+  "senderName" : "lisi",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/4.png",
+  "content" : "试什么？",
+  "time" : 1774327574344,
+  "conversationId" : "1_4"
+}, {
+  "senderId" : 1,
+  "senderName" : "LiChengXin",
+  "senderAvatar" : "http://localhost:9000/blog-images/avatar/1.png",
+  "content" : "聊天啊，还能干嘛？",
+  "time" : 1774327589718,
+  "conversationId" : "1_4"
 } ]

@@ -1,6 +1,7 @@
 package com.lee.entity.Article;
 
 
+import com.lee.entity.user.UserVo;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -37,7 +38,7 @@ public class ArticleVo {
     /**
      * 作者名字
      * */
-    private String userName;
+    private UserVo user;
 
     /**
      * 创建时间

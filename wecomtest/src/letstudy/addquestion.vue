@@ -1,100 +1,113 @@
 <template>
   <div class="question-create">
 
-    <h2>创建题目（模拟版）</h2>
+    <h2>🚀 题目创建系统</h2>
 
-    <!-- 类型 -->
-    <select v-model="form.type">
-      <option value="single_choice">单选题</option>
-      <option value="multiple_choice">多选题</option>
-      <option value="judge">判断题</option>
-      <option value="fill">填空题</option>
-      <option value="math">数学题</option>
-      <option value="subjective">主观题</option>
-    </select>
+    <div class="layout">
 
-    <!-- 难度 -->
-    <input type="number" v-model="form.difficulty" min="1" max="5" />
+      <!-- 左侧 -->
+      <div class="left">
 
-    <!-- 题干 -->
-    <div id="title-editor"></div>
-
-    <!-- 选项 -->
-    <div v-if="isChoice">
-      <h3>选项</h3>
-      <div v-for="(opt, index) in form.options" :key="index">
-        <span>{{ String.fromCharCode(65 + index) }}</span>
-        <input v-model="opt.content" placeholder="选项内容" />
-        <button @click="removeOption(index)">删除</button>
-      </div>
-      <button @click="addOption">+ 添加选项</button>
-    </div>
-
-    <!-- 答案 -->
-    <div>
-      <h3>答案</h3>
-
-      <!-- 单选 -->
-      <div v-if="form.type === 'single_choice'">
-        <input v-model="form.answer" placeholder="例如 A" />
-      </div>
-
-      <!-- 多选 -->
-      <div v-if="form.type === 'multiple_choice'">
-        <input v-model="multiAnswer" placeholder="例如 A,B" />
-      </div>
-
-      <!-- 判断 -->
-      <div v-if="form.type === 'judge'">
-        <select v-model="form.answer">
-          <option :value="true">正确</option>
-          <option :value="false">错误</option>
+        <!-- 类型 -->
+        <select v-model="form.type" class="select">
+          <option value="single_choice">单选题</option>
+          <option value="multiple_choice">多选题</option>
+          <option value="judge">判断题</option>
+          <option value="fill">填空题</option>
+          <option value="math">数学题</option>
+          <option value="subjective">主观题</option>
         </select>
+
+        <!-- 难度 -->
+        <input type="number" v-model="form.difficulty" min="1" max="5" class="input" />
+
+        <!-- 标题 -->
+        <div id="title-editor"></div>
+
+        <!-- 选项 -->
+        <div v-if="isChoice" class="option-box">
+          <h3>选项</h3>
+
+          <div v-for="(opt, index) in form.options" :key="index" class="option-item">
+            <span class="option-key">
+              {{ String.fromCharCode(65 + index) }}
+            </span>
+
+            <input v-model="opt.content" class="option-input" placeholder="请输入选项内容" />
+
+            <button class="btn danger" @click="removeOption(index)">
+              删除
+            </button>
+          </div>
+
+          <button class="btn add" @click="addOption">+ 添加选项</button>
+        </div>
+
+        <!-- 答案 -->
+        <div class="answer-box">
+          <h3>答案</h3>
+
+          <input v-if="form.type === 'single_choice'" v-model="form.answer" class="input" placeholder="A" />
+          <input v-if="form.type === 'multiple_choice'" v-model="multiAnswer" class="input" placeholder="A,B" />
+
+          <select v-if="form.type === 'judge'" v-model="form.answer" class="input">
+            <option :value="true">正确</option>
+            <option :value="false">错误</option>
+          </select>
+
+          <input v-if="form.type === 'fill'" v-model="fillAnswer" class="input" placeholder="用 | 分隔" />
+
+          <textarea v-if="isTextAnswer" v-model="form.answer" class="textarea"></textarea>
+        </div>
+
+        <!-- 解析 -->
+        <div id="analysis-editor"></div>
+
+        <!-- 标签 -->
+        <input v-model="tagsInput" class="input" placeholder="标签：算法,数学" />
+
+        <label class="checkbox">
+          <input type="checkbox" v-model="form.isPublic" />
+          公开
+        </label>
+
+        <button class="btn submit" @click="submit">
+          🚀 提交题目
+        </button>
       </div>
 
-      <!-- 填空 -->
-      <div v-if="form.type === 'fill'">
-        <input v-model="fillAnswer" placeholder="用 | 分隔" />
-      </div>
+      <!-- 右侧预览 -->
+      <div class="right">
+        <h3>📖 实时预览</h3>
 
-      <!-- 主观 / 数学 -->
-      <div v-if="isTextAnswer">
-        <textarea v-model="form.answer"></textarea>
+        <div class="preview">
+
+          <div id="preview-title"></div>
+
+          <ul v-if="isChoice">
+            <li v-for="(opt, i) in previewOptions" :key="i">
+              {{ opt.key }}. {{ opt.content }}
+            </li>
+          </ul>
+
+          <div class="analysis">
+            <h4>解析：</h4>
+            <div id="preview-analysis"></div>
+          </div>
+
+        </div>
       </div>
 
     </div>
-
-    <!-- 解析 -->
-    <div id="analysis-editor"></div>
-
-    <!-- 标签 -->
-    <input v-model="tagsInput" placeholder="标签（逗号分隔）" />
-
-    <!-- 是否公开 -->
-    <label>
-      公开
-      <input type="checkbox" v-model="form.isPublic" />
-    </label>
-
-    <br /><br />
-    <button @click="submit">提交</button>
-
-    <hr />
-
-    <!-- 模拟数据库展示 -->
-    <h3>📦 模拟题库数据</h3>
-    <pre>{{ questionDB }}</pre>
-
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue"
+import { reactive, ref, computed, onMounted, nextTick } from "vue"
 import Vditor from "vditor"
 import "vditor/dist/index.css"
 
-// 表单
-const form = ref({
+const form = reactive({
   type: "single_choice",
   difficulty: 3,
   options: [],
@@ -102,10 +115,6 @@ const form = ref({
   isPublic: false
 })
 
-// 模拟数据库
-const questionDB = ref([])
-
-// 辅助字段
 const tagsInput = ref("")
 const multiAnswer = ref("")
 const fillAnswer = ref("")
@@ -113,99 +122,249 @@ const fillAnswer = ref("")
 let titleEditor = null
 let analysisEditor = null
 
-// 类型判断
 const isChoice = computed(() =>
-  form.value.type === "single_choice" ||
-  form.value.type === "multiple_choice"
+  ["single_choice", "multiple_choice"].includes(form.type)
 )
 
 const isTextAnswer = computed(() =>
-  form.value.type === "subjective" ||
-  form.value.type === "math"
+  ["subjective", "math"].includes(form.type)
 )
 
-// 初始化编辑器
+const previewOptions = computed(() =>
+  form.options.map((o, i) => ({
+    key: String.fromCharCode(65 + i),
+    content: o.content
+  }))
+)
+
+// 🔥 核心：正确预览
+const updatePreview = async () => {
+  await nextTick()
+
+  if (titleEditor) {
+    Vditor.preview(
+      document.getElementById("preview-title"),
+      titleEditor.getValue(),
+      { math: { engine: "KaTeX" } }
+    )
+  }
+
+  if (analysisEditor) {
+    Vditor.preview(
+      document.getElementById("preview-analysis"),
+      analysisEditor.getValue(),
+      { math: { engine: "KaTeX" } }
+    )
+  }
+}
+
 onMounted(() => {
   titleEditor = new Vditor("title-editor", {
-    height: 200
+    height: 200,
+    mode: "sv",
+    input: updatePreview,
+    preview: { math: { engine: "KaTeX" } }
   })
 
   analysisEditor = new Vditor("analysis-editor", {
-    height: 200
+    height: 200,
+    mode: "sv",
+    input: updatePreview,
+    preview: { math: { engine: "KaTeX" } }
   })
 })
 
-// 选项操作
-const addOption = () => {
-  form.value.options.push({ content: "" })
+// 操作
+const addOption = () => form.options.push({ content: "" })
+const removeOption = (i) => form.options.splice(i, 1)
+
+// 答案处理
+const formatAnswer = () => {
+  switch (form.type) {
+    case "multiple_choice":
+      return multiAnswer.value.split(",")
+    case "fill":
+      return fillAnswer.value.split("|")
+    default:
+      return form.answer
+  }
 }
 
-const removeOption = (index) => {
-  form.value.options.splice(index, 1)
-}
-
-// 提交
 const submit = () => {
   const data = {
     id: Date.now(),
     title: titleEditor.getValue(),
-    type: form.value.type,
-    difficulty: form.value.difficulty,
-    options: [],
-    answer: null,
+    options: previewOptions.value,
     analysis: analysisEditor.getValue(),
-    tags: tagsInput.value.split(","),
-    isPublic: form.value.isPublic
+    answer: formatAnswer()
   }
 
-  // options 自动生成 A/B/C
-  if (isChoice.value) {
-    data.options = form.value.options.map((opt, index) => ({
-      key: String.fromCharCode(65 + index),
-      content: opt.content
-    }))
-  }
-
-  // answer 处理
-  if (form.value.type === "multiple_choice") {
-    data.answer = multiAnswer.value.split(",")
-  } else if (form.value.type === "fill") {
-    data.answer = fillAnswer.value.split("|")
-  } else {
-    data.answer = form.value.answer
-  }
-
-  // 存入模拟数据库
-  questionDB.value.push(data)
-
-  console.log("当前题库：", questionDB.value)
-
-  // 重置表单（关键）
-  resetForm()
-}
-
-// 重置
-const resetForm = () => {
-  form.value = {
-    type: "single_choice",
-    difficulty: 3,
-    options: [],
-    answer: "",
-    isPublic: false
-  }
-
-  tagsInput.value = ""
-  multiAnswer.value = ""
-  fillAnswer.value = ""
-
-  titleEditor.setValue("")
-  analysisEditor.setValue("")
+  console.log("提交数据：", data)
+  alert("成功（看控制台）")
 }
 </script>
 
 <style scoped>
 .question-create {
-  max-width: 800px;
-  margin: auto;
+  padding: 30px;
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+/* 整体布局 */
+.layout {
+  display: flex;
+  gap: 24px;
+}
+
+/* 左右卡片 */
+.left,
+.right {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* 标题 */
+h2 {
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+/* 输入框统一 */
+.input,
+.textarea,
+.select {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e6eb;
+  transition: 0.2s;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: #409eff;
+  outline: none;
+}
+
+/* 选项区域 */
+.option-box {
+  margin-top: 20px;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* A B C 圆圈 */
+.option-key {
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, #409eff, #66b1ff);
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 34px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(64, 158, 255, 0.4);
+}
+
+/* 输入框 */
+.option-input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #e5e6eb;
+}
+
+/* 按钮系统 */
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn.add {
+  background: linear-gradient(135deg, #409eff, #66b1ff);
+  color: white;
+}
+
+.btn.danger {
+  background: linear-gradient(135deg, #ff4d4f, #ff7875);
+  color: white;
+}
+
+.btn.submit {
+  background: linear-gradient(135deg, #67c23a, #95de64);
+  color: white;
+  width: 100%;
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+/* 预览区 */
+.preview {
+  background: #fafafa;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #ebeef5;
+}
+
+/* 题目样式 */
+.preview h1,
+.preview h2,
+.preview h3 {
+  margin: 10px 0;
+}
+
+/* 选项预览 */
+.preview ul {
+  margin-top: 10px;
+  padding-left: 0;
+}
+
+.preview li {
+  list-style: none;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: #ffffff;
+  border: 1px solid #e5e6eb;
+  transition: 0.2s;
+}
+
+.preview li:hover {
+  border-color: #409eff;
+  background: #ecf5ff;
+}
+
+/* 解析 */
+.analysis {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+/* checkbox */
+.checkbox {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  gap: 6px;
 }
 </style>

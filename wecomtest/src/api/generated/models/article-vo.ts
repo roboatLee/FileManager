@@ -13,13 +13,16 @@
  */
 
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { UserVo } from './user-vo';
 
 export interface ArticleVo {
     'id'?: number;
     'title'?: string;
     'markdownContent'?: string;
     'htmlContent'?: string;
-    'userName'?: string;
+    'user'?: UserVo;
     'createTime'?: string;
 }
 

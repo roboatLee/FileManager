@@ -1,7 +1,7 @@
 <template>
     <div class="chat-window">
 
-        <div class="message-container">
+        <div class="message-container" ref="chatBox">
             <div v-if="!messages || messages.length === 0" class="empty">
                 暂无消息，快来聊两句吧 👋
             </div>
@@ -11,20 +11,21 @@
                     'message',
                     msg.type === 'system'
                         ? 'system-message'
-                        : msg.senderName === currentUser
+                        : String(msg.senderId) === currentUser
                             ? 'self'
                             : 'other'
                 ]">
                     <!-- 系统消息 -->
                     <div v-if="msg.type === 'system'" class="system-text">
                         {{ msg.content }}
+                        
                     </div>
 
                     <!-- 普通聊天消息 -->
                     <div v-else class="message-row">
 
                         <!-- 左侧头像（别人） -->
-                        <img v-if="msg.senderName !== currentUser" :src="msg.senderAvatar" class="avatar" />
+                        <img v-if="String(msg.senderId) !== currentUser" :src="msg.senderAvatar" class="avatar" />
 
                         <div class="bubble">
                             <div class="name">
@@ -37,11 +38,8 @@
                         </div>
 
                         <!-- 右侧头像（自己） -->
-                        <img v-if="msg.senderName === currentUser" :src="msg.senderAvatar" class="avatar" />
-
+                        <img v-if="String(msg.senderId) === currentUser" :src="msg.senderAvatar" class="avatar" />
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -62,7 +60,7 @@ import { ref, watch, nextTick } from "vue"
 
 const { messages, currentUser } = defineProps({
     messages: Array,
-    currentUser: String
+    currentUser: String 
 })
 
 const emit = defineEmits(["send"])

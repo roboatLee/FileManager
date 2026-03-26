@@ -37,4 +37,11 @@ public class UserConvert {
         userVo.setAvatarUrl(fileInfo.getUrl());
         return userVo;
     }
+
+    /**
+     * 根据Userid转换成UserVo
+     * */
+    public   UserVo Id2UserVo(Long id){
+        return  this.Entity2Vo(userService.getById(id));
+    }
 }

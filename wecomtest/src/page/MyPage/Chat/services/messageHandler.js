@@ -16,6 +16,7 @@ export function handleMessage(msg,{ currentUser, conversations, users,GLOBAL }) 
         } else {
           const users = convId.split("_")
           target = users.find(u => u !== currentUser)
+          console.log("现在我要看target是： " + target)
         }
         if (!conversations[target]) {
           conversations[target] = []
@@ -59,6 +60,7 @@ export function handleMessage(msg,{ currentUser, conversations, users,GLOBAL }) 
 
     case "users":
       users.value = msg.data
+      console.log(users.value)
       break
   }
 }

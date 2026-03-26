@@ -6,6 +6,7 @@ import com.lee.dao.ChatMessage;
 import com.lee.dao.WsMessage;
 import com.lee.entity.FileInfo;
 import com.lee.entity.User;
+import com.lee.entity.user.UserVo;
 import com.lee.service.ChatMessageRepository;
 import com.lee.service.IUserService;
 import com.lee.service.impl.FileInfoServiceImpl;
@@ -54,16 +55,18 @@ public class ChatHandler extends TextWebSocketHandler  {
                         k -> ConcurrentHashMap.newKeySet());
         /**
          * 是否是第一次连接
-         * 如果是第一次连接，那么就广播这个用户加入了聊天程序
+         * 如果是第一次连接，那么就广播这个用户加入了聊天程序，而且将用户添加到在线列表里面
          * 如果不是，那么就不广播
          * */
         boolean firstConnection = userSessions.isEmpty();
+        userSessions.add(session);
+        sendUsers(session);
 
         if (firstConnection) {
             broadcastJoin(userId);
             broadcastUsers();
         }
-        userSessions.add(session);
+
         sendHistory(session);
     }
 
@@ -115,6 +118,7 @@ public class ChatHandler extends TextWebSocketHandler  {
 
 
         User user = userService.getById(userId);
+
         String userName = user.getUsername();
         System.out.println(userName);
 
@@ -122,7 +126,7 @@ public class ChatHandler extends TextWebSocketHandler  {
         if (userSessions != null) {
             userSessions.remove(session);
             if (userSessions.isEmpty()) {
-                sessions.remove(userName);
+                sessions.remove(userId);
                 broadcastLeave(userName);
             }
         }
@@ -144,10 +148,12 @@ public class ChatHandler extends TextWebSocketHandler  {
                     .filter(m -> {
                         String convId = m.getConversationId();
 
+                        System.out.println(convId);
                         if ("global".equals(convId)) {
                             return true;
                         }
-                        return convId.contains(user.getUsername());
+                        String[] ids = convId.split("_");
+                        return convId.contains(String.valueOf(userId));
                     })
                     .collect(Collectors.toList());
 
@@ -183,6 +189,7 @@ public class ChatHandler extends TextWebSocketHandler  {
         if (toUser != null && !"".equals(toUser)) {
             Long toUserId = Long.valueOf(toUser);
             conversationId = buildPrivateConversationId(userId, toUserId);
+            System.out.println(conversationId);
         } else {
             conversationId = "global";
         }
@@ -245,7 +252,8 @@ public class ChatHandler extends TextWebSocketHandler  {
 
         for (String user : users) {
 
-            Set<WebSocketSession> targetSessions = sessions.get(user);
+            Long uid = Long.valueOf(user);
+            Set<WebSocketSession> targetSessions = sessions.get(uid);
 
             if (targetSessions != null) {
                 for (WebSocketSession s : targetSessions) {
@@ -254,7 +262,6 @@ public class ChatHandler extends TextWebSocketHandler  {
                     }
                 }
             }
-
         }
 
 
@@ -277,8 +284,6 @@ public class ChatHandler extends TextWebSocketHandler  {
                     }
                 }
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -307,12 +312,23 @@ public class ChatHandler extends TextWebSocketHandler  {
     }
 
     /**
-     * 在线用户列表
+     * 在线用户列表，向所有人发送消息
      * */
     private void broadcastUsers() {
         try {
-            List<Long> userList =
-                    new ArrayList<>(sessions.keySet());
+            List<UserVo> userList = sessions.keySet().stream()
+                    .map(userId -> {
+                        User user = userService.getById(userId);
+                        FileInfo fileInfo = fileInfoService.getById(user.getAvatarId());
+
+                        UserVo vo = new UserVo();
+                        vo.setId(userId);
+                        vo.setUsername(user.getUsername());
+                        vo.setAvatarUrl(fileInfo.getUrl());
+                        return vo;
+                    })
+                    .collect(Collectors.toList());
+
             for (Set<WebSocketSession> userSessions : sessions.values()) {
                 for (WebSocketSession s : userSessions) {
                     if (s.isOpen()) {
@@ -334,6 +350,15 @@ public class ChatHandler extends TextWebSocketHandler  {
             return user1 + "_" + user2;
         } else {
             return user2 + "_" + user1;
+        }
+    }
+
+    private void sendUsers(WebSocketSession session) {
+        try {
+            List<Long> userList = new ArrayList<>(sessions.keySet());
+            send(session, "users", userList);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

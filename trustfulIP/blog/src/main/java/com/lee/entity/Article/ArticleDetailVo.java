@@ -1,5 +1,6 @@
 package com.lee.entity.Article;
 
+import com.lee.entity.user.UserVo;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -30,7 +31,7 @@ public class ArticleDetailVo {
     /**
      * 作者名字
      * */
-    private String userName;
+    private UserVo userVo;
 
     /**
      * 创建时间

@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **title** | **string** |  | [optional] [default to undefined]
 **markdownContent** | **string** |  | [optional] [default to undefined]
 **htmlContent** | **string** |  | [optional] [default to undefined]
-**userName** | **string** |  | [optional] [default to undefined]
+**user** | [**UserVo**](UserVo.md) |  | [optional] [default to undefined]
 **createTime** | **string** |  | [optional] [default to undefined]
 
 ## Example
@@ -22,7 +22,7 @@ const instance: ArticleVo = {
     title,
     markdownContent,
     htmlContent,
-    userName,
+    user,
     createTime,
 };
 ```

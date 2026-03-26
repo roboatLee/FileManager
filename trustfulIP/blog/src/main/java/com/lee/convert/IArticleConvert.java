@@ -4,8 +4,10 @@ import com.lee.entity.Article.Article;
 import com.lee.entity.Article.ArticleDetailVo;
 import com.lee.entity.Article.ArticleDto;
 import com.lee.entity.Article.ArticleVo;
+import com.lee.entity.User;
+import com.lee.entity.user.UserVo;
 import com.lee.security.JwtUtil;
-import jdk.internal.dynalink.linker.LinkerServices;
+import com.lee.service.IUserService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,19 +21,27 @@ import java.util.List;
 @Service
 public class IArticleConvert {
    private UserConvert userConvert;
+    private IUserService userService;
 
-    public IArticleConvert(UserConvert userConvert) {
+    public IArticleConvert(UserConvert userConvert, IUserService userService) {
         this.userConvert = userConvert;
+        this.userService = userService;
     }
 
     public ArticleVo entity2vo(Article article){
+
        ArticleVo articleVo = new ArticleVo();
+
+       User user = userService.getById(article.getUserId());
+        UserVo userVo = userConvert.Entity2Vo(user);
+
        articleVo.setHtmlContent(article.getHtmlContent());
        articleVo.setTitle(article.getTitle());
        articleVo.setMarkdownContent(article.getMarkdownContent());
         articleVo.setCreateTime(article.getCreateTime());
-       articleVo.setUserName(userConvert.convertUserId2UserName(article.getUserId()));
+       articleVo.setUser(userVo);
         articleVo.setId(article.getId());
+
        return articleVo;
    }
 
@@ -46,6 +56,10 @@ public class IArticleConvert {
    }
 
    public ArticleDetailVo entity2DetailVo(Article article){
+
+        User user = userService.getById(article.getUserId());
+       UserVo userVo = userConvert.Entity2Vo(user);
+
        ArticleDetailVo articleDetailVo = new ArticleDetailVo();
 
        articleDetailVo.setHtmlContent(article.getHtmlContent());
@@ -54,7 +68,7 @@ public class IArticleConvert {
        articleDetailVo.setCreateTime(article.getCreateTime());
        articleDetailVo.setLikeNumber(article.getLikeNumber());
        articleDetailVo.setViewNumber(article.getViewNumber());
-       articleDetailVo.setUserName(userConvert.convertUserId2UserName(article.getUserId()));
+       articleDetailVo.setUserVo(userVo);
 
        return articleDetailVo;
    }
