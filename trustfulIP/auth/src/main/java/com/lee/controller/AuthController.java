@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author KitenLee
@@ -38,5 +39,10 @@ public class AuthController {
 
     @GetMapping("/getter")
     public UserVo getUserByToken(HttpServletRequest request){return authService.getUserById(request);}
+
+    @PostMapping("/refresh")
+    public Map<String, Object> refresh(@RequestBody Map<String, String> body){
+        return  authService.refresh(body);
+    }
 
 }

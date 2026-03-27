@@ -7,6 +7,7 @@ import com.lee.entity.User;
 import com.lee.entity.user.UserVo;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author KitenLee
@@ -17,4 +18,5 @@ public interface AuthService {
 
     LoginResponse login(LoginRequest request);
     UserVo getUserById(HttpServletRequest request);
+    Map<String, Object> refresh( Map<String, String> body);
 }

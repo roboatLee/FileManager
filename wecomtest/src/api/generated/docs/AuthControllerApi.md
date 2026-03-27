@@ -6,6 +6,7 @@ All URIs are relative to *http://localhost:8080*
 |------------- | ------------- | -------------|
 |[**getUserByToken**](#getuserbytoken) | **GET** /auth/getter | |
 |[**login**](#login) | **POST** /auth/login | |
+|[**refresh**](#refresh) | **POST** /auth/refresh | |
 |[**register**](#register) | **POST** /auth/register | |
 
 # **getUserByToken**
@@ -84,6 +85,56 @@ const { status, data } = await apiInstance.login(
 ### Return type
 
 **LoginResponse**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: */*
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | OK |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **refresh**
+> { [key: string]: object; } refresh(requestBody)
+
+
+### Example
+
+```typescript
+import {
+    AuthControllerApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AuthControllerApi(configuration);
+
+let requestBody: { [key: string]: string; }; //
+
+const { status, data } = await apiInstance.refresh(
+    requestBody
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **requestBody** | **{ [key: string]: string; }**|  | |
+
+
+### Return type
+
+**{ [key: string]: object; }**
 
 ### Authorization
 

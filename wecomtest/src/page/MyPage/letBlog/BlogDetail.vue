@@ -32,8 +32,7 @@
         <hr />
 
         <!-- 内容 -->
-        <div id="preview" class="content"></div>
-
+        <div ref="previewRef" class="content"></div>
       </div>
     </div>
 
@@ -47,7 +46,7 @@
 
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getArticleById } from './myApi/articleApi'
 import type { ArticleDetailVo } from '@/api/generated'
@@ -59,6 +58,8 @@ import 'vditor/dist/index.css'
 const route = useRoute()
 const blog = ref<ArticleDetailVo | null>(null)
 const loading = ref(true)
+const previewRef = ref<HTMLDivElement | null>(null)
+
 
 const getDetail = async () => {
   console.log("getDetail开始启动")
@@ -78,22 +79,27 @@ const getDetail = async () => {
 
     console.log(blog.value)
 
-    await nextTick()
-
-    const previewEl = document.getElementById('preview')
-    if (!previewEl) return
-
-    Vditor.preview(previewEl as HTMLDivElement, blog.value.markdownContent, {
-      mode: 'light',
-      hljs: { style: 'github' },
-      math: { engine: 'KaTeX' }
-    })
   } catch (e) {
     console.error("请求失败", e)
   } finally {
     loading.value = false  // ✅ 无论成功失败都关闭 loading
   }
 }
+watch(blog, async (val) => {
+  if (!val) return
+
+  await nextTick()
+
+  if (previewRef.value) {
+    previewRef.value.innerHTML = ''
+
+    Vditor.preview(previewRef.value, val.markdownContent, {
+      mode: 'light',
+      hljs: { style: 'github' },
+      math: { engine: 'KaTeX' }
+    })
+  }
+})
 
 onMounted(async () => {
   await getDetail()
@@ -120,7 +126,7 @@ const formatTime = (time: string) => {
   background: #fff;
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 /* 标题 */

@@ -6,14 +6,10 @@
     </header>
 
     <main class="blog-list">
-      <article 
-        v-for="blog in blogs" 
-        
-        class="blog-card"
-      >
+      <article v-for="blog in blogs" class="blog-card">
         <div class="card-content" @click="goDetail(blog.id)">
           <h2 class="blog-title">{{ blog.title }}</h2>
-          
+
           <div class="meta">
             <span v-if="blog.userName" class="author">
               <i class="icon-user"></i> {{ blog.userName }}
@@ -27,17 +23,14 @@
             {{ (blog.summary || blog.htmlContent || '').slice(0, 120) + '...' }}
           </p>
 
-          <router-link 
-            v-if="blog._id || blog.id"
-            :to="`/article/${blog._id || blog.id}`"
-            class="read-more"
-          >
+          <router-link v-if="blog._id || blog.id" :to="{ name: 'BlogDetail', params: { id: blog._id || blog.id } }"
+            class="read-more">
             阅读全文 →
           </router-link>
         </div>
       </article>
     </main>
-    
+
   </div>
 </template>
 
@@ -93,7 +86,7 @@ const goDetail = (id) => {
   color: white;
   border-radius: 16px;
   margin-bottom: 3rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 .hero h1 {
@@ -118,14 +111,14 @@ const goDetail = (id) => {
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   transition: all 0.25s ease;
   border: 1px solid #f0f0f5;
 }
 
 .blog-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
 }
 
 .card-content {
@@ -150,7 +143,8 @@ const goDetail = (id) => {
 .meta .icon-user,
 .meta .icon-calendar {
   margin-right: 0.4rem;
-  font-style: normal; /* 如果你没有用 icon 字体，可以删掉 */
+  font-style: normal;
+  /* 如果你没有用 icon 字体，可以删掉 */
 }
 
 .excerpt {
@@ -181,6 +175,11 @@ const goDetail = (id) => {
 }
 
 /* 你也可以添加一些小图标（需要自行引入 iconfont 或 lucide 等） */
-.icon-user::before  { content: "👤 "; }
-.icon-calendar::before { content: "📅 "; }
+.icon-user::before {
+  content: "👤 ";
+}
+
+.icon-calendar::before {
+  content: "📅 ";
+}
 </style>

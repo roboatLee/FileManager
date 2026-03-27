@@ -56,12 +56,14 @@ const handleLogin = async () => {
         const token = res.data.token   // ⭐ 正确取值
         const username = res.data.username   // ⭐ 取出来
         const userId= res.data.userId // ⭐ 取出来
+        const refreshToken= res.data.refreshToken // ⭐ 取出来
 
         console.log(res.data)
 
         localStorage.setItem("token", token)
         localStorage.setItem("username", username)   // ⭐ 加这一行
         localStorage.setItem("userId", userId)
+        localStorage.setItem('refreshToken',refreshToken)
         
         authStore.loginSuccess(res.data)  // ⭐ 传 data
 
@@ -70,6 +72,7 @@ const handleLogin = async () => {
         router.push("/")
     } catch (e) {
         ElMessage.error("登录失败")
+        console.log(e)
     }
 }
 </script>

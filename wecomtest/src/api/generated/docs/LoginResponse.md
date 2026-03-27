@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **userId** | **number** |  | [optional] [default to undefined]
 **username** | **string** |  | [optional] [default to undefined]
 **role** | **string** |  | [optional] [default to undefined]
+**refreshToken** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -20,6 +21,7 @@ const instance: LoginResponse = {
     userId,
     username,
     role,
+    refreshToken,
 };
 ```
 
