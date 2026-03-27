@@ -26,7 +26,7 @@ public class QuestionController {
     }
 
     @PostMapping("/addQuestion")
-    public void addQuestion(QuestionDto questionDto,@RequestHeader("Authorization") String token){
+    public void addQuestion(@RequestBody QuestionDto questionDto,@RequestHeader("Authorization") String token){
         questionService.addQuestion(questionDto,token);
     }
 

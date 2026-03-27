@@ -21,7 +21,11 @@ import java.util.List;
 @Service
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> implements IQuestionService {
 
+    private TagServiceImpl tagService;
 
+    public QuestionServiceImpl(TagServiceImpl tagService) {
+        this.tagService = tagService;
+    }
 
     /**
      * 目前的json格式
@@ -41,15 +45,15 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
      * */
     @Override
     public void addQuestion(QuestionDto questionDto, String token) {
-        //todo:获得UserId
         Long userId = JwtUtil.getUserIdInt(token);
 
-        //todo: 进行一个信息的转换
         Question question = QuestionConverter.toEntity(questionDto);
         question.setAuthorId(userId);
 
-        //todo: 进行数据库存储
+        System.out.println(question);
+
         this.save(question);
+        tagService.handleTags(question.getId(),questionDto.getTags());
 
     }
 

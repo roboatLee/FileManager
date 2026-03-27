@@ -200,41 +200,31 @@ const submit = async () => {
 
   const dto: QuestionDto = {
     title: titleEditor.getValue(),
-
     type: form.type,
     difficulty: form.difficulty,
-
-    categoryId: 1, //可以先写死，后面再做选择器
-
+    categoryId: 1,
     options: form.options.map((opt, index) => ({
+      key: String.fromCharCode(65 + index),
       content: opt.content
     })),
-
     answer: formatAnswer() as any,
-
     analysis: analysisEditor.getValue(),
-
     tags: tagsInput.value
-      ? tagsInput.value.split(",")
-      : [],
-
-    isPublic: form.isPublic
+      ? tagsInput.value.split(/[,，]/).map(tag => tag.trim()).filter(tag => tag !== "")
+      : [], isPublic: form.isPublic
   }
 
   console.log("提交数据：", dto)
 
-  // try {
-  //   const token = localStorage.getItem("token") // 或 pinia
-
-  //   const res = await addQuestion(`Bearer ${token}`, dto)
-
-  //   console.log("接口返回：", res)
-  //   alert("提交成功！")
-
-  // } catch (e) {
-  //   console.error(e)
-  //   alert("提交失败")
-  // }
+  try {
+    const token = localStorage.getItem("token") // 或 pinia
+    const res = await addQuestion(token, dto)
+    console.log("接口返回：", res)
+    alert("提交成功！")
+  } catch (e) {
+    console.error(e)
+    alert("提交失败")
+  }
 }
 
 </script>

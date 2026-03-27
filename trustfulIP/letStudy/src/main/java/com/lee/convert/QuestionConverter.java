@@ -7,6 +7,7 @@ import com.lee.entity.Question;
 import com.lee.entity.QuestionDto;
 import com.lee.persistence.json.JsonUtil;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -33,12 +34,15 @@ public class QuestionConverter {
     public static Question toEntity(QuestionDto dto) {
         Question q = new Question();
         q.setTitle(JsonUtil.toJson(dto.getTitle()));
-        q.setType(JsonUtil.toJson(dto.getType()));
+        q.setType(dto.getType());
         q.setCategoryId(dto.getCategoryId());
         q.setDifficulty(dto.getDifficulty().byteValue());
         q.setAnalysis(JsonUtil.toJson(dto.getAnalysis()));
         q.setIsPublic(dto.getIsPublic());
-
+        q.setCreatedAt(LocalDateTime.now());
+        q.setUpdatedAt(LocalDateTime.now());
+        q.setSubmitCount(0);
+        q.setCorrectCount(0);
         try {
             q.setOptions(mapper.writeValueAsString(dto.getOptions()));
             q.setAnswer(mapper.writeValueAsString(dto.getAnswer()));
