@@ -2,6 +2,7 @@ package com.lee.service;
 
 import com.lee.entity.Question;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lee.entity.QuestionDetailVo;
 import com.lee.entity.QuestionDto;
 import com.lee.entity.QuestionVo;
 
@@ -19,4 +20,5 @@ public interface IQuestionService extends IService<Question> {
 
     void addQuestion(QuestionDto questionDto, String token);
     List<QuestionVo> getAllQuestion();
+    QuestionDetailVo getQuestionById(Long id);
 }

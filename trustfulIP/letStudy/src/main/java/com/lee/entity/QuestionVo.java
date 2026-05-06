@@ -7,6 +7,8 @@ package com.lee.entity;
 
 import lombok.Data;
 
+import java.util.List;
+
 
 @Data
 public class QuestionVo {
@@ -33,5 +35,15 @@ public class QuestionVo {
      * }
      *
      */
+    private Long id;
+    private String title;
+    private String type;
+    private Long categoryId;
+    private Integer difficulty;
+    private List<String> tags;
+    private Boolean isPublic;
+    private Long authorId;
+    private Integer submitCount;
+    private Integer correctCount;
 
 }

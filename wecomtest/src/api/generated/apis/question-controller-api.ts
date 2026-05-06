@@ -30,16 +30,16 @@ export const QuestionControllerApiAxiosParamCreator = function (configuration?: 
     return {
         /**
          * 
-         * @param {QuestionDto} questionDto 
          * @param {string} authorization 
+         * @param {QuestionDto} questionDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addQuestion: async (questionDto: QuestionDto, authorization: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'questionDto' is not null or undefined
-            assertParamExists('addQuestion', 'questionDto', questionDto)
+        addQuestion: async (authorization: string, questionDto: QuestionDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'authorization' is not null or undefined
             assertParamExists('addQuestion', 'authorization', authorization)
+            // verify required parameter 'questionDto' is not null or undefined
+            assertParamExists('addQuestion', 'questionDto', questionDto)
             const localVarPath = `/question/addQuestion`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -52,12 +52,7 @@ export const QuestionControllerApiAxiosParamCreator = function (configuration?: 
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            if (questionDto !== undefined) {
-                for (const [key, value] of Object.entries(questionDto)) {
-                    localVarQueryParameter[key] = value;
-                }
-            }
-
+            localVarHeaderParameter['Content-Type'] = 'application/json';
 
             if (authorization != null) {
                 localVarHeaderParameter['Authorization'] = String(authorization);
@@ -65,6 +60,7 @@ export const QuestionControllerApiAxiosParamCreator = function (configuration?: 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(questionDto, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -111,13 +107,13 @@ export const QuestionControllerApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {QuestionDto} questionDto 
          * @param {string} authorization 
+         * @param {QuestionDto} questionDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async addQuestion(questionDto: QuestionDto, authorization: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.addQuestion(questionDto, authorization, options);
+        async addQuestion(authorization: string, questionDto: QuestionDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addQuestion(authorization, questionDto, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['QuestionControllerApi.addQuestion']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -144,13 +140,13 @@ export const QuestionControllerApiFactory = function (configuration?: Configurat
     return {
         /**
          * 
-         * @param {QuestionDto} questionDto 
          * @param {string} authorization 
+         * @param {QuestionDto} questionDto 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addQuestion(questionDto: QuestionDto, authorization: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.addQuestion(questionDto, authorization, options).then((request) => request(axios, basePath));
+        addQuestion(authorization: string, questionDto: QuestionDto, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.addQuestion(authorization, questionDto, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -169,13 +165,13 @@ export const QuestionControllerApiFactory = function (configuration?: Configurat
 export class QuestionControllerApi extends BaseAPI {
     /**
      * 
-     * @param {QuestionDto} questionDto 
      * @param {string} authorization 
+     * @param {QuestionDto} questionDto 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public addQuestion(questionDto: QuestionDto, authorization: string, options?: RawAxiosRequestConfig) {
-        return QuestionControllerApiFp(this.configuration).addQuestion(questionDto, authorization, options).then((request) => request(this.axios, this.basePath));
+    public addQuestion(authorization: string, questionDto: QuestionDto, options?: RawAxiosRequestConfig) {
+        return QuestionControllerApiFp(this.configuration).addQuestion(authorization, questionDto, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

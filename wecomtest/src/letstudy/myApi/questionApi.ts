@@ -18,3 +18,11 @@ export const addQuestion = (token: string, questionDto: QuestionDto) => {
     }
   })
 }
+
+export const getQuestionList = () => {
+  return http.get("/question/list")
+}
+
+export const getQuestionById = (id: number) => {
+  return http.get(`/question/${id}`)
+}

@@ -1,5 +1,6 @@
 package com.lee.controller;
 
+import com.lee.entity.QuestionDetailVo;
 import com.lee.entity.QuestionDto;
 import com.lee.entity.QuestionVo;
 import com.lee.service.impl.QuestionServiceImpl;
@@ -35,4 +36,8 @@ public class QuestionController {
         return  questionService.getAllQuestion();
     }
 
+    @GetMapping("/{id}")
+    public QuestionDetailVo getQuestionById(@PathVariable Long id) {
+        return questionService.getQuestionById(id);
+    }
 }

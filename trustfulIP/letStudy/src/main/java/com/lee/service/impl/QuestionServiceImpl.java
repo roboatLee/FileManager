@@ -59,8 +59,20 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
     @Override
     public List<QuestionVo> getAllQuestion() {
-        return null;
+        List<Question> questions = this.list();
+        return questions.stream()
+                .map(QuestionConverter::toVo)
+                .collect(java.util.stream.Collectors.toList());
     }
+    @Override
+    public QuestionDetailVo getQuestionById(Long id) {
+        Question question = this.getById(id);
+        if (question == null) {
+            return null;
+        }
+        return QuestionConverter.toDetailVo(question);
+    }
+
 
 
 }

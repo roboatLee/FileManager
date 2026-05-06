@@ -166,14 +166,14 @@ const updatePreview = async () => {
 
 onMounted(() => {
   titleEditor = new Vditor("title-editor", {
-    height: 200,
+    height: 400,
     mode: "sv",
     input: updatePreview,
     preview: { math: { engine: "KaTeX" } }
   })
 
   analysisEditor = new Vditor("analysis-editor", {
-    height: 200,
+    height: 400,
     mode: "sv",
     input: updatePreview,
     preview: { math: { engine: "KaTeX" } }

@@ -2,8 +2,9 @@ let ws = null
 
 export function connect(token, handlers) {
 
-  ws = new WebSocket(`ws://10un4gz933676.vicp.fun:80/chat?token=${token}`)
+  ws = new WebSocket(`ws://47.104.254.0:30659/chat?token=${token}`)
 
+  console.log("连接成功")
   ws.onopen = () => {
     handlers.onOpen && handlers.onOpen()
   }

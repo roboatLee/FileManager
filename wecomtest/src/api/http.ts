@@ -11,7 +11,8 @@ let failedQueue: ((token: string) => void)[] = []
 
 // ===== 请求拦截器：自动带 accessToken =====
 http.interceptors.request.use(config => {
-  const token = localStorage.getItem("accessToken")
+  const token = localStorage.getItem("token")
+  console.log(token)
   if (token) {
     config.headers.Authorization = "Bearer " + token
   }

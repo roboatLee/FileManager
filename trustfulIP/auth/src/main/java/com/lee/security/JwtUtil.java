@@ -39,6 +39,7 @@ public class JwtUtil {
     }
 
     public static Claims parseToken(String token) {
+        System.out.println(token);
         if (token.startsWith("Bearer ")) {
             token = token.substring(7);
         }

@@ -87,6 +87,7 @@ onMounted(() => {
     return
   }
   connectSocket()
+  console.log("这是Chat里面的函数")
 })
 
 

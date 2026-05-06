@@ -8,7 +8,7 @@ All URIs are relative to *http://localhost:8080*
 |[**getListQuestionVo**](#getlistquestionvo) | **GET** /question/list | |
 
 # **addQuestion**
-> addQuestion()
+> addQuestion(questionDto)
 
 
 ### Example
@@ -23,12 +23,12 @@ import {
 const configuration = new Configuration();
 const apiInstance = new QuestionControllerApi(configuration);
 
-let questionDto: QuestionDto; // (default to undefined)
 let authorization: string; // (default to undefined)
+let questionDto: QuestionDto; //
 
 const { status, data } = await apiInstance.addQuestion(
-    questionDto,
-    authorization
+    authorization,
+    questionDto
 );
 ```
 
@@ -36,7 +36,7 @@ const { status, data } = await apiInstance.addQuestion(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **questionDto** | **QuestionDto** |  | defaults to undefined|
+| **questionDto** | **QuestionDto**|  | |
 | **authorization** | [**string**] |  | defaults to undefined|
 
 
@@ -50,7 +50,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: Not defined
 
 

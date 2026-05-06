@@ -2,9 +2,7 @@ package com.lee.convert;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lee.entity.OptionDTO;
-import com.lee.entity.Question;
-import com.lee.entity.QuestionDto;
+import com.lee.entity.*;
 import com.lee.persistence.json.JsonUtil;
 
 import java.time.LocalDateTime;
@@ -78,5 +76,59 @@ public class QuestionConverter {
         }
 
         return dto;
+    }
+    public static QuestionVo toVo(Question q) {
+        QuestionVo vo = new QuestionVo();
+        vo.setId(q.getId());
+        vo.setType(q.getType());
+        vo.setCategoryId(q.getCategoryId());
+        vo.setDifficulty(q.getDifficulty() == null ? null : (int) q.getDifficulty());
+        vo.setIsPublic(q.getIsPublic());
+        vo.setAuthorId(q.getAuthorId());
+        vo.setSubmitCount(q.getSubmitCount());
+        vo.setCorrectCount(q.getCorrectCount());
+        try {
+            if (q.getTitle() != null) {
+                vo.setTitle(mapper.readValue(q.getTitle(), String.class));
+            }
+            if (q.getTags() != null) {
+                vo.setTags(mapper.readValue(q.getTags(), new TypeReference<List<String>>() {}));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("JSON解析失败", e);
+        }
+        return vo;
+    }
+
+    public static QuestionDetailVo toDetailVo(Question q) {
+        QuestionDetailVo vo = new QuestionDetailVo();
+        vo.setId(q.getId());
+        vo.setType(q.getType());
+        vo.setCategoryId(q.getCategoryId());
+        vo.setDifficulty(q.getDifficulty() == null ? null : (int) q.getDifficulty());
+        vo.setIsPublic(q.getIsPublic());
+        vo.setAuthorId(q.getAuthorId());
+        vo.setSubmitCount(q.getSubmitCount());
+        vo.setCorrectCount(q.getCorrectCount());
+        try {
+            if (q.getTitle() != null) {
+                vo.setTitle(mapper.readValue(q.getTitle(), String.class));
+            }
+            if (q.getAnalysis() != null) {
+                vo.setAnalysis(mapper.readValue(q.getAnalysis(), String.class));
+            }
+            if (q.getOptions() != null) {
+                vo.setOptions(mapper.readValue(q.getOptions(), new TypeReference<List<OptionDTO>>() {}));
+            }
+            if (q.getAnswer() != null) {
+                vo.setAnswer(mapper.readValue(q.getAnswer(), Object.class));
+            }
+            if (q.getTags() != null) {
+                vo.setTags(mapper.readValue(q.getTags(), new TypeReference<List<String>>() {}));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("JSON解析失败", e);
+        }
+        return vo;
     }
 }

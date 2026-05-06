@@ -32,9 +32,16 @@ public class UserConvert {
         userVo.setUsername(user.getUsername());
         userVo.setId(user.getId());
         userVo.setRole(user.getRole());
-        FileInfo fileInfo = fileInfoService.getById(user.getAvatarId());
-        System.out.println(fileInfo);
-        userVo.setAvatarUrl(fileInfo.getUrl());
+        FileInfo fileInfo = null;
+
+        if (user.getAvatarId() != null) {
+            fileInfo = fileInfoService.getById(user.getAvatarId());
+        }
+
+        userVo.setAvatarUrl(
+                fileInfo != null ? fileInfo.getUrl() : null
+        );
+
         return userVo;
     }
 

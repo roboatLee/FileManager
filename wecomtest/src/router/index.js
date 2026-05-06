@@ -32,10 +32,6 @@ const routes = [
     component: () => import("@/views/Register.vue"),
   },
   {
-    path: "/private/:username",
-    component: () => import("@/views/PrivateChat.vue"),
-  },
-  {
     path: "/blog",
     component: () => import("@/page/MyPage/letBlog/blog.vue"),
   },
@@ -61,20 +57,20 @@ const routes = [
     name: "UserCenter",
     component: () => import("@/usercenter/UserCenter.vue"),
   },
-    {
+  {
     path: "/letstudy",
     name: "letstudy",
     component: () => import("@/letstudy/letstudy.vue"),
   },
-      {
-    path: "/letstudydetail",
+  {
+    path: "/letstudydetail/:id",
     name: "letstudydetail",
     component: () => import("@/letstudy/letstudydetail.vue"),
   },
-        {
+  {
     path: "/addquetion",
     name: "addquetion",
-    component: () => import("@/letstudy/addquestion.vue"),
+    component: () => import("@/letstudy/add.vue"),
   },
 ];
 

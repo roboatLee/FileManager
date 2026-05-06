@@ -17,7 +17,7 @@ export default defineConfig({
   server: {
     port: 5172,
     host: "0.0.0.0",
-    allowedHosts: ["all","10un4gz933676.vicp.fun"],
+    allowedHosts: ["all","10un4gz933676.vicp.fun","gis1oy6b.zjz-service.cn"],
     proxy: {
       "/api": {
         target: "http://localhost:8080",
